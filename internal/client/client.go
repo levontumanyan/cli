@@ -13,13 +13,63 @@ import (
 	"strings"
 	"time"
 
-	"ectl/internal/config"
+	"github.com/elastic/ectl/internal/config"
 )
 
 type Client struct {
 	baseURL string
 	apiKey  string
 	http    *http.Client
+}
+
+type ResolveIndexItem struct {
+	Name       string   `json:"name"`
+	Attributes []string `json:"attributes,omitempty"`
+}
+
+type ResolveDataStream struct {
+	Name           string   `json:"name"`
+	BackingIndices []string `json:"backing_indices,omitempty"`
+	TimestampField string   `json:"timestamp_field,omitempty"`
+}
+
+type ResolveIndexResponse struct {
+	Indices     []ResolveIndexItem  `json:"indices,omitempty"`
+	DataStreams []ResolveDataStream `json:"data_streams,omitempty"`
+}
+
+type RemoteClusterInfo struct {
+	Connected             bool     `json:"connected"`
+	Mode                  string   `json:"mode,omitempty"`
+	Seeds                 []string `json:"seeds,omitempty"`
+	ProxyAddress          string   `json:"proxy_address,omitempty"`
+	NumNodesConnected     int      `json:"num_nodes_connected,omitempty"`
+	InitialConnectTimeout string   `json:"initial_connect_timeout,omitempty"`
+	SkipUnavailable       bool     `json:"skip_unavailable,omitempty"`
+}
+
+type CatIndex struct {
+	Health    string `json:"health"`
+	Status    string `json:"status"`
+	Index     string `json:"index"`
+	DocsCount string `json:"docs.count"`
+	StoreSize string `json:"store.size"`
+}
+
+type DataStreamIndex struct {
+	IndexName string `json:"index_name"`
+}
+
+type DataStream struct {
+	Name       string            `json:"name"`
+	Status     string            `json:"status,omitempty"`
+	Generation int               `json:"generation,omitempty"`
+	Indices    []DataStreamIndex `json:"indices,omitempty"`
+	Template   string            `json:"template,omitempty"`
+}
+
+type DataStreamsResponse struct {
+	DataStreams []DataStream `json:"data_streams,omitempty"`
 }
 
 type ESQLColumn struct {
@@ -111,6 +161,113 @@ func (c *Client) ESQLQuery(ctx context.Context, query string) (ESQLResponse, []b
 		return ESQLResponse{}, b, fmt.Errorf("parse response: %w", err)
 	}
 	return out, b, nil
+}
+
+func (c *Client) ResolveIndex(ctx context.Context, pattern string) (ResolveIndexResponse, []byte, error) {
+	pattern = strings.TrimSpace(pattern)
+	if pattern == "" {
+		pattern = "*"
+	}
+
+	q := url.Values{}
+	q.Set("expand_wildcards", "all")
+
+	b, err := c.get(ctx, "/_resolve/index/"+url.PathEscape(pattern), q)
+	if err != nil {
+		return ResolveIndexResponse{}, nil, err
+	}
+
+	var out ResolveIndexResponse
+	if err := json.Unmarshal(b, &out); err != nil {
+		return ResolveIndexResponse{}, b, fmt.Errorf("parse resolve index response: %w", err)
+	}
+	return out, b, nil
+}
+
+func (c *Client) RemoteInfo(ctx context.Context) (map[string]RemoteClusterInfo, []byte, error) {
+	b, err := c.get(ctx, "/_remote/info", nil)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	var out map[string]RemoteClusterInfo
+	if err := json.Unmarshal(b, &out); err != nil {
+		return nil, b, fmt.Errorf("parse remote info response: %w", err)
+	}
+	if out == nil {
+		out = map[string]RemoteClusterInfo{}
+	}
+	return out, b, nil
+}
+
+func (c *Client) CatIndices(ctx context.Context) ([]CatIndex, []byte, error) {
+	q := url.Values{}
+	q.Set("format", "json")
+	q.Set("bytes", "b")
+	q.Set("s", "index")
+	q.Set("expand_wildcards", "all")
+	// Keep the output stable by choosing columns explicitly.
+	q.Set("h", "health,status,index,docs.count,store.size")
+
+	b, err := c.get(ctx, "/_cat/indices", q)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	var out []CatIndex
+	if err := json.Unmarshal(b, &out); err != nil {
+		return nil, b, fmt.Errorf("parse indices response: %w", err)
+	}
+	return out, b, nil
+}
+
+func (c *Client) DataStreams(ctx context.Context) ([]DataStream, []byte, error) {
+	q := url.Values{}
+	q.Set("expand_wildcards", "all")
+
+	b, err := c.get(ctx, "/_data_stream", q)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	var resp DataStreamsResponse
+	if err := json.Unmarshal(b, &resp); err != nil {
+		return nil, b, fmt.Errorf("parse data streams response: %w", err)
+	}
+	return resp.DataStreams, b, nil
+}
+
+func (c *Client) get(ctx context.Context, path string, q url.Values) ([]byte, error) {
+	u := c.baseURL + path
+	if len(q) > 0 {
+		u += "?" + q.Encode()
+	}
+
+	req, err := http.NewRequestWithContext(ctx, http.MethodGet, u, nil)
+	if err != nil {
+		return nil, fmt.Errorf("create request: %w", err)
+	}
+	req.Header.Set("Authorization", "ApiKey "+c.apiKey)
+	req.Header.Set("Accept", "application/json")
+
+	resp, err := c.http.Do(req)
+	if err != nil {
+		return nil, fmt.Errorf("request failed: %w", err)
+	}
+	defer resp.Body.Close()
+
+	b, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return nil, fmt.Errorf("read response: %w", err)
+	}
+	if resp.StatusCode >= 400 {
+		msg := strings.TrimSpace(string(b))
+		if msg == "" {
+			msg = resp.Status
+		}
+		return b, fmt.Errorf("elasticsearch error (%s): %s", resp.Status, msg)
+	}
+	return b, nil
 }
 
 func elasticsearchURLFromCloudID(cloudID string) (string, error) {

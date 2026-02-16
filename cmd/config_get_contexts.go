@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"sort"
 
-	"ectl/internal/config"
+	"github.com/elastic/ectl/internal/config"
 
 	"github.com/spf13/cobra"
 )

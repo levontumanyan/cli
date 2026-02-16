@@ -6,12 +6,13 @@ import (
 	"io/fs"
 	"os"
 	"path/filepath"
+	"strings"
 
 	"go.yaml.in/yaml/v3"
 )
 
 const (
-	dirName      = ".ectl"
+	dirName      = "ectl"
 	configName   = "config.yaml"
 	dirPerms     = 0o700
 	configPerms  = 0o600
@@ -30,11 +31,11 @@ type Config struct {
 }
 
 func DefaultPath() (string, error) {
-	home, err := os.UserHomeDir()
+	base, err := os.UserConfigDir()
 	if err != nil {
-		return "", fmt.Errorf("get home dir: %w", err)
+		return "", fmt.Errorf("get user config dir: %w", err)
 	}
-	return filepath.Join(home, dirName, configName), nil
+	return filepath.Join(base, dirName, configName), nil
 }
 
 func Load(path string) (Config, error) {
@@ -48,7 +49,19 @@ func Load(path string) (Config, error) {
 
 	var cfg Config
 	if err := yaml.Unmarshal(b, &cfg); err != nil {
-		return Config{}, fmt.Errorf("parse yaml: %w", err)
+		// Backward-compat: older initial templates included an empty config stub at the end
+		// (current-context + contexts). If a user later added a real config above it,
+		// YAML has duplicate keys and fails to parse. Try stripping that stub.
+		if repaired := tryRepairTemplateStub(b); repaired != nil {
+			var cfg2 Config
+			if err2 := yaml.Unmarshal(repaired, &cfg2); err2 == nil {
+				cfg = cfg2
+			} else {
+				return Config{}, fmt.Errorf("parse yaml: %w", err)
+			}
+		} else {
+			return Config{}, fmt.Errorf("parse yaml: %w", err)
+		}
 	}
 	if cfg.Contexts == nil {
 		cfg.Contexts = map[string]Context{}
@@ -86,6 +99,98 @@ func Save(path string, cfg Config) error {
 		return fmt.Errorf("replace config: %w", err)
 	}
 	return nil
+}
+
+// EnsureInitialized creates a default config file (with commented examples)
+// if it does not already exist. It never overwrites an existing file.
+//
+// It returns true when a file was created.
+func EnsureInitialized(path string) (bool, error) {
+	if _, err := os.Stat(path); err == nil {
+		return false, nil
+	} else if !errors.Is(err, fs.ErrNotExist) {
+		return false, fmt.Errorf("stat config: %w", err)
+	}
+
+	dir := filepath.Dir(path)
+	if err := os.MkdirAll(dir, dirPerms); err != nil {
+		return false, fmt.Errorf("create config dir: %w", err)
+	}
+
+	f, err := os.OpenFile(path, os.O_WRONLY|os.O_CREATE|os.O_EXCL, configPerms)
+	if err != nil {
+		if errors.Is(err, fs.ErrExist) {
+			return false, nil
+		}
+		return false, fmt.Errorf("create config: %w", err)
+	}
+	defer f.Close()
+
+	template := defaultConfigTemplate()
+	if _, err := f.WriteString(template); err != nil {
+		_ = os.Remove(path)
+		return false, fmt.Errorf("write config template: %w", err)
+	}
+	return true, nil
+}
+
+func defaultConfigTemplate() string {
+	// Keep this file valid YAML while also being a helpful guide for first-time users.
+	// Everything in the example is commented out. We intentionally do not include an
+	// "empty config" YAML mapping to avoid duplicate-key parse errors if a user later
+	// adds their own config below/above the example.
+	lines := []string{
+		"# ectl configuration",
+		"#",
+		"# Quickstart:",
+		"#   ectl config set-context prod --cloud-id '...' --api-key '...'",
+		"#   ectl config use-context prod",
+		"#",
+		"# You can also edit this file directly. Example:",
+		"#",
+		"# current-context: prod",
+		"# contexts:",
+		"#   prod:",
+		"#     cloud_id: \"deployment-name:base64...\"",
+		"#     api_key: \"encoded-api-key\"",
+		"#   local:",
+		"#     elasticsearch_url: \"https://localhost:9200\"",
+		"#     api_key: \"encoded-api-key\"",
+		"#",
+		"",
+	}
+	return strings.Join(lines, "\n")
+}
+
+func tryRepairTemplateStub(b []byte) []byte {
+	s := string(b)
+	// Only attempt repair for files that look like they came from our template.
+	if !strings.Contains(s, "# ectl configuration") {
+		return nil
+	}
+
+	lines := strings.Split(s, "\n")
+	out := make([]string, 0, len(lines))
+	removed := 0
+	for _, line := range lines {
+		switch strings.TrimRight(line, " \t") {
+		case `current-context: ""`, "contexts: {}":
+			removed++
+			continue
+		default:
+			out = append(out, line)
+		}
+	}
+	if removed == 0 {
+		return nil
+	}
+
+	// Trim trailing empty lines.
+	for len(out) > 0 && strings.TrimSpace(out[len(out)-1]) == "" {
+		out = out[:len(out)-1]
+	}
+	out = append(out, "")
+	return []byte(strings.Join(out, "\n"))
 }
 
 func copyFile(src, dst string, mode fs.FileMode) error {

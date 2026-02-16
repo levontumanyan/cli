@@ -1,6 +1,6 @@
 package main
 
-import "ectl/cmd"
+import "github.com/elastic/ectl/cmd"
 
 func main() {
 	cmd.Execute()

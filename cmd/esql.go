@@ -6,12 +6,14 @@ import (
 	"fmt"
 	"strings"
 
-	"ectl/internal/client"
-	"ectl/internal/config"
-	"ectl/internal/output"
+	"github.com/elastic/ectl/internal/client"
+	"github.com/elastic/ectl/internal/config"
+	"github.com/elastic/ectl/internal/output"
 
 	"github.com/spf13/cobra"
 )
+
+var esqlShowNull bool
 
 var esqlCmd = &cobra.Command{
 	Use:          "esql <query>",
@@ -57,10 +59,14 @@ var esqlCmd = &cobra.Command{
 		}
 
 		fmtFormat := output.NormalizeFormat(rootFormat)
-		return output.Render(cmd.OutOrStdout(), fmtFormat, resp, raw)
+		opts := output.RenderOpts{
+			OmitNull: !esqlShowNull,
+		}
+		return output.Render(cmd.OutOrStdout(), fmtFormat, resp, raw, opts)
 	},
 }
 
 func init() {
 	rootCmd.AddCommand(esqlCmd)
+	esqlCmd.Flags().BoolVar(&esqlShowNull, "null", false, "Include null-only columns in output (omitted by default)")
 }
