@@ -32,6 +32,8 @@ contexts:
 - **`contexts.<name>.elasticsearch_url`**: Direct Elasticsearch base URL. If set, it overrides `cloud_id` URL derivation.
 - **`contexts.<name>.api_key`**: API key used for requests (sent as `Authorization: ApiKey ...`).
 
+> **Future**: OAuth2 / UIAM-based authentication (client credentials, authorization code with PKCE, and OIDC token exchange) will be supported via an `auth` sub-object in the context. See [`docs/auth.md`](auth.md) for the full design.
+
 ## Commands
 
 Create/update a context:

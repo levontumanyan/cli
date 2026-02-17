@@ -98,6 +98,7 @@ Short aliases work too (`idx`, `ds`, `rc`):
 ## Docs
 
 - [`docs/config.md`](docs/config.md)
+- [`docs/auth.md`](docs/auth.md) — future OAuth2 / UIAM authentication
 - [`docs/esql.md`](docs/esql.md)
 - [`docs/get.md`](docs/get.md)
 
