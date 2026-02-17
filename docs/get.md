@@ -15,7 +15,13 @@ ectl get <resource> [name|pattern...]
 | `indices` | `index`, `idx` |
 | `data-streams` | `datastreams`, `ds` |
 | `remote-clusters` | `remoteclusters`, `remote`, `rc` |
+| `slos` | `slo` |
+| `slo-definitions` | `slo-definition`, `slo-defs`, `slo-def` |
 | `all` | _(default when no resource given is an error)_ |
+
+> Note: `ectl get slos` queries the Kibana API. If `kibana_url` is not set, `ectl` derives it from `cloud_id` (preferred) or from an Elastic Cloud-style `elasticsearch_url` when possible.
+
+> Note: `ectl get slo-definitions` queries Kibana's Saved Objects API (`type=slo`) to show raw definitions.
 
 ## Examples
 
@@ -23,6 +29,8 @@ ectl get <resource> [name|pattern...]
 ectl get indices
 ectl get data-streams
 ectl get remote-clusters
+ectl get slos
+ectl get slo-definitions
 ectl get all
 ```
 

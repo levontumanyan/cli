@@ -14,6 +14,7 @@ var (
 	setContextCloudID          string
 	setContextAPIKey           string
 	setContextElasticsearchURL string
+	setContextKibanaURL        string
 )
 
 var configSetContextCmd = &cobra.Command{
@@ -46,6 +47,9 @@ var configSetContextCmd = &cobra.Command{
 		if setContextElasticsearchURL != "" {
 			ctx.ElasticsearchURL = strings.TrimSpace(setContextElasticsearchURL)
 		}
+		if setContextKibanaURL != "" {
+			ctx.KibanaURL = strings.TrimSpace(setContextKibanaURL)
+		}
 
 		if ctx.APIKey == "" {
 			return errors.New("--api-key is required (or set previously for this context)")
@@ -74,4 +78,5 @@ func init() {
 	configSetContextCmd.Flags().StringVar(&setContextCloudID, "cloud-id", "", "Elastic Cloud ID for the deployment/project")
 	configSetContextCmd.Flags().StringVar(&setContextAPIKey, "api-key", "", "Elastic API key (stored in config file)")
 	configSetContextCmd.Flags().StringVar(&setContextElasticsearchURL, "elasticsearch-url", "", "Direct Elasticsearch URL (overrides cloud-id-derived URL)")
+	configSetContextCmd.Flags().StringVar(&setContextKibanaURL, "kibana-url", "", "Direct Kibana base URL (optional; otherwise derived from cloud-id or elasticsearch-url when possible)")
 }

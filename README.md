@@ -78,6 +78,7 @@ By default, columns where every value is null are omitted. To include them:
 ./ectl get indices
 ./ectl get data-streams
 ./ectl get remote-clusters
+./ectl get slos
 ./ectl get all
 ```
 
@@ -99,6 +100,7 @@ Short aliases work too (`idx`, `ds`, `rc`):
 
 - [`docs/config.md`](docs/config.md)
 - [`docs/auth.md`](docs/auth.md) — future OAuth2 / UIAM authentication
+- [`docs/api.md`](docs/api.md)
 - [`docs/esql.md`](docs/esql.md)
 - [`docs/get.md`](docs/get.md)
 

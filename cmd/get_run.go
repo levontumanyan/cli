@@ -37,11 +37,6 @@ func runGet(out io.Writer, resource string, patterns []string, format string) er
 		return fmt.Errorf("context %q not found; run `ectl config get-contexts`", ctxName)
 	}
 
-	cl, err := client.NewFromContext(ctxCfg)
-	if err != nil {
-		return err
-	}
-
 	kind, err := normalizeGetResource(resource)
 	if err != nil {
 		return err
@@ -53,6 +48,47 @@ func runGet(out io.Writer, resource string, patterns []string, format string) er
 	}
 
 	ctx := context.Background()
+
+	if kind == "slos" {
+		kb, err := client.NewKibanaFromContext(ctxCfg)
+		if err != nil {
+			return err
+		}
+
+		slos, err := kb.ListSLOs(ctx)
+		if err != nil {
+			return err
+		}
+
+		filtered := filterSLOs(slos, patterns)
+		if fmtFormat == output.FormatJSON || fmtFormat == output.FormatYAML {
+			return output.RenderRows(out, fmtFormat, nil, nil, filtered)
+		}
+		return output.RenderRows(out, fmtFormat, slosHeaders(), slosRows(filtered), filtered)
+	}
+
+	if kind == "slo-definitions" {
+		kb, err := client.NewKibanaFromContext(ctxCfg)
+		if err != nil {
+			return err
+		}
+
+		defs, err := kb.ListSLODefinitions(ctx)
+		if err != nil {
+			return err
+		}
+
+		filtered := filterSLODefinitions(defs, patterns)
+		if fmtFormat == output.FormatJSON || fmtFormat == output.FormatYAML {
+			return output.RenderRows(out, fmtFormat, nil, nil, filtered)
+		}
+		return output.RenderRows(out, fmtFormat, sloDefinitionsHeaders(), sloDefinitionsRows(filtered), filtered)
+	}
+
+	cl, err := client.NewFromContext(ctxCfg)
+	if err != nil {
+		return err
+	}
 
 	if kind == "remote-clusters" {
 		info, _, err := cl.RemoteInfo(ctx)
@@ -131,8 +167,12 @@ func normalizeGetResource(s string) (string, error) {
 		return "data-streams", nil
 	case "remote-clusters", "remoteclusters", "remote", "rc":
 		return "remote-clusters", nil
+	case "slos", "slo":
+		return "slos", nil
+	case "slo-definitions", "slo-definition", "slo-defs", "slo-def":
+		return "slo-definitions", nil
 	default:
-		return "", fmt.Errorf("unknown resource %q (try: indices | data-streams | remote-clusters | all)", s)
+		return "", fmt.Errorf("unknown resource %q (try: indices | data-streams | remote-clusters | slos | slo-definitions | all)", s)
 	}
 }
 

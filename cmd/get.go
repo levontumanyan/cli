@@ -12,7 +12,7 @@ var getCmd = &cobra.Command{
 	Args: func(cmd *cobra.Command, args []string) error {
 		if len(args) == 0 {
 			_ = cmd.Help()
-			return fmt.Errorf("resource type must be specified (try: indices | data-streams (ds) | remote-clusters (rc) | all)")
+			return fmt.Errorf("resource type must be specified (try: indices | data-streams (ds) | remote-clusters (rc) | slos | slo-definitions | all)")
 		}
 		return nil
 	},
@@ -21,6 +21,8 @@ var getCmd = &cobra.Command{
 		"indices", "index", "idx",
 		"data-streams", "datastreams", "ds",
 		"remote-clusters", "remoteclusters", "remote", "rc",
+		"slos", "slo",
+		"slo-definitions", "slo-definition", "slo-defs", "slo-def",
 		"all",
 	},
 	RunE: func(cmd *cobra.Command, args []string) error {
