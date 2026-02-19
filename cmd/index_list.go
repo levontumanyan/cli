@@ -13,14 +13,14 @@ var indexListCmd = &cobra.Command{
 	Use:          "list",
 	Aliases:      []string{"ls"},
 	Short:        "List indices or data streams",
-	Deprecated:   "use `ectl get <resource>` (e.g. `ectl get indices` or `ectl get data-streams`)",
+	Deprecated:   "use `elastic get <resource>` (e.g. `elastic get indices` or `elastic get data-streams`)",
 	SilenceUsage: true,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		kind, err := normalizeIndexListKind(indexListKind)
 		if err != nil {
 			return err
 		}
-		// Support passing name/pattern args, e.g. `ectl index list -k indices logs-*`.
+		// Support passing name/pattern args, e.g. `elastic index list -k indices logs-*`.
 		return runGet(cmd.OutOrStdout(), kind, args, rootFormat)
 	},
 }

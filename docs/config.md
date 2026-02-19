@@ -1,16 +1,16 @@
 # Configuration
 
-`ectl` reads and writes a single YAML config file containing contexts and the active context.
+`elastic` reads and writes a single YAML config file containing contexts and the active context.
 
 ## Config file location
 
-`ectl` uses the OS-appropriate per-user config directory (via Go's `os.UserConfigDir()`):
+`elastic` uses the OS-appropriate per-user config directory (via Go's `os.UserConfigDir()`):
 
-- **Linux**: `$XDG_CONFIG_HOME/ectl/config.yaml` (fallback `~/.config/ectl/config.yaml`)
-- **macOS**: `~/Library/Application Support/ectl/config.yaml`
-- **Windows**: `%AppData%\\ectl\\config.yaml`
+- **Linux**: `$XDG_CONFIG_HOME/elastic/config.yaml` (fallback `~/.config/elastic/config.yaml`)
+- **macOS**: `~/Library/Application Support/elastic/config.yaml`
+- **Windows**: `%AppData%\\elastic\\config.yaml`
 
-On first run, `ectl` will create this file if it does not exist, including a commented-out example configuration.
+On first run, `elastic` will create this file if it does not exist, including a commented-out example configuration.
 
 ## Schema
 
@@ -31,7 +31,7 @@ contexts:
 - **`current-context`**: Name of the default context to use when `--context` is not provided.
 - **`contexts.<name>.cloud_id`**: Elastic Cloud ID for a deployment/project. Used to derive the Elasticsearch endpoint URL.
 - **`contexts.<name>.elasticsearch_url`**: Direct Elasticsearch base URL. If set, it overrides `cloud_id` URL derivation.
-- **`contexts.<name>.kibana_url`**: Optional Kibana base URL. If omitted, `ectl` derives it from `cloud_id` (preferred) or from an Elastic Cloud-style `elasticsearch_url` when possible.
+- **`contexts.<name>.kibana_url`**: Optional Kibana base URL. If omitted, `elastic` derives it from `cloud_id` (preferred) or from an Elastic Cloud-style `elasticsearch_url` when possible.
 - **`contexts.<name>.api_key`**: API key used for requests (sent as `Authorization: ApiKey ...`).
 
 > **Future**: OAuth2 / UIAM-based authentication (client credentials, authorization code with PKCE, and OIDC token exchange) will be supported via an `auth` sub-object in the context. See [`docs/auth.md`](auth.md) for the full design.
@@ -41,18 +41,18 @@ contexts:
 Create/update a context:
 
 ```bash
-ectl config set-context prod --cloud-id '...' --api-key '...'
+elastic config set-context prod --cloud-id '...' --api-key '...'
 ```
 
 Select the active context:
 
 ```bash
-ectl config use-context prod
+elastic config use-context prod
 ```
 
 List contexts:
 
 ```bash
-ectl config get-contexts
+elastic config get-contexts
 ```
 

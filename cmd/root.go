@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/elastic/ectl/internal/config"
+	"github.com/elastic/cli/internal/config"
 	"github.com/spf13/cobra"
 )
 
@@ -15,9 +15,9 @@ var (
 )
 
 var rootCmd = &cobra.Command{
-	Use:   "ectl",
-	Short: "ectl is a CLI for interacting with Elastic products",
-	Long:  "ectl is a developer/operator CLI for interacting with Elastic products, with first-class support for Elastic Cloud.",
+	Use:   "elastic",
+	Short: "elastic is a CLI for interacting with Elastic products",
+	Long:  "elastic is a developer/operator CLI for interacting with Elastic products, with first-class support for Elastic Cloud.",
 	// We print errors ourselves in Execute(); avoid Cobra printing them twice.
 	SilenceErrors: true,
 	PersistentPreRunE: func(cmd *cobra.Command, args []string) error {

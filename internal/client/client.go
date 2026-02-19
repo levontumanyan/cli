@@ -13,7 +13,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/elastic/ectl/internal/config"
+	"github.com/elastic/cli/internal/config"
 )
 
 type Client struct {

@@ -1,6 +1,6 @@
 # Authentication
 
-Today `ectl` authenticates to Elasticsearch using a static API key (`api_key`) stored in the config file. This document describes planned support for OAuth2-based authentication via Elastic's **Unified Identity and Access Management (UIAM)** platform.
+Today `elastic` authenticates to Elasticsearch using a static API key (`api_key`) stored in the config file. This document describes planned support for OAuth2-based authentication via Elastic's **Unified Identity and Access Management (UIAM)** platform.
 
 > **Status**: This is a design document for future work. None of the flows below are implemented yet.
 
@@ -12,7 +12,7 @@ Today `ectl` authenticates to Elasticsearch using a static API key (`api_key`) s
 - OAuth2 / OpenID Connect (OIDC) compliant authorization and token endpoints.
 - Scoped access tokens that can be used to authenticate to Elasticsearch clusters, Kibana, and other Elastic services without managing per-cluster API keys.
 
-By integrating with UIAM, `ectl` will be able to obtain short-lived access tokens and use them to access Elastic Cloud clusters, removing the need for long-lived API keys.
+By integrating with UIAM, `elastic` will be able to obtain short-lived access tokens and use them to access Elastic Cloud clusters, removing the need for long-lived API keys.
 
 ## Planned authentication methods
 
@@ -20,18 +20,18 @@ By integrating with UIAM, `ectl` will be able to obtain short-lived access token
 
 **Use case**: Unattended / CI / service-to-service access.
 
-A pre-registered OAuth2 client (identified by a `client_id` and `client_secret`) requests an access token directly from the UIAM token endpoint. No interactive login is needed.
+A pre-registered OAuth2 client (identified by a `client_id` and `client_secret`) requests an access token direlasticy from the UIAM token endpoint. No interactive login is needed.
 
 ```
-ectl ──POST /oauth2/token──► UIAM
+elastic ──POST /oauth2/token──► UIAM
       grant_type=client_credentials
       client_id=...
       client_secret=...
       scope=...
 
-ectl ◄── access_token ──── UIAM
+elastic ◄── access_token ──── UIAM
 
-ectl ──Bearer <token>──► Elasticsearch
+elastic ──Bearer <token>──► Elasticsearch
 ```
 
 **Config example** (future):
@@ -42,8 +42,8 @@ contexts:
     cloud_id: "deploy:base64..."
     auth:
       method: client_credentials
-      client_id: "ectl-ci"
-      client_secret: "${ECTL_CLIENT_SECRET}"   # env-var expansion
+      client_id: "elastic-ci"
+      client_secret: "${ELASTIC_CLIENT_SECRET}"   # env-var expansion
       token_url: "https://auth.elastic.co/oauth2/token"
       scopes:
         - "cluster:read"
@@ -53,14 +53,14 @@ contexts:
 
 **Use case**: Interactive developer login.
 
-`ectl` opens the user's browser to the UIAM authorization endpoint. After the user authenticates (and optionally completes MFA), UIAM redirects back to a temporary localhost callback with an authorization code. `ectl` exchanges the code for an access token and a refresh token.
+`elastic` opens the user's browser to the UIAM authorization endpoint. After the user authenticates (and optionally completes MFA), UIAM redirects back to a temporary localhost callback with an authorization code. `elastic` exchanges the code for an access token and a refresh token.
 
 PKCE (Proof Key for Code Exchange, [RFC 7636](https://datatracker.ietf.org/doc/html/rfc7636)) is used to secure the flow for public / native CLI clients that cannot safely store a client secret.
 
 ```
-ectl ──browser open──► UIAM /oauth2/authorize
+elastic ──browser open──► UIAM /oauth2/authorize
                         ?response_type=code
-                        &client_id=ectl
+                        &client_id=elastic
                         &redirect_uri=http://localhost:<port>/callback
                         &code_challenge=<S256 hash>
                         &scope=...
@@ -69,14 +69,14 @@ User authenticates in browser
 
 UIAM ──redirect──► http://localhost:<port>/callback?code=...
 
-ectl ──POST /oauth2/token──► UIAM
+elastic ──POST /oauth2/token──► UIAM
       grant_type=authorization_code
       code=...
       code_verifier=...
 
-ectl ◄── access_token + refresh_token ──── UIAM
+elastic ◄── access_token + refresh_token ──── UIAM
 
-ectl ──Bearer <token>──► Elasticsearch
+elastic ──Bearer <token>──► Elasticsearch
 ```
 
 **Config example** (future):
@@ -87,34 +87,34 @@ contexts:
     cloud_id: "deploy:base64..."
     auth:
       method: authorization_code
-      client_id: "ectl"
+      client_id: "elastic"
       issuer: "https://auth.elastic.co"
       scopes:
         - "cluster:read"
         - "cluster:write"
 ```
 
-`ectl login` will trigger the browser flow and cache the tokens locally. `ectl` will transparently refresh the access token using the stored refresh token.
+`elastic login` will trigger the browser flow and cache the tokens locally. `elastic` will transparently refresh the access token using the stored refresh token.
 
 ### 3. OIDC Token Exchange
 
 **Use case**: Workload identity federation; environments that already have an OIDC token from an external identity provider (e.g., GitHub Actions, GCP, AWS).
 
-The caller supplies an existing OIDC ID token. `ectl` presents it to the UIAM token-exchange endpoint ([RFC 8693](https://datatracker.ietf.org/doc/html/rfc8693)), which validates the external token and returns an Elastic access token.
+The caller supplies an existing OIDC ID token. `elastic` presents it to the UIAM token-exchange endpoint ([RFC 8693](https://datatracker.ietf.org/doc/html/rfc8693)), which validates the external token and returns an Elastic access token.
 
 ```
-External IdP ──id_token──► ectl
+External IdP ──id_token──► elastic
 
-ectl ──POST /oauth2/token──► UIAM
+elastic ──POST /oauth2/token──► UIAM
       grant_type=urn:ietf:params:oauth:grant-type:token-exchange
       subject_token=<external OIDC id_token>
       subject_token_type=urn:ietf:params:oauth:token-type:id_token
       requested_token_type=urn:ietf:params:oauth:token-type:access_token
       scope=...
 
-ectl ◄── access_token ──── UIAM
+elastic ◄── access_token ──── UIAM
 
-ectl ──Bearer <token>──► Elasticsearch
+elastic ──Bearer <token>──► Elasticsearch
 ```
 
 **Config example** (future):
@@ -125,7 +125,7 @@ contexts:
     cloud_id: "deploy:base64..."
     auth:
       method: token_exchange
-      client_id: "ectl-gha"
+      client_id: "elastic-gha"
       token_url: "https://auth.elastic.co/oauth2/token"
       subject_token_env: "ACTIONS_ID_TOKEN_REQUEST_TOKEN"   # source of the external OIDC token
       scopes:
@@ -134,15 +134,15 @@ contexts:
 
 ## How UIAM credentials are used to access clusters
 
-With API-key auth, `ectl` sends `Authorization: ApiKey <key>` directly to the Elasticsearch endpoint.
+With API-key auth, `elastic` sends `Authorization: ApiKey <key>` direlasticy to the Elasticsearch endpoint.
 
 With UIAM-based auth, the flow changes:
 
-1. **Token acquisition** -- `ectl` obtains an OAuth2 access token from the UIAM token endpoint using one of the methods above.
-2. **Token caching** -- The access token (and refresh token, if present) are stored in a per-context credential cache on disk, protected with user-only file permissions (`0600`). The cache lives alongside the config file (e.g., `~/.config/ectl/credentials.yaml`).
-3. **Request authentication** -- `ectl` sends requests to Elasticsearch with `Authorization: Bearer <access_token>`. UIAM-aware Elastic Cloud proxies validate the token and map it to the appropriate cluster permissions.
-4. **Transparent refresh** -- When an access token is expired or about to expire, `ectl` automatically refreshes it using the stored refresh token (authorization-code flow) or by requesting a new one (client-credentials and token-exchange flows).
-5. **Scoping** -- Token scopes requested during authentication determine what the bearer can do. This is enforced server-side by UIAM and the Elastic Cloud infrastructure; `ectl` does not need to manage per-cluster API keys.
+1. **Token acquisition** -- `elastic` obtains an OAuth2 access token from the UIAM token endpoint using one of the methods above.
+2. **Token caching** -- The access token (and refresh token, if present) are stored in a per-context credential cache on disk, protected with user-only file permissions (`0600`). The cache lives alongside the config file (e.g., `~/.config/elastic/credentials.yaml`).
+3. **Request authentication** -- `elastic` sends requests to Elasticsearch with `Authorization: Bearer <access_token>`. UIAM-aware Elastic Cloud proxies validate the token and map it to the appropriate cluster permissions.
+4. **Transparent refresh** -- When an access token is expired or about to expire, `elastic` automatically refreshes it using the stored refresh token (authorization-code flow) or by requesting a new one (client-credentials and token-exchange flows).
+5. **Scoping** -- Token scopes requested during authentication determine what the bearer can do. This is enforced server-side by UIAM and the Elastic Cloud infrastructure; `elastic` does not need to manage per-cluster API keys.
 
 ### Credential precedence
 
@@ -152,7 +152,7 @@ The planned precedence order:
 
 1. `--api-key` flag (if added) or `api_key` in the context config -- static API key, sent as `Authorization: ApiKey ...`.
 2. `auth.method` in the context config -- OAuth2 flow, produces `Authorization: Bearer ...`.
-3. `ECTL_API_KEY` environment variable (future) -- fallback static API key.
+3. `ELASTIC_API_KEY` environment variable (future) -- fallback static API key.
 
 ## Planned config schema changes
 
@@ -178,14 +178,14 @@ contexts:
 
 | Command | Description |
 |---|---|
-| `ectl login` | Start an interactive authorization-code login for the current context. |
-| `ectl logout` | Clear cached tokens for the current (or specified) context. |
-| `ectl auth status` | Show current auth method, token expiry, and scopes for the active context. |
+| `elastic login` | Start an interactive authorization-code login for the current context. |
+| `elastic logout` | Clear cached tokens for the current (or specified) context. |
+| `elastic auth status` | Show current auth method, token expiry, and scopes for the active context. |
 
 ## Security considerations
 
 - **Credential storage** -- Tokens are stored in a dedicated credentials file with `0600` permissions. The config file itself continues to hold only non-secret configuration (except for `api_key`, which already exists there today).
 - **Client secrets** -- For the client-credentials flow, `client_secret` can be supplied via environment variable expansion (`${VAR}`) to avoid writing secrets to disk.
 - **PKCE** -- The authorization-code flow always uses PKCE (`S256`). A plain `code_challenge_method` is not supported.
-- **Token lifetimes** -- `ectl` respects the `expires_in` value from the token response and proactively refreshes tokens before they expire.
-- **Revocation** -- `ectl logout` revokes tokens at the UIAM revocation endpoint when available, in addition to deleting them locally.
+- **Token lifetimes** -- `elastic` respects the `expires_in` value from the token response and proactively refreshes tokens before they expire.
+- **Revocation** -- `elastic logout` revokes tokens at the UIAM revocation endpoint when available, in addition to deleting them locally.

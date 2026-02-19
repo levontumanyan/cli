@@ -12,7 +12,7 @@ import (
 )
 
 const (
-	dirName      = "ectl"
+	dirName      = "elastic"
 	configName   = "config.yaml"
 	dirPerms     = 0o700
 	configPerms  = 0o600
@@ -141,11 +141,11 @@ func defaultConfigTemplate() string {
 	// "empty config" YAML mapping to avoid duplicate-key parse errors if a user later
 	// adds their own config below/above the example.
 	lines := []string{
-		"# ectl configuration",
+		"# elastic configuration",
 		"#",
 		"# Quickstart:",
-		"#   ectl config set-context prod --cloud-id '...' --api-key '...'",
-		"#   ectl config use-context prod",
+		"#   elastic config set-context prod --cloud-id '...' --api-key '...'",
+		"#   elastic config use-context prod",
 		"#",
 		"# You can also edit this file directly. Example:",
 		"#",
@@ -167,7 +167,7 @@ func defaultConfigTemplate() string {
 func tryRepairTemplateStub(b []byte) []byte {
 	s := string(b)
 	// Only attempt repair for files that look like they came from our template.
-	if !strings.Contains(s, "# ectl configuration") {
+	if !strings.Contains(s, "# elastic configuration") {
 		return nil
 	}
 

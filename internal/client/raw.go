@@ -56,7 +56,7 @@ func doRaw(ctx context.Context, hc *http.Client, baseURL, apiKey string, isKiban
 
 	req.Header.Set("Authorization", "ApiKey "+apiKey)
 	if isKibana {
-		req.Header.Set("kbn-xsrf", "ectl")
+		req.Header.Set("kbn-xsrf", "elastic")
 	}
 	if headers != nil {
 		for k, vv := range headers {

@@ -1,11 +1,11 @@
 # get
 
-The `ectl get` command lists Elasticsearch resources (kubectl-style).
+The `elastic get` command lists Elasticsearch resources (kubelastic-style).
 
 ## Usage
 
 ```bash
-ectl get <resource> [name|pattern...]
+elastic get <resource> [name|pattern...]
 ```
 
 ## Resources
@@ -19,33 +19,33 @@ ectl get <resource> [name|pattern...]
 | `slo-definitions` | `slo-definition`, `slo-defs`, `slo-def` |
 | `all` | _(default when no resource given is an error)_ |
 
-> Note: `ectl get slos` queries the Kibana API. If `kibana_url` is not set, `ectl` derives it from `cloud_id` (preferred) or from an Elastic Cloud-style `elasticsearch_url` when possible.
+> Note: `elastic get slos` queries the Kibana API. If `kibana_url` is not set, `elastic` derives it from `cloud_id` (preferred) or from an Elastic Cloud-style `elasticsearch_url` when possible.
 
-> Note: `ectl get slo-definitions` queries Kibana's Saved Objects API (`type=slo`) to show raw definitions.
+> Note: `elastic get slo-definitions` queries Kibana's Saved Objects API (`type=slo`) to show raw definitions.
 
 ## Examples
 
 ```bash
-ectl get indices
-ectl get data-streams
-ectl get remote-clusters
-ectl get slos
-ectl get slo-definitions
-ectl get all
+elastic get indices
+elastic get data-streams
+elastic get remote-clusters
+elastic get slos
+elastic get slo-definitions
+elastic get all
 ```
 
 Filter by name or glob pattern:
 
 ```bash
-ectl get indices 'logs-*'
-ectl get data-streams 'metrics-*'
-ectl get rc 'cluster-*'
+elastic get indices 'logs-*'
+elastic get data-streams 'metrics-*'
+elastic get rc 'cluster-*'
 ```
 
 Multiple patterns are supported:
 
 ```bash
-ectl get indices 'logs-*' 'metrics-*'
+elastic get indices 'logs-*' 'metrics-*'
 ```
 
 ## Selecting a context
@@ -53,14 +53,14 @@ ectl get indices 'logs-*' 'metrics-*'
 Use the active context:
 
 ```bash
-ectl config use-context prod
-ectl get indices
+elastic config use-context prod
+elastic get indices
 ```
 
 Override per invocation:
 
 ```bash
-ectl get -c staging indices
+elastic get -c staging indices
 ```
 
 ## Output formats
@@ -73,19 +73,19 @@ Use `--format` / `-f` (or `--output` as an alias):
 - `yaml`: YAML output
 
 ```bash
-ectl get indices -f json
-ectl get data-streams -f csv
-ectl get all -f yaml
+elastic get indices -f json
+elastic get data-streams -f csv
+elastic get all -f yaml
 ```
 
 ## Legacy command
 
-The older `ectl index list` command still works but is deprecated. Use `ectl get` instead:
+The older `elastic index list` command still works but is deprecated. Use `elastic get` instead:
 
 ```bash
 # deprecated
-ectl index list -k indices
+elastic index list -k indices
 
 # recommended
-ectl get indices
+elastic get indices
 ```

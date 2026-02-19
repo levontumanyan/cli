@@ -3,7 +3,7 @@ package cmd
 import (
 	"strings"
 
-	"github.com/elastic/ectl/internal/client"
+	"github.com/elastic/cli/internal/client"
 )
 
 func indicesHeaders() []string {

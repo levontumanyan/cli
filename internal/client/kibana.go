@@ -12,7 +12,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/elastic/ectl/internal/config"
+	"github.com/elastic/cli/internal/config"
 )
 
 // KibanaClient is a minimal client for Kibana's HTTP APIs.
@@ -259,7 +259,7 @@ func (c *KibanaClient) get(ctx context.Context, p string, q url.Values) ([]byte,
 	req.Header.Set("Authorization", "ApiKey "+c.apiKey)
 	req.Header.Set("Accept", "application/json")
 	// Not required for GET, but harmless and helps with some Kibana setups.
-	req.Header.Set("kbn-xsrf", "ectl")
+	req.Header.Set("kbn-xsrf", "elastic")
 
 	resp, err := c.http.Do(req)
 	if err != nil {

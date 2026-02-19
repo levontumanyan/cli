@@ -7,7 +7,7 @@ import (
 	"io"
 	"strings"
 
-	"github.com/elastic/ectl/internal/client"
+	"github.com/elastic/cli/internal/client"
 
 	"github.com/olekukonko/tablewriter"
 	"go.yaml.in/yaml/v3"

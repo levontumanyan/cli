@@ -8,12 +8,12 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/elastic/ectl/internal/client"
-	"github.com/elastic/ectl/internal/config"
-	"github.com/elastic/ectl/internal/output"
+	"github.com/elastic/cli/internal/client"
+	"github.com/elastic/cli/internal/config"
+	"github.com/elastic/cli/internal/output"
 )
 
-// runGet is shared logic for both `ectl get` and legacy `ectl index list`.
+// runGet is shared logic for both `elastic get` and legacy `elastic index list`.
 func runGet(out io.Writer, resource string, patterns []string, format string) error {
 	path, err := config.DefaultPath()
 	if err != nil {
@@ -29,12 +29,12 @@ func runGet(out io.Writer, resource string, patterns []string, format string) er
 		ctxName = cfg.CurrentContext
 	}
 	if ctxName == "" {
-		return fmt.Errorf("no context selected; run `ectl config set-context <name> ...` and `ectl config use-context <name>`")
+		return fmt.Errorf("no context selected; run `elastic config set-context <name> ...` and `elastic config use-context <name>`")
 	}
 
 	ctxCfg, ok := cfg.Contexts[ctxName]
 	if !ok {
-		return fmt.Errorf("context %q not found; run `ectl config get-contexts`", ctxName)
+		return fmt.Errorf("context %q not found; run `elastic config get-contexts`", ctxName)
 	}
 
 	kind, err := normalizeGetResource(resource)

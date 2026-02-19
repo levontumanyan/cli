@@ -1,4 +1,4 @@
-module github.com/elastic/ectl
+module github.com/elastic/cli
 
 go 1.25.3
 

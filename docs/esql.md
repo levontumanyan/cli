@@ -1,19 +1,19 @@
 # ES|QL
 
-The `ectl esql` command runs an ES|QL query against the selected Elasticsearch endpoint.
+The `elastic esql` command runs an ES|QL query against the selected Elasticsearch endpoint.
 
 ## Usage
 
 ```bash
-ectl esql '<query>'
+elastic esql '<query>'
 ```
 
 Examples:
 
 ```bash
-ectl esql 'FROM logs-* | LIMIT 5'
-ectl esql 'FROM logs-* | WHERE @timestamp > NOW() - 1 hour | LIMIT 10'
-ectl esql 'FROM metrics-* | STATS avg_cpu = AVG(system.cpu.total.pct) BY host.name | SORT avg_cpu DESC | LIMIT 10'
+elastic esql 'FROM logs-* | LIMIT 5'
+elastic esql 'FROM logs-* | WHERE @timestamp > NOW() - 1 hour | LIMIT 10'
+elastic esql 'FROM metrics-* | STATS avg_cpu = AVG(system.cpu.total.pct) BY host.name | SORT avg_cpu DESC | LIMIT 10'
 ```
 
 ## Selecting a context
@@ -21,14 +21,14 @@ ectl esql 'FROM metrics-* | STATS avg_cpu = AVG(system.cpu.total.pct) BY host.na
 Use the active context:
 
 ```bash
-ectl config use-context prod
-ectl esql 'FROM logs-* | LIMIT 5'
+elastic config use-context prod
+elastic esql 'FROM logs-* | LIMIT 5'
 ```
 
 Override per invocation:
 
 ```bash
-ectl esql -c staging 'FROM logs-* | LIMIT 5'
+elastic esql -c staging 'FROM logs-* | LIMIT 5'
 ```
 
 ## Output formats
@@ -43,10 +43,10 @@ Use `--format` / `-f` (or `--output` as an alias):
 Examples:
 
 ```bash
-ectl esql -f table 'FROM logs-* | LIMIT 5'
-ectl esql -f json  'FROM logs-* | LIMIT 1'
-ectl esql -f csv   'FROM logs-* | LIMIT 10'
-ectl esql -f yaml  'FROM logs-* | LIMIT 5'
+elastic esql -f table 'FROM logs-* | LIMIT 5'
+elastic esql -f json  'FROM logs-* | LIMIT 1'
+elastic esql -f csv   'FROM logs-* | LIMIT 10'
+elastic esql -f yaml  'FROM logs-* | LIMIT 5'
 ```
 
 ## Null handling
@@ -54,6 +54,6 @@ ectl esql -f yaml  'FROM logs-* | LIMIT 5'
 By default, columns where every value is null are omitted from the output. To include them, pass `--null`:
 
 ```bash
-ectl esql --null 'FROM logs-* | LIMIT 5'
+elastic esql --null 'FROM logs-* | LIMIT 5'
 ```
 

@@ -4,7 +4,7 @@ import "github.com/spf13/cobra"
 
 var configCmd = &cobra.Command{
 	Use:   "config",
-	Short: "Manage ectl CLI configuration",
+	Short: "Manage elastic CLI configuration",
 }
 
 func init() {
