@@ -1,66 +1,67 @@
-# get
+# Resource Listing
 
-The `elastic get` command lists Elasticsearch resources (kubelastic-style).
+Resource listing commands are grouped by product area.
 
-## Usage
+## Elasticsearch resources
+
+Usage:
 
 ```bash
-elastic get <resource> [name|pattern...]
+elastic es <resource> list [name|pattern...]
 ```
 
-## Resources
+Resources:
 
-| Resource | Aliases |
-|---|---|
-| `indices` | `index`, `idx` |
-| `data-streams` | `datastreams`, `ds` |
-| `remote-clusters` | `remoteclusters`, `remote`, `rc` |
-| `slos` | `slo` |
-| `slo-definitions` | `slo-definition`, `slo-defs`, `slo-def` |
-| `all` | _(default when no resource given is an error)_ |
+- `indices` (alias: `idx`)
+- `data-streams` (alias: `ds`)
+- `remote-clusters` (alias: `rc`)
 
-> Note: `elastic get slos` queries the Kibana API. If `kibana_url` is not set, `elastic` derives it from `cloud_id` (preferred) or from an Elastic Cloud-style `elasticsearch_url` when possible.
-
-> Note: `elastic get slo-definitions` queries Kibana's Saved Objects API (`type=slo`) to show raw definitions.
-
-## Examples
+Examples:
 
 ```bash
-elastic get indices
-elastic get data-streams
-elastic get remote-clusters
-elastic get slos
-elastic get slo-definitions
-elastic get all
+elastic es indices list
+elastic es data-streams list
+elastic es remote-clusters list
 ```
 
 Filter by name or glob pattern:
 
 ```bash
-elastic get indices 'logs-*'
-elastic get data-streams 'metrics-*'
-elastic get rc 'cluster-*'
+elastic es indices list 'logs-*'
+elastic es data-streams list 'metrics-*'
+elastic es rc list 'cluster-*'
 ```
 
 Multiple patterns are supported:
 
 ```bash
-elastic get indices 'logs-*' 'metrics-*'
+elastic es indices list 'logs-*' 'metrics-*'
 ```
+
+## SLO resources
+
+SLO commands are grouped under `slos`:
+
+```bash
+elastic slos list [name|pattern...]
+elastic slos list-definitions [name|pattern...]
+```
+
+> Note: `elastic slos list` and `elastic slos list-definitions` query Kibana APIs. If `kibana_url` is not set, `elastic` derives it from `cloud_id` (preferred) or from an Elastic Cloud-style `elasticsearch_url` when possible.
 
 ## Selecting a context
 
 Use the active context:
 
 ```bash
-elastic config use-context prod
-elastic get indices
+elastic config context use prod
+elastic es indices list
 ```
 
 Override per invocation:
 
 ```bash
-elastic get -c staging indices
+elastic -c staging es indices list
 ```
 
 ## Output formats
@@ -69,23 +70,11 @@ Use `--format` / `-f` (or `--output` as an alias):
 
 - `table` (default): terminal table
 - `json`: pretty-printed JSON response
-- `csv`: CSV with a header row (requires a specific resource, not `all`)
+- `csv`: CSV with a header row
 - `yaml`: YAML output
 
 ```bash
-elastic get indices -f json
-elastic get data-streams -f csv
-elastic get all -f yaml
-```
-
-## Legacy command
-
-The older `elastic index list` command still works but is deprecated. Use `elastic get` instead:
-
-```bash
-# deprecated
-elastic index list -k indices
-
-# recommended
-elastic get indices
+elastic es indices list -f json
+elastic es data-streams list -f csv
+elastic slos list -f yaml
 ```

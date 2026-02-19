@@ -10,7 +10,7 @@ import (
 )
 
 var configGetContextsCmd = &cobra.Command{
-	Use:   "get-contexts",
+	Use:   "list",
 	Short: "List configured contexts",
 	RunE: func(cmd *cobra.Command, args []string) error {
 		path, err := config.DefaultPath()
@@ -41,5 +41,5 @@ var configGetContextsCmd = &cobra.Command{
 }
 
 func init() {
-	configCmd.AddCommand(configGetContextsCmd)
+	configContextCmd.AddCommand(configGetContextsCmd)
 }

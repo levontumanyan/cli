@@ -18,7 +18,7 @@ var (
 )
 
 var configSetContextCmd = &cobra.Command{
-	Use:   "set-context <name>",
+	Use:   "set <name>",
 	Short: "Create or update a context",
 	Args:  cobra.ExactArgs(1),
 	RunE: func(cmd *cobra.Command, args []string) error {
@@ -73,7 +73,7 @@ var configSetContextCmd = &cobra.Command{
 }
 
 func init() {
-	configCmd.AddCommand(configSetContextCmd)
+	configContextCmd.AddCommand(configSetContextCmd)
 
 	configSetContextCmd.Flags().StringVar(&setContextCloudID, "cloud-id", "", "Elastic Cloud ID for the deployment/project")
 	configSetContextCmd.Flags().StringVar(&setContextAPIKey, "api-key", "", "Elastic API key (stored in config file)")

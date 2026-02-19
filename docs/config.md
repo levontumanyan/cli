@@ -41,18 +41,18 @@ contexts:
 Create/update a context:
 
 ```bash
-elastic config set-context prod --cloud-id '...' --api-key '...'
+elastic config context set prod --cloud-id '...' --api-key '...'
 ```
 
 Select the active context:
 
 ```bash
-elastic config use-context prod
+elastic config context use prod
 ```
 
 List contexts:
 
 ```bash
-elastic config get-contexts
+elastic config context list
 ```
 

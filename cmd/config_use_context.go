@@ -11,7 +11,7 @@ import (
 )
 
 var configUseContextCmd = &cobra.Command{
-	Use:   "use-context <name>",
+	Use:   "use <name>",
 	Short: "Set the current context",
 	Args:  cobra.ExactArgs(1),
 	RunE: func(cmd *cobra.Command, args []string) error {
@@ -44,5 +44,5 @@ var configUseContextCmd = &cobra.Command{
 }
 
 func init() {
-	configCmd.AddCommand(configUseContextCmd)
+	configContextCmd.AddCommand(configUseContextCmd)
 }

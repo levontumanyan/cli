@@ -1,11 +1,15 @@
 # api
 
-The `elastic api` command makes raw HTTP requests to either Elasticsearch (`es`) or Kibana (`kb`) using the active context for authentication and base URL resolution.
+Raw HTTP requests are exposed as product-specific subcommands:
+
+- `elastic es raw ...` for Elasticsearch APIs
+- `elastic kb raw ...` for Kibana APIs
 
 ## Usage
 
 ```bash
-elastic api <service> <path> [key=value...] [-q key=value...] [-H 'k:v'] [-X METHOD] [-d BODY]
+elastic es raw <path> [key=value...] [-q key=value...] [-H 'k:v'] [-X METHOD] [-d BODY]
+elastic kb raw <path> [key=value...] [-q key=value...] [-H 'k:v'] [-X METHOD] [-d BODY]
 ```
 
 ## Examples
@@ -13,31 +17,31 @@ elastic api <service> <path> [key=value...] [-q key=value...] [-H 'k:v'] [-X MET
 GET an Elasticsearch endpoint:
 
 ```bash
-elastic api es /_cluster/health
+elastic es raw /_cluster/health
 ```
 
 GET with query parameters (either style works):
 
 ```bash
-elastic api es /_cat/indices format=json
-elastic api es /_cat/indices -q format=json
+elastic es raw /_cat/indices format=json
+elastic es raw /_cat/indices -q format=json
 ```
 
 Pretty-print JSON responses:
 
 ```bash
-elastic api es /_cluster/health -f json
+elastic es raw /_cluster/health -f json
 ```
 
 Call a Kibana API:
 
 ```bash
-elastic api kb /api/status -f json
+elastic kb raw /api/status -f json
 ```
 
 POST with a JSON body:
 
 ```bash
-elastic api es /_security/user -X POST -d '{"username":"alice"}' -H 'Content-Type: application/json' -f json
+elastic es raw /_security/user -X POST -d '{"username":"alice"}' -H 'Content-Type: application/json' -f json
 ```
 

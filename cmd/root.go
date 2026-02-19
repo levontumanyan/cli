@@ -14,10 +14,19 @@ var (
 	rootOutput  string
 )
 
+const rootBanner = "" +
+	"  ╔═╗╦  ╔═╗╔═╗╔╦╗╦╔═╗\n" +
+	"  ║╣ ║  ╠═╣╚═╗ ║ ║║  \n" +
+	"  ╚═╝╩═╝╩ ╩╚═╝ ╩ ╩╚═╝\n"
+
 var rootCmd = &cobra.Command{
 	Use:   "elastic",
-	Short: "elastic is a CLI for interacting with Elastic products",
-	Long:  "elastic is a developer/operator CLI for interacting with Elastic products, with first-class support for Elastic Cloud.",
+	Short: "elastic is the CLI for Elastic.",
+	Long:  "elastic is the CLI for Elastic.",
+	RunE: func(cmd *cobra.Command, args []string) error {
+		_, _ = fmt.Fprint(cmd.OutOrStdout(), rootBanner+"\n")
+		return cmd.Help()
+	},
 	// We print errors ourselves in Execute(); avoid Cobra printing them twice.
 	SilenceErrors: true,
 	PersistentPreRunE: func(cmd *cobra.Command, args []string) error {

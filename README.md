@@ -29,7 +29,7 @@ If you previously used `~/.elastic/config.yaml` (or an older `~/.elk/config.yaml
 ### 1) Create a context
 
 ```bash
-./elastic config set-context prod \
+./elastic config context set prod \
   --cloud-id 'my-deploy:...' \
   --api-key '...'
 ```
@@ -37,7 +37,7 @@ If you previously used `~/.elastic/config.yaml` (or an older `~/.elk/config.yaml
 Or use a direct Elasticsearch URL (self-managed or custom endpoint):
 
 ```bash
-./elastic config set-context local \
+./elastic config context set local \
   --elasticsearch-url 'https://localhost:9200' \
   --api-key '...'
 ```
@@ -45,53 +45,54 @@ Or use a direct Elasticsearch URL (self-managed or custom endpoint):
 ### 2) Select the active context
 
 ```bash
-./elastic config use-context prod
-./elastic config get-contexts
+./elastic config context use prod
+./elastic config context list
 ```
 
 ### 3) Run an ES|QL query
 
 ```bash
-./elastic esql 'FROM logs-* | LIMIT 5'
+./elastic es query 'FROM logs-* | LIMIT 5'
 ```
 
 Output formats:
 
 ```bash
-./elastic esql -f table 'FROM logs-* | LIMIT 5'
-./elastic esql -f json  'FROM logs-* | LIMIT 1'
-./elastic esql -f csv   'FROM logs-* | LIMIT 10'
-./elastic esql -f yaml  'FROM logs-* | LIMIT 5'
+./elastic es query -f table 'FROM logs-* | LIMIT 5'
+./elastic es query -f json  'FROM logs-* | LIMIT 1'
+./elastic es query -f csv   'FROM logs-* | LIMIT 10'
+./elastic es query -f yaml  'FROM logs-* | LIMIT 5'
 ```
 
 By default, columns where every value is null are omitted. To include them:
 
 ```bash
-./elastic esql --null 'FROM logs-* | LIMIT 5'
+./elastic es query --null 'FROM logs-* | LIMIT 5'
 ```
 
 ### 4) List resources
 
 ```bash
-./elastic get indices
-./elastic get data-streams
-./elastic get remote-clusters
-./elastic get slos
-./elastic get all
+./elastic es indices list
+./elastic es data-streams list
+./elastic es remote-clusters list
+./elastic slos list
+./elastic slos list-definitions
 ```
 
 Filter by name or glob pattern:
 
 ```bash
-./elastic get indices 'logs-*'
-./elastic get data-streams 'metrics-*'
+./elastic es indices list 'logs-*'
+./elastic es data-streams list 'metrics-*'
 ```
 
-Short aliases work too (`idx`, `ds`, `rc`):
+Short aliases work too (`cfg`, `idx`, `ds`, `rc`):
 
 ```bash
-./elastic get ds
-./elastic get rc
+./elastic cfg context list
+./elastic es ds list
+./elastic es rc list
 ```
 
 ## Docs

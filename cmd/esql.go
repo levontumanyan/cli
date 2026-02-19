@@ -15,8 +15,8 @@ import (
 
 var esqlShowNull bool
 
-var esqlCmd = &cobra.Command{
-	Use:          "esql <query>",
+var esQueryCmd = &cobra.Command{
+	Use:          "query <query>",
 	Short:        "Run an ES|QL query",
 	Args:         cobra.ExactArgs(1),
 	SilenceUsage: true,
@@ -40,12 +40,12 @@ var esqlCmd = &cobra.Command{
 			ctxName = cfg.CurrentContext
 		}
 		if ctxName == "" {
-			return fmt.Errorf("no context selected; run `elastic config set-context <name> ...` and `elastic config use-context <name>`")
+			return fmt.Errorf("no context selected; run `elastic config context set <name> ...` and `elastic config context use <name>`")
 		}
 
 		ctxCfg, ok := cfg.Contexts[ctxName]
 		if !ok {
-			return fmt.Errorf("context %q not found; run `elastic config get-contexts`", ctxName)
+			return fmt.Errorf("context %q not found; run `elastic config context list`", ctxName)
 		}
 
 		cl, err := client.NewFromContext(ctxCfg)
@@ -67,6 +67,6 @@ var esqlCmd = &cobra.Command{
 }
 
 func init() {
-	rootCmd.AddCommand(esqlCmd)
-	esqlCmd.Flags().BoolVar(&esqlShowNull, "null", false, "Include null-only columns in output (omitted by default)")
+	esCmd.AddCommand(esQueryCmd)
+	esQueryCmd.Flags().BoolVar(&esqlShowNull, "null", false, "Include null-only columns in output (omitted by default)")
 }

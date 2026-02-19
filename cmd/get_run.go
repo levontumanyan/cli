@@ -13,7 +13,7 @@ import (
 	"github.com/elastic/cli/internal/output"
 )
 
-// runGet is shared logic for both `elastic get` and legacy `elastic index list`.
+// runGet is shared listing logic used by noun-first resource commands.
 func runGet(out io.Writer, resource string, patterns []string, format string) error {
 	path, err := config.DefaultPath()
 	if err != nil {
@@ -29,12 +29,12 @@ func runGet(out io.Writer, resource string, patterns []string, format string) er
 		ctxName = cfg.CurrentContext
 	}
 	if ctxName == "" {
-		return fmt.Errorf("no context selected; run `elastic config set-context <name> ...` and `elastic config use-context <name>`")
+		return fmt.Errorf("no context selected; run `elastic config context set <name> ...` and `elastic config context use <name>`")
 	}
 
 	ctxCfg, ok := cfg.Contexts[ctxName]
 	if !ok {
-		return fmt.Errorf("context %q not found; run `elastic config get-contexts`", ctxName)
+		return fmt.Errorf("context %q not found; run `elastic config context list`", ctxName)
 	}
 
 	kind, err := normalizeGetResource(resource)
