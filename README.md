@@ -7,7 +7,7 @@
 From the repo root:
 
 ```bash
-go build -o elastic .
+go install ./cmd/elastic
 ```
 
 ## Configuration
