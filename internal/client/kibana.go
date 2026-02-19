@@ -22,6 +22,9 @@ type KibanaClient struct {
 	http    *http.Client
 }
 
+func (c *KibanaClient) BaseURL() string { return c.baseURL }
+func (c *KibanaClient) APIKey() string  { return c.apiKey }
+
 func NewKibanaFromContext(ctx config.Context) (*KibanaClient, error) {
 	baseURL := strings.TrimSpace(ctx.KibanaURL)
 	if baseURL == "" {
