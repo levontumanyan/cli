@@ -21,26 +21,30 @@ var abMCPConfigCmd = &cobra.Command{
 	Long: `Generate the MCP client configuration JSON that can be pasted into
 Cursor, Claude Desktop, VS Code, or any other MCP-compatible client.
 
-The output uses "npx mcp-remote" as the transport bridge.`,
+The output uses "elastic ab mcp proxy" as the stdio transport.`,
 	SilenceUsage: true,
 	RunE: func(cmd *cobra.Command, args []string) error {
-		kb, err := abKibanaClient()
-		if err != nil {
+		// Validate that the context is reachable (catches config errors early).
+		if _, err := abKibanaClient(); err != nil {
 			return err
 		}
 
-		mcpURL := buildMCPURL(kb, abSpace, abMCPNamespace)
+		proxyArgs := []string{"ab", "mcp", "proxy"}
+		if rootContext != "" {
+			proxyArgs = append(proxyArgs, "--context", rootContext)
+		}
+		if abSpace != "" {
+			proxyArgs = append(proxyArgs, "--space", abSpace)
+		}
+		if abMCPNamespace != "" {
+			proxyArgs = append(proxyArgs, "--namespace", abMCPNamespace)
+		}
 
 		cfg := map[string]any{
 			"mcpServers": map[string]any{
 				"elastic-agent-builder": map[string]any{
-					"command": "npx",
-					"args": []string{
-						"mcp-remote",
-						mcpURL,
-						"--header",
-						fmt.Sprintf("Authorization:ApiKey %s", kb.APIKey()),
-					},
+					"command": "elastic",
+					"args":    proxyArgs,
 				},
 			},
 		}
@@ -70,5 +74,5 @@ func init() {
 	agentBuilderCmd.AddCommand(abMCPCmd)
 	abMCPCmd.AddCommand(abMCPConfigCmd)
 
-	abMCPConfigCmd.Flags().StringVar(&abMCPNamespace, "namespace", "", "Comma-separated list of namespaces to filter tools")
+	abMCPCmd.PersistentFlags().StringVar(&abMCPNamespace, "namespace", "", "Comma-separated list of namespaces to filter tools")
 }
