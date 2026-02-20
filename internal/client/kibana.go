@@ -249,6 +249,25 @@ func (c *KibanaClient) ListSLODefinitions(ctx context.Context) ([]map[string]any
 	return all, nil
 }
 
+// TaskManagerHealth gets the Kibana task manager health status.
+//
+// It returns a raw map to avoid binding to a specific Kibana version's schema.
+func (c *KibanaClient) TaskManagerHealth(ctx context.Context) (map[string]any, error) {
+	b, err := c.get(ctx, "/api/task_manager/_health", nil)
+	if err != nil {
+		return nil, err
+	}
+
+	var out map[string]any
+	if err := json.Unmarshal(b, &out); err != nil {
+		return nil, fmt.Errorf("parse kibana task manager health response: %w", err)
+	}
+	if out == nil {
+		out = map[string]any{}
+	}
+	return out, nil
+}
+
 func (c *KibanaClient) get(ctx context.Context, p string, q url.Values) ([]byte, error) {
 	u := c.baseURL + p
 	if len(q) > 0 {

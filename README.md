@@ -80,6 +80,13 @@ By default, columns where every value is null are omitted. To include them:
 ./elastic slos list-definitions
 ```
 
+### 5) Check Kibana task manager health
+
+```bash
+./elastic kb task-manager health
+./elastic kb task-manager health -f json
+```
+
 Filter by name or glob pattern:
 
 ```bash
