@@ -1,6 +1,7 @@
 package client
 
 import (
+	"bytes"
 	"context"
 	"encoding/json"
 	"errors"
@@ -266,6 +267,177 @@ func (c *KibanaClient) TaskManagerHealth(ctx context.Context) (map[string]any, e
 		out = map[string]any{}
 	}
 	return out, nil
+}
+
+// DashboardSearchResponse is the response from POST /api/dashboards/search.
+type DashboardSearchResponse struct {
+	Dashboards []map[string]any `json:"dashboards"`
+	Total      int              `json:"total"`
+	Page       int              `json:"page"`
+}
+
+// SearchDashboards searches dashboards via POST /api/dashboards/search.
+func (c *KibanaClient) SearchDashboards(ctx context.Context, search string, page, perPage int) (*DashboardSearchResponse, error) {
+	body := map[string]any{}
+	if search != "" {
+		body["search"] = search
+	}
+	if page > 0 {
+		body["page"] = page
+	}
+	if perPage > 0 {
+		body["per_page"] = perPage
+	}
+
+	b, err := c.post(ctx, "/api/dashboards/search", body)
+	if err != nil {
+		return nil, err
+	}
+
+	var resp DashboardSearchResponse
+	if err := json.Unmarshal(b, &resp); err != nil {
+		return nil, fmt.Errorf("parse dashboards search response: %w", err)
+	}
+	return &resp, nil
+}
+
+// GetDashboard retrieves a single dashboard by ID via GET /api/dashboards/{id}.
+func (c *KibanaClient) GetDashboard(ctx context.Context, id string) (map[string]any, error) {
+	b, err := c.getInternal(ctx, "/api/dashboards/"+url.PathEscape(id), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	var out map[string]any
+	if err := json.Unmarshal(b, &out); err != nil {
+		return nil, fmt.Errorf("parse dashboard response: %w", err)
+	}
+	return out, nil
+}
+
+// CreateDashboard creates a dashboard via POST /api/dashboards.
+// The body should be the full request payload (with "data" key and optionally "id"/"spaces").
+func (c *KibanaClient) CreateDashboard(ctx context.Context, body map[string]any) (map[string]any, error) {
+	b, err := c.post(ctx, "/api/dashboards", body)
+	if err != nil {
+		return nil, err
+	}
+
+	var out map[string]any
+	if err := json.Unmarshal(b, &out); err != nil {
+		return nil, fmt.Errorf("parse create dashboard response: %w", err)
+	}
+	return out, nil
+}
+
+// DeleteDashboard deletes a dashboard by ID via DELETE /api/dashboards/{id}.
+func (c *KibanaClient) DeleteDashboard(ctx context.Context, id string) error {
+	return c.del(ctx, "/api/dashboards/"+url.PathEscape(id))
+}
+
+func (c *KibanaClient) post(ctx context.Context, p string, body any) ([]byte, error) {
+	jsonBody, err := json.Marshal(body)
+	if err != nil {
+		return nil, fmt.Errorf("marshal request body: %w", err)
+	}
+
+	req, err := http.NewRequestWithContext(ctx, http.MethodPost, c.baseURL+p, bytes.NewReader(jsonBody))
+	if err != nil {
+		return nil, fmt.Errorf("create request: %w", err)
+	}
+	req.Header.Set("Authorization", "ApiKey "+c.apiKey)
+	req.Header.Set("Accept", "application/json")
+	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("kbn-xsrf", "elastic")
+	req.Header.Set("Elastic-Api-Version", "1")
+	req.Header.Set("X-Elastic-Internal-Origin", "kibana")
+
+	resp, err := c.http.Do(req)
+	if err != nil {
+		return nil, fmt.Errorf("request failed: %w", err)
+	}
+	defer resp.Body.Close()
+
+	b, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return nil, fmt.Errorf("read response: %w", err)
+	}
+	if resp.StatusCode >= 400 {
+		msg := strings.TrimSpace(string(b))
+		if msg == "" {
+			msg = resp.Status
+		}
+		return nil, fmt.Errorf("kibana error (%s): %s", resp.Status, msg)
+	}
+	return b, nil
+}
+
+func (c *KibanaClient) del(ctx context.Context, p string) error {
+	req, err := http.NewRequestWithContext(ctx, http.MethodDelete, c.baseURL+p, nil)
+	if err != nil {
+		return fmt.Errorf("create request: %w", err)
+	}
+	req.Header.Set("Authorization", "ApiKey "+c.apiKey)
+	req.Header.Set("Accept", "application/json")
+	req.Header.Set("kbn-xsrf", "elastic")
+	req.Header.Set("Elastic-Api-Version", "1")
+	req.Header.Set("X-Elastic-Internal-Origin", "kibana")
+
+	resp, err := c.http.Do(req)
+	if err != nil {
+		return fmt.Errorf("request failed: %w", err)
+	}
+	defer resp.Body.Close()
+
+	b, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return fmt.Errorf("read response: %w", err)
+	}
+	if resp.StatusCode >= 400 {
+		msg := strings.TrimSpace(string(b))
+		if msg == "" {
+			msg = resp.Status
+		}
+		return fmt.Errorf("kibana error (%s): %s", resp.Status, msg)
+	}
+	return nil
+}
+
+// getInternal is like get but adds headers required by internal/experimental Kibana APIs.
+func (c *KibanaClient) getInternal(ctx context.Context, p string, q url.Values) ([]byte, error) {
+	u := c.baseURL + p
+	if len(q) > 0 {
+		u += "?" + q.Encode()
+	}
+
+	req, err := http.NewRequestWithContext(ctx, http.MethodGet, u, nil)
+	if err != nil {
+		return nil, fmt.Errorf("create request: %w", err)
+	}
+	req.Header.Set("Authorization", "ApiKey "+c.apiKey)
+	req.Header.Set("Accept", "application/json")
+	req.Header.Set("kbn-xsrf", "elastic")
+	req.Header.Set("Elastic-Api-Version", "1")
+	req.Header.Set("X-Elastic-Internal-Origin", "kibana")
+
+	resp, err := c.http.Do(req)
+	if err != nil {
+		return nil, fmt.Errorf("request failed: %w", err)
+	}
+	defer resp.Body.Close()
+
+	b, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return nil, fmt.Errorf("read response: %w", err)
+	}
+	if resp.StatusCode >= 400 {
+		msg := strings.TrimSpace(string(b))
+		if msg == "" {
+			msg = resp.Status
+		}
+		return nil, fmt.Errorf("kibana error (%s): %s", resp.Status, msg)
+	}
+	return b, nil
 }
 
 func (c *KibanaClient) get(ctx context.Context, p string, q url.Values) ([]byte, error) {
