@@ -10,7 +10,7 @@ jobs:
     name: Build ${{ matrix.goos }}/${{ matrix.goarch }}
     runs-on: ubuntu-latest
     permissions:
-      contents: read
+      contents: write
     strategy:
       matrix:
         include:
@@ -57,9 +57,8 @@ jobs:
           zip "$ARCHIVE" elastic.exe
           echo "ARCHIVE=$ARCHIVE" >> "$GITHUB_ENV"
 
-      - name: Upload artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: elastic-${{ github.ref_name }}-${{ matrix.goos }}-${{ matrix.goarch }}
-          path: ${{ env.ARCHIVE }}
-          if-no-files-found: error
+      - name: Upload asset to release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: gh release upload "${{ github.ref_name }}" "${{ env.ARCHIVE }}" --clobber
