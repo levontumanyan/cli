@@ -1,3 +1,7 @@
+# :warning: this is the `next` branch
+
+This is the merge branch where a significant rework of elastic/cli is being done. Expect broken code, missing functionality, etc. until it is merged into `main`.
+
 # elastic
 
 `elastic` is the CLI for Elastic.
