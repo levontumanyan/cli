@@ -95,6 +95,48 @@ func TestUnknownCommandError(t *testing.T) {
 	}
 }
 
+func TestSchemaValidationError_Single(t *testing.T) {
+	err := &apperrors.SchemaValidationError{Violations: []string{`field "name": required but missing`}}
+
+	if err.ErrorCode() != "validation_error" {
+		t.Errorf("ErrorCode: got %q, want %q", err.ErrorCode(), "validation_error")
+	}
+	msg := err.Error()
+	if msg != `field "name": required but missing` {
+		t.Errorf("Error(): got %q", msg)
+	}
+}
+
+func TestSchemaValidationError_Multiple(t *testing.T) {
+	violations := []string{
+		`field "name": required but missing`,
+		`field "count": expected number, got string`,
+		`field "extra": unknown field`,
+	}
+	err := &apperrors.SchemaValidationError{Violations: violations}
+
+	if err.ErrorCode() != "validation_error" {
+		t.Errorf("ErrorCode: got %q, want %q", err.ErrorCode(), "validation_error")
+	}
+	msg := err.Error()
+	expected := `field "name": required but missing; field "count": expected number, got string; field "extra": unknown field`
+	if msg != expected {
+		t.Errorf("Error(): got %q, want %q", msg, expected)
+	}
+}
+
+func TestSchemaValidationError_Empty(t *testing.T) {
+	err := &apperrors.SchemaValidationError{Violations: []string{}}
+
+	if err.ErrorCode() != "validation_error" {
+		t.Errorf("ErrorCode: got %q, want %q", err.ErrorCode(), "validation_error")
+	}
+	msg := err.Error()
+	if msg != "validation failed" {
+		t.Errorf("Error(): got %q, want %q", msg, "validation failed")
+	}
+}
+
 // ErrorCode() is defined on all types, satisfying output.OutputError implicitly.
 // This compile-time assertion verifies each type satisfies the interface without
 // importing the output package (interfaces are satisfied implicitly in Go).
@@ -110,4 +152,5 @@ func TestAllTypesImplementOutputError(t *testing.T) {
 	var _ outputError = &apperrors.InvalidArgumentError{}
 	var _ outputError = &apperrors.CommandError{}
 	var _ outputError = &apperrors.UnknownCommandError{}
+	var _ outputError = &apperrors.SchemaValidationError{}
 }

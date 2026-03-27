@@ -21,10 +21,10 @@
 
 **Purpose**: Add the new dependency and create the `internal/schema` package skeleton
 
-- [ ] T001 Add `github.com/google/jsonschema-go` dependency via `go get github.com/google/jsonschema-go` and verify `go.mod` / `go.sum` update; run `just test` to confirm nothing breaks
-- [ ] T002 [P] Create package skeleton file `internal/schema/schema.go` with package declaration and doc comment (`// Package schema provides JSON Schema generation, validation, and deserialization for CLI command inputs.`)
-- [ ] T003 [P] Create package skeleton file `internal/schema/validate.go` with package declaration
-- [ ] T004 [P] Create test helper package `internal/schema/schematest/helpers.go` with sample input structs for testing: `SimpleInput` (required string `Name` + optional int `Count`), `AllOptionalInput` (optional string + optional bool), `NestedInput` (struct with nested struct field), `MultiTypeInput` (string + int + bool + string-slice fields) — all with `json` and `jsonschema` tags
+- [x] T001 Add `github.com/google/jsonschema-go` dependency via `go get github.com/google/jsonschema-go` and verify `go.mod` / `go.sum` update; run `just test` to confirm nothing breaks
+- [x] T002 [P] Create package skeleton file `internal/schema/schema.go` with package declaration and doc comment (`// Package schema provides JSON Schema generation, validation, and deserialization for CLI command inputs.`)
+- [x] T003 [P] Create package skeleton file `internal/schema/validate.go` with package declaration
+- [x] T004 [P] Create test helper package `internal/schema/schematest/helpers.go` with sample input structs for testing: `SimpleInput` (required string `Name` + optional int `Count`), `AllOptionalInput` (optional string + optional bool), `NestedInput` (struct with nested struct field), `MultiTypeInput` (string + int + bool + string-slice fields) — all with `json` and `jsonschema` tags
 
 **Checkpoint**: `just test` passes, new dependency resolves, skeleton packages compile
 
@@ -36,14 +36,14 @@
 
 **⚠️ CRITICAL**: No user story work can begin until this phase is complete
 
-- [ ] T005 Write tests for `NoInput` type in `internal/schema/schema_test.go`: verify it is an empty struct with zero fields; verify `Reflect[NoInput]()` produces a schema with type `"object"`, no required fields, and `additionalProperties` set to `false`
-- [ ] T006 Implement `NoInput` struct type and `Reflect[T any]()` in `internal/schema/schema.go` — `Reflect` calls `jsonschema.Reflect` on a zero-value `*T`, sets `AdditionalProperties` to `false` (strict mode), and returns the schema
-- [ ] T007 Write tests for `ValidationError` type and `FormatErrors()` in `internal/schema/schema_test.go`: single error formats as `validation failed:\n  - field "name": required but missing`; multiple errors list all violations; zero errors returns nil
-- [ ] T008 Implement `ValidationError` struct (Field string, Message string, Value any) and `FormatErrors(errs []ValidationError) error` in `internal/schema/schema.go` — returns nil for empty slice, wraps joined messages for non-empty
-- [ ] T009 Add `ValidationError` typed error to `internal/errors/errors.go`: create `SchemaValidationError` struct with `Violations []string` field, implementing `output.OutputError` with code `"validation_error"` and `Error()` returning the joined violations message — follow the existing pattern of `ConfigError`, `InputError`, etc.
-- [ ] T010 Write tests for `SchemaValidationError` in `internal/errors/errors_test.go`: verify `ErrorCode()` returns `"validation_error"`, verify `Error()` includes all violation messages, verify it satisfies the `outputError` interface compile-time assertion (add to `TestAllTypesImplementOutputError`)
-- [ ] T011 Write tests for `ValidateAndDecode[T]()` in `internal/schema/validate_test.go` using table-driven tests: valid JSON returns populated struct and nil error; nil/empty input with all-optional schema (`schematest.AllOptionalInput`) returns zero-value struct; nil/empty input with required fields (`schematest.SimpleInput`) returns error naming each required field; malformed JSON returns parse error; unknown field returns error naming the field; wrong type (string where int expected) returns error with expected vs actual; multiple violations (missing required + unknown field) all reported in single error
-- [ ] T012 Implement `ValidateAndDecode[T any](data []byte) (T, error)` in `internal/schema/validate.go` — handle nil/empty → `{}` normalization; parse JSON into `map[string]any` for validation; validate required fields present; validate no unknown fields exist; validate field types match schema; collect all violations into `[]ValidationError`; if valid, unmarshal into `T` via `encoding/json` with `json.Decoder` + `DisallowUnknownFields()`; return `FormatErrors()` on failure
+- [x] T005 Write tests for `NoInput` type in `internal/schema/schema_test.go`: verify it is an empty struct with zero fields; verify `Reflect[NoInput]()` produces a schema with type `"object"`, no required fields, and `additionalProperties` set to `false`
+- [x] T006 Implement `NoInput` struct type and `Reflect[T any]()` in `internal/schema/schema.go` — `Reflect` calls `jsonschema.Reflect` on a zero-value `*T`, sets `AdditionalProperties` to `false` (strict mode), and returns the schema
+- [x] T007 Write tests for `ValidationError` type and `FormatErrors()` in `internal/schema/schema_test.go`: single error formats as `validation failed:\n  - field "name": required but missing`; multiple errors list all violations; zero errors returns nil
+- [x] T008 Implement `ValidationError` struct (Field string, Message string, Value any) and `FormatErrors(errs []ValidationError) error` in `internal/schema/schema.go` — returns nil for empty slice, wraps joined messages for non-empty
+- [x] T009 Add `ValidationError` typed error to `internal/errors/errors.go`: create `SchemaValidationError` struct with `Violations []string` field, implementing `output.OutputError` with code `"validation_error"` and `Error()` returning the joined violations message — follow the existing pattern of `ConfigError`, `InputError`, etc.
+- [x] T010 Write tests for `SchemaValidationError` in `internal/errors/errors_test.go`: verify `ErrorCode()` returns `"validation_error"`, verify `Error()` includes all violation messages, verify it satisfies the `outputError` interface compile-time assertion (add to `TestAllTypesImplementOutputError`)
+- [x] T011 Write tests for `ValidateAndDecode[T]()` in `internal/schema/validate_test.go` using table-driven tests: valid JSON returns populated struct and nil error; nil/empty input with all-optional schema (`schematest.AllOptionalInput`) returns zero-value struct; nil/empty input with required fields (`schematest.SimpleInput`) returns error naming each required field; malformed JSON returns parse error; unknown field returns error naming the field; wrong type (string where int expected) returns error with expected vs actual; multiple violations (missing required + unknown field) all reported in single error
+- [x] T012 Implement `ValidateAndDecode[T any](data []byte) (T, error)` in `internal/schema/validate.go` — handle nil/empty → `{}` normalization; parse JSON into `map[string]any` for validation; validate required fields present; validate no unknown fields exist; validate field types match schema; collect all violations into `[]ValidationError`; if valid, unmarshal into `T` via `encoding/json` with `json.Decoder` + `DisallowUnknownFields()`; return `FormatErrors()` on failure
 
 **Checkpoint**: `just test` passes, `internal/schema` package fully functional in isolation, `SchemaValidationError` integrates with existing error taxonomy
 
@@ -59,17 +59,17 @@
 
 > **NOTE: Write these tests FIRST, ensure they FAIL before implementation**
 
-- [ ] T013 [US1] Write test in `internal/factory/factory_test.go`: given a command created with `New[schematest.SimpleInput]`, when input JSON is piped via stdin missing the required `name` field (e.g., `{"count":5}`), then RunE returns an error containing the field name `"name"` and the handler is NOT called (call count = 0)
-- [ ] T014 [US1] Write test in `internal/factory/factory_test.go`: given a command created with `New[schematest.SimpleInput]`, when input JSON has a field with wrong type (e.g., `{"name":"ok","count":"not-a-number"}`), then RunE returns an error describing the type mismatch and handler is NOT called
-- [ ] T015 [US1] Write test in `internal/factory/factory_test.go`: given a command created with `New[schematest.SimpleInput]`, when input is syntactically malformed JSON (e.g., `{bad`), then RunE returns a parse error and handler is NOT called
-- [ ] T016 [US1] Write test in `internal/factory/factory_test.go`: given a command created with `New[schematest.SimpleInput]`, when input JSON contains an unknown field (e.g., `{"name":"ok","extra":"bad"}`), then RunE returns an error naming the unknown field `"extra"` and handler is NOT called
-- [ ] T017 [US1] Write test in `internal/factory/factory_test.go`: given a command created with `New[schematest.SimpleInput]`, when valid JSON `{"name":"test"}` is provided, then validation passes and the handler IS called exactly once
-- [ ] T018 [P] [US1] Write test in `internal/factory/factory_test.go`: given a command created with `New[schematest.SimpleInput]` and `--format=json`, when validation fails, then stdout contains a JSON error envelope with `"code":"validation_error"` and the error field lists the violations — confirming integration with the `output.Render` + `SchemaValidationError` pipeline
+- [x] T013 [US1] Write test in `internal/factory/factory_test.go`: given a command created with `New[schematest.SimpleInput]`, when input JSON is piped via stdin missing the required `name` field (e.g., `{"count":5}`), then RunE returns an error containing the field name `"name"` and the handler is NOT called (call count = 0)
+- [x] T014 [US1] Write test in `internal/factory/factory_test.go`: given a command created with `New[schematest.SimpleInput]`, when input JSON has a field with wrong type (e.g., `{"name":"ok","count":"not-a-number"}`), then RunE returns an error describing the type mismatch and handler is NOT called
+- [x] T015 [US1] Write test in `internal/factory/factory_test.go`: given a command created with `New[schematest.SimpleInput]`, when input is syntactically malformed JSON (e.g., `{bad`), then RunE returns a parse error and handler is NOT called
+- [x] T016 [US1] Write test in `internal/factory/factory_test.go`: given a command created with `New[schematest.SimpleInput]`, when input JSON contains an unknown field (e.g., `{"name":"ok","extra":"bad"}`), then RunE returns an error naming the unknown field `"extra"` and handler is NOT called
+- [x] T017 [US1] Write test in `internal/factory/factory_test.go`: given a command created with `New[schematest.SimpleInput]`, when valid JSON `{"name":"test"}` is provided, then validation passes and the handler IS called exactly once
+- [x] T018 [P] [US1] Write test in `internal/factory/factory_test.go`: given a command created with `New[schematest.SimpleInput]` and `--format=json`, when validation fails, then stdout contains a JSON error envelope with `"code":"validation_error"` and the error field lists the violations — confirming integration with the `output.Render` + `SchemaValidationError` pipeline
 
 ### Implementation for US1
 
-- [ ] T019 [US1] Change the signature of `factory.New` to `factory.New[T any]` in `internal/factory/factory.go`: update `RunFunc` to `RunFunc[T any] func(ctx RunContext, input T) (any, error)`; in `RunE`, after reading body via `readBody(cmd)`, call `schema.ValidateAndDecode[T](body)`; on validation error, wrap in `apperrors.SchemaValidationError` and pass to `output.Render()`; on success, pass decoded `T` to handler alongside `RunContext`
-- [ ] T020 [US1] Update ALL existing tests in `internal/factory/factory_test.go` to use the new generic `New[schema.NoInput]` signature — every test that constructs a command via `New(name, desc, func(ctx RunContext) ...)` must become `New[schema.NoInput](name, desc, func(ctx RunContext, _ schema.NoInput) ...)` — run `just test` and fix each compilation error systematically
+- [x] T019 [US1] Change the signature of `factory.New` to `factory.New[T any]` in `internal/factory/factory.go`: update `RunFunc` to `RunFunc[T any] func(ctx RunContext, input T) (any, error)`; in `RunE`, after reading body via `readBody(cmd)`, call `schema.ValidateAndDecode[T](body)`; on validation error, wrap in `apperrors.SchemaValidationError` and pass to `output.Render()`; on success, pass decoded `T` to handler alongside `RunContext`
+- [x] T020 [US1] Update ALL existing tests in `internal/factory/factory_test.go` to use the new generic `New[schema.NoInput]` signature — every test that constructs a command via `New(name, desc, func(ctx RunContext) ...)` must become `New[schema.NoInput](name, desc, func(ctx RunContext, _ schema.NoInput) ...)` — run `just test` and fix each compilation error systematically
 
 **Checkpoint**: `just test` passes. Invalid input is rejected before handler runs. Valid input reaches the handler. JSON error envelopes carry `validation_error` code.
 
@@ -83,15 +83,15 @@
 
 ### Tests for US2
 
-- [ ] T021 [US2] Write test in `internal/factory/factory_test.go`: given a command `New[schematest.SimpleInput]`, when valid JSON `{"name":"test","count":5}` is piped via stdin, then the handler receives a `SimpleInput` struct with `Name=="test"` and `Count==5` — assert both field values inside the handler callback
-- [ ] T022 [US2] Write test in `internal/factory/factory_test.go`: given a command `New[schema.NoInput]`, when no input is provided (nil body), then the handler receives a zero-value `NoInput` struct and no error occurs
-- [ ] T023 [US2] Write test in `internal/factory/factory_test.go`: given a command `New[schematest.AllOptionalInput]`, when empty input `{}` is piped, then the handler receives a zero-value struct with all fields at their Go defaults
+- [x] T021 [US2] Write test in `internal/factory/factory_test.go`: given a command `New[schematest.SimpleInput]`, when valid JSON `{"name":"test","count":5}` is piped via stdin, then the handler receives a `SimpleInput` struct with `Name=="test"` and `Count==5` — assert both field values inside the handler callback
+- [x] T022 [US2] Write test in `internal/factory/factory_test.go`: given a command `New[schema.NoInput]`, when no input is provided (nil body), then the handler receives a zero-value `NoInput` struct and no error occurs
+- [x] T023 [US2] Write test in `internal/factory/factory_test.go`: given a command `New[schematest.AllOptionalInput]`, when empty input `{}` is piped, then the handler receives a zero-value struct with all fields at their Go defaults
 
 ### Implementation for US2
 
-- [ ] T024 [US2] Migrate the `version` command in `cmd/root.go` to use `factory.New[schema.NoInput]("version", "Print version info", func(ctx factory.RunContext, _ schema.NoInput) (any, error) { ... })` — add import for `github.com/elastic/cli/internal/schema`
-- [ ] T025 [US2] Update tests in `cmd/root_test.go` — if any test constructs or references the `version` handler signature, update to match the new generic factory; run `just test` to verify all cmd tests pass
-- [ ] T026 [US2] Remove the `Body []byte` field from the exported `RunContext` struct in `internal/factory/factory.go` — the raw body is read inside `RunE`, passed to `ValidateAndDecode[T]`, and only the decoded `T` is exposed to the handler; update any remaining test assertions that reference `ctx.Body`
+- [x] T024 [US2] Migrate the `version` command in `cmd/root.go` to use `factory.New[schema.NoInput]("version", "Print version info", func(ctx factory.RunContext, _ schema.NoInput) (any, error) { ... })` — add import for `github.com/elastic/cli/internal/schema`
+- [x] T025 [US2] Update tests in `cmd/root_test.go` — if any test constructs or references the `version` handler signature, update to match the new generic factory; run `just test` to verify all cmd tests pass
+- [x] T026 [US2] Remove the `Body []byte` field from the exported `RunContext` struct in `internal/factory/factory.go` — the raw body is read inside `RunE`, passed to `ValidateAndDecode[T]`, and only the decoded `T` is exposed to the handler; update any remaining test assertions that reference `ctx.Body`
 
 **Checkpoint**: `just test` passes. Handler receives typed struct. Old non-generic `New` / `RunFunc` signature no longer compiles. `Body` field removed from public `RunContext`.
 

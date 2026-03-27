@@ -145,3 +145,26 @@ envelope) and then returns `nil`, the caller has no signal that anything went
 wrong. In CLI code this manifests as exit code 0 for a failed invocation.
 Always ensure that error paths propagate a non-nil return value — even if the
 error has already been presented to the user.
+
+### Do not reference experimental spec file IDs in code
+
+Spec files under `specs/*/` are experimental and may be removed, renamed, or restructured.
+Code comments must not reference task IDs, user story IDs, or other internal identifiers
+from spec files (e.g., T001, US1, P1, etc.), as these IDs become orphaned and misleading
+once the spec is archived or deleted.
+
+**Good**: Code comments reference public, stable identifiers:
+```go
+// See https://github.com/elastic/elastic-cli/issues/42 for context
+// Also discussed in the design review with the CLI team
+```
+
+**Bad**: Code comments reference experimental spec IDs:
+```go
+// This implements task T042 from specs/004-command-input-schema/tasks.md
+// See user story US1 for more context
+```
+
+Use spec documents themselves for detailed implementation guidance and planning,
+but keep only public information (GitHub issues, ADRs, design docs) and implementation
+facts (behavior, API contracts) in code comments and docstrings.

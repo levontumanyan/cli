@@ -10,6 +10,7 @@ import (
 	apperrors "github.com/elastic/cli/internal/errors"
 	"github.com/elastic/cli/internal/factory"
 	"github.com/elastic/cli/internal/output"
+	"github.com/elastic/cli/internal/schema"
 	"github.com/spf13/cobra"
 )
 
@@ -29,7 +30,7 @@ var rootCmd = &cobra.Command{
 func init() {
 	rootCmd.PersistentFlags().StringVar(&contextFlag, "context", "", "Context to use for this command")
 	rootCmd.PersistentFlags().String("format", "text", "Output format (text|json)")
-	rootCmd.AddCommand(factory.New("version", "Print version info", func(ctx factory.RunContext) (any, error) {
+	rootCmd.AddCommand(factory.New[schema.NoInput]("version", "Print version info", func(ctx factory.RunContext, _ schema.NoInput) (any, error) {
 		return "elastic version dev", nil
 	}))
 }

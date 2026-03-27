@@ -72,3 +72,17 @@ func (e *UnknownCommandError) Unwrap() error     { return e.Cause }
 func (e *CommandError) Error() string     { return e.Cause.Error() }
 func (e *CommandError) ErrorCode() string { return "command_failed" }
 func (e *CommandError) Unwrap() error     { return e.Cause }
+
+// SchemaValidationError is returned when input validation fails against the schema.
+type SchemaValidationError struct {
+	Violations []string
+}
+
+func (e *SchemaValidationError) Error() string {
+	if len(e.Violations) == 0 {
+		return "validation failed"
+	}
+	return strings.Join(e.Violations, "; ")
+}
+
+func (e *SchemaValidationError) ErrorCode() string { return "validation_error" }

@@ -12,6 +12,8 @@ import (
 
 	"github.com/elastic/cli/internal/factory/factorytest"
 	"github.com/elastic/cli/internal/output"
+	"github.com/elastic/cli/internal/schema"
+	"github.com/elastic/cli/internal/schema/schematest"
 	"github.com/spf13/cobra"
 )
 
@@ -31,14 +33,14 @@ func executeCmd(t *testing.T, sub *cobra.Command, args ...string) error {
 // ---- New() command fields ---------------------------------------------------
 
 func TestNew_Use(t *testing.T) {
-	cmd := New("my-cmd", "short desc", func(ctx RunContext) (any, error) { return nil, nil })
+	cmd := New[schema.NoInput]("my-cmd", "short desc", func(ctx RunContext, _ schema.NoInput) (any, error) { return nil, nil })
 	if cmd.Use != "my-cmd" {
 		t.Errorf("Use: got %q, want %q", cmd.Use, "my-cmd")
 	}
 }
 
 func TestNew_Short(t *testing.T) {
-	cmd := New("my-cmd", "short desc", func(ctx RunContext) (any, error) { return nil, nil })
+	cmd := New[schema.NoInput]("my-cmd", "short desc", func(ctx RunContext, _ schema.NoInput) (any, error) { return nil, nil })
 	if cmd.Short != "short desc" {
 		t.Errorf("Short: got %q, want %q", cmd.Short, "short desc")
 	}
@@ -58,7 +60,7 @@ contexts:
 	t.Setenv("ELASTIC_CONFIG", configPath)
 
 	callCount := 0
-	cmd := New("sub", "desc", func(ctx RunContext) (any, error) {
+	cmd := New[schema.NoInput]("sub", "desc", func(ctx RunContext, _ schema.NoInput) (any, error) {
 		callCount++
 		return nil, nil
 	})
@@ -87,7 +89,7 @@ contexts:
 	t.Setenv("ELASTIC_CONFIG", configPath)
 
 	var received RunContext
-	cmd := New("sub", "desc", func(ctx RunContext) (any, error) {
+	cmd := New[schema.NoInput]("sub", "desc", func(ctx RunContext, _ schema.NoInput) (any, error) {
 		received = ctx
 		return nil, nil
 	})
@@ -115,7 +117,7 @@ func TestNew_RunContextConfigPath(t *testing.T) {
 	t.Setenv("ELASTIC_CONFIG", configPath)
 
 	var received RunContext
-	cmd := New("sub", "desc", func(ctx RunContext) (any, error) {
+	cmd := New[schema.NoInput]("sub", "desc", func(ctx RunContext, _ schema.NoInput) (any, error) {
 		received = ctx
 		return nil, nil
 	})
@@ -134,7 +136,7 @@ func TestNew_HandlerErrorPropagates(t *testing.T) {
 	t.Setenv("ELASTIC_CONFIG", factorytest.TempConfigFile(t, []byte("")))
 
 	want := errors.New("handler failure")
-	cmd := New("sub", "desc", func(ctx RunContext) (any, error) { return nil, want })
+	cmd := New[schema.NoInput]("sub", "desc", func(ctx RunContext, _ schema.NoInput) (any, error) { return nil, want })
 
 	err := executeCmd(t, cmd)
 	if err == nil {
@@ -159,8 +161,8 @@ contexts:
 	t.Setenv("ELASTIC_CONFIG", configPath)
 
 	var ctx1, ctx2 RunContext
-	cmd1 := New("cmd-one", "first", func(ctx RunContext) (any, error) { ctx1 = ctx; return nil, nil })
-	cmd2 := New("cmd-two", "second", func(ctx RunContext) (any, error) { ctx2 = ctx; return nil, nil })
+	cmd1 := New[schema.NoInput]("cmd-one", "first", func(ctx RunContext, _ schema.NoInput) (any, error) { ctx1 = ctx; return nil, nil })
+	cmd2 := New[schema.NoInput]("cmd-two", "second", func(ctx RunContext, _ schema.NoInput) (any, error) { ctx2 = ctx; return nil, nil })
 
 	if err := executeCmd(t, cmd1); err != nil {
 		t.Fatalf("cmd1: %v", err)
@@ -192,7 +194,7 @@ func TestNew_NoConfigFile_XDGEmpty(t *testing.T) {
 	t.Setenv("XDG_CONFIG_HOME", tmpDir)
 
 	var received RunContext
-	cmd := New("sub", "desc", func(ctx RunContext) (any, error) {
+	cmd := New[schema.NoInput]("sub", "desc", func(ctx RunContext, _ schema.NoInput) (any, error) {
 		received = ctx
 		return nil, nil
 	})
@@ -222,7 +224,7 @@ func TestNew_NoConfigFile_HomeEmpty(t *testing.T) {
 	t.Setenv("HOME", tmpDir)
 
 	var received RunContext
-	cmd := New("sub", "desc", func(ctx RunContext) (any, error) {
+	cmd := New[schema.NoInput]("sub", "desc", func(ctx RunContext, _ schema.NoInput) (any, error) {
 		received = ctx
 		return nil, nil
 	})
@@ -259,7 +261,7 @@ contexts:
 	t.Setenv("ELASTIC_CONFIG", configPath)
 
 	var received RunContext
-	cmd := New("sub", "desc", func(ctx RunContext) (any, error) {
+	cmd := New[schema.NoInput]("sub", "desc", func(ctx RunContext, _ schema.NoInput) (any, error) {
 		received = ctx
 		return nil, nil
 	})
@@ -291,7 +293,7 @@ contexts:
 	t.Setenv("ELASTIC_CONFIG", configPath)
 
 	var received RunContext
-	cmd := New("sub", "desc", func(ctx RunContext) (any, error) {
+	cmd := New[schema.NoInput]("sub", "desc", func(ctx RunContext, _ schema.NoInput) (any, error) {
 		received = ctx
 		return nil, nil
 	})
@@ -329,7 +331,7 @@ contexts:
 	t.Setenv("ELASTIC_CONFIG", configPath)
 
 	var received RunContext
-	cmd := New("sub", "desc", func(ctx RunContext) (any, error) {
+	cmd := New[schema.NoInput]("sub", "desc", func(ctx RunContext, _ schema.NoInput) (any, error) {
 		received = ctx
 		return nil, nil
 	})
@@ -373,7 +375,7 @@ func TestNew_Context_FlagOverridesCurrentContext(t *testing.T) {
 	t.Setenv("ELASTIC_CONFIG", configPath)
 
 	var received RunContext
-	cmd := New("sub", "desc", func(ctx RunContext) (any, error) { received = ctx; return nil, nil })
+	cmd := New[schema.NoInput]("sub", "desc", func(ctx RunContext, _ schema.NoInput) (any, error) { received = ctx; return nil, nil })
 	if err := executeCmd(t, cmd, "--context=dev"); err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
@@ -387,7 +389,7 @@ func TestNew_Context_DefaultsToCurrentContext(t *testing.T) {
 	t.Setenv("ELASTIC_CONFIG", configPath)
 
 	var received RunContext
-	cmd := New("sub", "desc", func(ctx RunContext) (any, error) { received = ctx; return nil, nil })
+	cmd := New[schema.NoInput]("sub", "desc", func(ctx RunContext, _ schema.NoInput) (any, error) { received = ctx; return nil, nil })
 	if err := executeCmd(t, cmd); err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
@@ -400,7 +402,7 @@ func TestNew_Context_UnknownName_ErrorListsAvailable(t *testing.T) {
 	configPath := factorytest.TempConfigFile(t, []byte(twoContextConfig))
 	t.Setenv("ELASTIC_CONFIG", configPath)
 
-	cmd := New("sub", "desc", func(ctx RunContext) (any, error) { return nil, nil })
+	cmd := New[schema.NoInput]("sub", "desc", func(ctx RunContext, _ schema.NoInput) (any, error) { return nil, nil })
 	err := executeCmd(t, cmd, "--context=missing")
 	if err == nil {
 		t.Fatal("expected error for unknown context, got nil")
@@ -421,7 +423,7 @@ func TestNew_Context_NoConfigFile_NoFlag_EmptyActiveContext(t *testing.T) {
 	t.Setenv("XDG_CONFIG_HOME", t.TempDir())
 
 	var received RunContext
-	cmd := New("sub", "desc", func(ctx RunContext) (any, error) { received = ctx; return nil, nil })
+	cmd := New[schema.NoInput]("sub", "desc", func(ctx RunContext, _ schema.NoInput) (any, error) { received = ctx; return nil, nil })
 	if err := executeCmd(t, cmd); err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
@@ -434,7 +436,7 @@ func TestNew_Context_NoConfigFile_WithFlag_Errors(t *testing.T) {
 	t.Setenv("ELASTIC_CONFIG", "")
 	t.Setenv("XDG_CONFIG_HOME", t.TempDir())
 
-	cmd := New("sub", "desc", func(ctx RunContext) (any, error) { return nil, nil })
+	cmd := New[schema.NoInput]("sub", "desc", func(ctx RunContext, _ schema.NoInput) (any, error) { return nil, nil })
 	err := executeCmd(t, cmd, "--context=anything")
 	if err == nil {
 		t.Fatal("expected error when --context set but no contexts configured, got nil")
@@ -446,24 +448,22 @@ func TestNew_Context_NoConfigFile_WithFlag_Errors(t *testing.T) {
 
 // ---- RunContext.Body -----------------------------------------------
 
-// TestNew_Body_NilWhenNoInputConfigured asserts that RunContext exposes a Body
-// []byte field and that it is nil when the command is invoked with no input
-// source configured (no piped stdin, no --file flag).
+// TestNew_Body_NilWhenNoInputConfigured verifies that a NoInput command
+// succeeds with no stdin and no --file flag.
 func TestNew_Body_NilWhenNoInputConfigured(t *testing.T) {
 	t.Setenv("ELASTIC_CONFIG", factorytest.TempConfigFile(t, []byte("")))
 
-	var received RunContext
-	cmd := New("sub", "desc", func(ctx RunContext) (any, error) {
-		received = ctx
+	handlerCalled := false
+	cmd := New[schema.NoInput]("sub", "desc", func(_ RunContext, _ schema.NoInput) (any, error) {
+		handlerCalled = true
 		return nil, nil
 	})
 
 	if err := executeCmd(t, cmd); err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
-
-	if received.Body != nil {
-		t.Errorf("Body: got %v, want nil", received.Body)
+	if !handlerCalled {
+		t.Error("handler should have been called")
 	}
 }
 
@@ -478,65 +478,62 @@ func executeCmdWithStdin(t *testing.T, sub *cobra.Command, r io.Reader, args ...
 }
 
 // TestNew_Body_PopulatedFromStdin verifies that when a non-empty reader is
-// injected as stdin, Body is set to the reader's bytes.
+// injected as stdin, the command reads it and calls the handler.
 func TestNew_Body_PopulatedFromStdin(t *testing.T) {
 	t.Setenv("ELASTIC_CONFIG", factorytest.TempConfigFile(t, []byte("")))
 
-	payload := []byte(`{"x":1}`)
-	var received RunContext
-	cmd := New("sub", "desc", func(ctx RunContext) (any, error) {
-		received = ctx
+	handlerCalled := false
+	cmd := New[schema.NoInput]("sub", "desc", func(ctx RunContext, _ schema.NoInput) (any, error) {
+		handlerCalled = true
 		return nil, nil
 	})
 
-	if err := executeCmdWithStdin(t, cmd, bytes.NewReader(payload)); err != nil {
+	if err := executeCmdWithStdin(t, cmd, bytes.NewReader([]byte(`{}`))); err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
-	if !bytes.Equal(received.Body, payload) {
-		t.Errorf("Body: got %q, want %q", received.Body, payload)
+	if !handlerCalled {
+		t.Error("expected handler to be called")
 	}
 }
 
 // TestNew_Body_NilWhenStdinEmpty verifies that an injected reader with zero
-// bytes results in a nil Body (not an empty non-nil slice).
+// bytes results in the handler being called with a zero-value input.
 func TestNew_Body_NilWhenStdinEmpty(t *testing.T) {
 	t.Setenv("ELASTIC_CONFIG", factorytest.TempConfigFile(t, []byte("")))
 
-	var received RunContext
-	cmd := New("sub", "desc", func(ctx RunContext) (any, error) {
-		received = ctx
+	handlerCalled := false
+	cmd := New[schema.NoInput]("sub", "desc", func(ctx RunContext, _ schema.NoInput) (any, error) {
+		handlerCalled = true
 		return nil, nil
 	})
 
 	if err := executeCmdWithStdin(t, cmd, bytes.NewReader(nil)); err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
-	if received.Body != nil {
-		t.Errorf("Body: got %q, want nil", received.Body)
+	if !handlerCalled {
+		t.Error("expected handler to be called with empty stdin")
 	}
 }
 
 // ---- RunContext.Body via --file ------------------------------------
 
 // TestNew_Body_PopulatedFromFile verifies that --file reads the file and
-// sets Body to its contents.
+// calls the handler.
 func TestNew_Body_PopulatedFromFile(t *testing.T) {
 	t.Setenv("ELASTIC_CONFIG", factorytest.TempConfigFile(t, []byte("")))
 
-	payload := []byte(`{"hello":"world"}`)
-	filePath := factorytest.TempDataFile(t, payload)
-
-	var received RunContext
-	cmd := New("sub", "desc", func(ctx RunContext) (any, error) {
-		received = ctx
+	handlerCalled := false
+	filePath := factorytest.TempDataFile(t, []byte(`{}`))
+	cmd := New[schema.NoInput]("sub", "desc", func(ctx RunContext, _ schema.NoInput) (any, error) {
+		handlerCalled = true
 		return nil, nil
 	})
 
 	if err := executeCmd(t, cmd, "--file", filePath); err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
-	if !bytes.Equal(received.Body, payload) {
-		t.Errorf("Body: got %q, want %q", received.Body, payload)
+	if !handlerCalled {
+		t.Error("expected handler to be called")
 	}
 }
 
@@ -546,7 +543,7 @@ func TestNew_Body_ErrorWhenFileNotFound(t *testing.T) {
 	t.Setenv("ELASTIC_CONFIG", factorytest.TempConfigFile(t, []byte("")))
 
 	handlerCalled := false
-	cmd := New("sub", "desc", func(ctx RunContext) (any, error) {
+	cmd := New[schema.NoInput]("sub", "desc", func(ctx RunContext, _ schema.NoInput) (any, error) {
 		handlerCalled = true
 		return nil, nil
 	})
@@ -571,7 +568,7 @@ func TestNew_Body_ErrorWhenFileUnreadable(t *testing.T) {
 	filePath := factorytest.TempConfigFileUnreadable(t, []byte(`{}`))
 
 	handlerCalled := false
-	cmd := New("sub", "desc", func(ctx RunContext) (any, error) {
+	cmd := New[schema.NoInput]("sub", "desc", func(ctx RunContext, _ schema.NoInput) (any, error) {
 		handlerCalled = true
 		return nil, nil
 	})
@@ -585,24 +582,24 @@ func TestNew_Body_ErrorWhenFileUnreadable(t *testing.T) {
 	}
 }
 
-// TestNew_Body_NilWhenFileEmpty verifies that a zero-byte --file yields nil
-// Body without error.
+// TestNew_Body_NilWhenFileEmpty verifies that a zero-byte --file succeeds
+// without error and the handler is called.
 func TestNew_Body_NilWhenFileEmpty(t *testing.T) {
 	t.Setenv("ELASTIC_CONFIG", factorytest.TempConfigFile(t, []byte("")))
 
 	filePath := factorytest.TempDataFile(t, []byte{})
 
-	var received RunContext
-	cmd := New("sub", "desc", func(ctx RunContext) (any, error) {
-		received = ctx
+	handlerCalled := false
+	cmd := New[schema.NoInput]("sub", "desc", func(_ RunContext, _ schema.NoInput) (any, error) {
+		handlerCalled = true
 		return nil, nil
 	})
 
 	if err := executeCmd(t, cmd, "--file", filePath); err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
-	if received.Body != nil {
-		t.Errorf("Body: got %q, want nil for empty file", received.Body)
+	if !handlerCalled {
+		t.Error("handler should have been called")
 	}
 }
 
@@ -617,7 +614,7 @@ func TestNew_Body_ErrorWhenBothStdinAndFile(t *testing.T) {
 	stdinData := bytes.NewReader([]byte(`{"source":"stdin"}`))
 
 	handlerCalled := false
-	cmd := New("sub", "desc", func(ctx RunContext) (any, error) {
+	cmd := New[schema.NoInput]("sub", "desc", func(ctx RunContext, _ schema.NoInput) (any, error) {
 		handlerCalled = true
 		return nil, nil
 	})
@@ -658,7 +655,7 @@ func executeCmdCapture(t *testing.T, sub *cobra.Command, args ...string) (string
 func TestNew_FormatJSON_ProducesEnvelopeWithData(t *testing.T) {
 	t.Setenv("ELASTIC_CONFIG", factorytest.TempConfigFile(t, []byte("")))
 
-	cmd := New("sub", "desc", func(ctx RunContext) (any, error) {
+	cmd := New[schema.NoInput]("sub", "desc", func(ctx RunContext, _ schema.NoInput) (any, error) {
 		return "elastic version dev", nil
 	})
 
@@ -681,7 +678,7 @@ func TestNew_FormatJSON_ProducesEnvelopeWithData(t *testing.T) {
 func TestNew_FormatJSON_OutputIsValidJSON(t *testing.T) {
 	t.Setenv("ELASTIC_CONFIG", factorytest.TempConfigFile(t, []byte("")))
 
-	cmd := New("sub", "desc", func(ctx RunContext) (any, error) {
+	cmd := New[schema.NoInput]("sub", "desc", func(ctx RunContext, _ schema.NoInput) (any, error) {
 		return "hello", nil
 	})
 
@@ -747,7 +744,7 @@ func TestJsonValid(t *testing.T) {
 func TestNew_NoFormat_ProducesTextOutput(t *testing.T) {
 	t.Setenv("ELASTIC_CONFIG", factorytest.TempConfigFile(t, []byte("")))
 
-	cmd := New("sub", "desc", func(ctx RunContext) (any, error) {
+	cmd := New[schema.NoInput]("sub", "desc", func(ctx RunContext, _ schema.NoInput) (any, error) {
 		return "plain output", nil
 	})
 
@@ -765,7 +762,7 @@ func TestNew_FormatText_IdenticalToNoFlag(t *testing.T) {
 	t.Setenv("ELASTIC_CONFIG", factorytest.TempConfigFile(t, []byte("")))
 
 	makeCmd := func() *cobra.Command {
-		return New("sub", "desc", func(ctx RunContext) (any, error) {
+		return New[schema.NoInput]("sub", "desc", func(ctx RunContext, _ schema.NoInput) (any, error) {
 			return "plain output", nil
 		})
 	}
@@ -810,7 +807,7 @@ func executeCmdCaptureWithStderr(t *testing.T, sub *cobra.Command, args ...strin
 func TestNew_FormatJSON_HandlerError_ProducesErrorEnvelope(t *testing.T) {
 	t.Setenv("ELASTIC_CONFIG", factorytest.TempConfigFile(t, []byte("")))
 
-	cmd := New("sub", "desc", func(ctx RunContext) (any, error) {
+	cmd := New[schema.NoInput]("sub", "desc", func(ctx RunContext, _ schema.NoInput) (any, error) {
 		return nil, errors.New("something went wrong")
 	})
 
@@ -841,7 +838,7 @@ func TestNew_FormatJSON_HandlerError_ProducesErrorEnvelope(t *testing.T) {
 func TestNew_FormatJSON_HandlerError_NoStderr(t *testing.T) {
 	t.Setenv("ELASTIC_CONFIG", factorytest.TempConfigFile(t, []byte("")))
 
-	cmd := New("sub", "desc", func(ctx RunContext) (any, error) {
+	cmd := New[schema.NoInput]("sub", "desc", func(ctx RunContext, _ schema.NoInput) (any, error) {
 		return nil, errors.New("oops")
 	})
 
@@ -860,7 +857,7 @@ func TestNew_TextMode_HandlerError_PropagatesError(t *testing.T) {
 	t.Setenv("ELASTIC_CONFIG", factorytest.TempConfigFile(t, []byte("")))
 
 	want := errors.New("handler failure text mode")
-	cmd := New("sub", "desc", func(ctx RunContext) (any, error) {
+	cmd := New[schema.NoInput]("sub", "desc", func(ctx RunContext, _ schema.NoInput) (any, error) {
 		return nil, want
 	})
 
@@ -882,7 +879,7 @@ func TestNew_FormatJSON_ConfigError_ProducesConfigErrorCode(t *testing.T) {
 	configPath := factorytest.TempConfigFileUnreadable(t, []byte("current_context: prod\n"))
 	t.Setenv("ELASTIC_CONFIG", configPath)
 
-	cmd := New("sub", "desc", func(ctx RunContext) (any, error) {
+	cmd := New[schema.NoInput]("sub", "desc", func(ctx RunContext, _ schema.NoInput) (any, error) {
 		return "ok", nil
 	})
 
@@ -916,7 +913,7 @@ contexts:
 	configPath := factorytest.TempConfigFile(t, []byte(yaml))
 	t.Setenv("ELASTIC_CONFIG", configPath)
 
-	cmd := New("sub", "desc", func(ctx RunContext) (any, error) {
+	cmd := New[schema.NoInput]("sub", "desc", func(ctx RunContext, _ schema.NoInput) (any, error) {
 		return "ok", nil
 	})
 
@@ -941,7 +938,7 @@ contexts:
 func TestNew_FormatXML_ProducesInvalidArgumentCode(t *testing.T) {
 	t.Setenv("ELASTIC_CONFIG", factorytest.TempConfigFile(t, []byte("")))
 
-	cmd := New("sub", "desc", func(ctx RunContext) (any, error) {
+	cmd := New[schema.NoInput]("sub", "desc", func(ctx RunContext, _ schema.NoInput) (any, error) {
 		return "ok", nil
 	})
 
@@ -976,7 +973,7 @@ contexts:
       url: http://localhost:9200
 `)))
 
-	cmd := New("sub", "desc", func(ctx RunContext) (any, error) {
+	cmd := New[schema.NoInput]("sub", "desc", func(ctx RunContext, _ schema.NoInput) (any, error) {
 		return nil, nil
 	})
 
@@ -1018,7 +1015,7 @@ contexts:
       url: http://localhost:9200
 `)))
 
-	cmd := New("sub", "desc", func(ctx RunContext) (any, error) {
+	cmd := New[schema.NoInput]("sub", "desc", func(ctx RunContext, _ schema.NoInput) (any, error) {
 		return map[string]string{"status": "ok"}, nil
 	})
 
@@ -1047,5 +1044,216 @@ contexts:
 	}
 	if len(warnings) != 0 {
 		t.Errorf("warnings: got %v, want []", warnings)
+	}
+}
+
+// ---- Schema validation -------------------------------------------
+
+// TestNew_Validation_MissingRequiredField verifies that a missing required field
+// is caught before the handler runs and the handler is never called.
+func TestNew_Validation_MissingRequiredField(t *testing.T) {
+	t.Setenv("ELASTIC_CONFIG", factorytest.TempConfigFile(t, []byte("")))
+
+	handlerCalled := false
+	cmd := New[schematest.SimpleInput]("sub", "desc", func(_ RunContext, _ schematest.SimpleInput) (any, error) {
+		handlerCalled = true
+		return nil, nil
+	})
+
+	err := executeCmdWithStdin(t, cmd, bytes.NewReader([]byte(`{"count":5}`)))
+
+	if handlerCalled {
+		t.Error("handler must not be called when required field is missing")
+	}
+	if err == nil {
+		t.Fatal("expected error for missing required field, got nil")
+	}
+	if !strings.Contains(err.Error(), "name") {
+		t.Errorf("error should mention missing field %q, got: %s", "name", err.Error())
+	}
+}
+
+// TestNew_Validation_WrongType verifies that a type mismatch is caught before
+// the handler runs.
+func TestNew_Validation_WrongType(t *testing.T) {
+	t.Setenv("ELASTIC_CONFIG", factorytest.TempConfigFile(t, []byte("")))
+
+	handlerCalled := false
+	cmd := New[schematest.SimpleInput]("sub", "desc", func(_ RunContext, _ schematest.SimpleInput) (any, error) {
+		handlerCalled = true
+		return nil, nil
+	})
+
+	err := executeCmdWithStdin(t, cmd, bytes.NewReader([]byte(`{"name":"ok","count":"not-a-number"}`)))
+
+	if handlerCalled {
+		t.Error("handler must not be called when a field has the wrong type")
+	}
+	if err == nil {
+		t.Fatal("expected error for type mismatch, got nil")
+	}
+}
+
+// TestNew_Validation_MalformedJSON verifies that syntactically invalid JSON is
+// rejected before the handler runs.
+func TestNew_Validation_MalformedJSON(t *testing.T) {
+	t.Setenv("ELASTIC_CONFIG", factorytest.TempConfigFile(t, []byte("")))
+
+	handlerCalled := false
+	cmd := New[schematest.SimpleInput]("sub", "desc", func(_ RunContext, _ schematest.SimpleInput) (any, error) {
+		handlerCalled = true
+		return nil, nil
+	})
+
+	err := executeCmdWithStdin(t, cmd, bytes.NewReader([]byte(`{bad`)))
+
+	if handlerCalled {
+		t.Error("handler must not be called when JSON is malformed")
+	}
+	if err == nil {
+		t.Fatal("expected error for malformed JSON, got nil")
+	}
+}
+
+// TestNew_Validation_UnknownField verifies that an unknown field is rejected
+// before the handler runs and the field name appears in the error.
+func TestNew_Validation_UnknownField(t *testing.T) {
+	t.Setenv("ELASTIC_CONFIG", factorytest.TempConfigFile(t, []byte("")))
+
+	handlerCalled := false
+	cmd := New[schematest.SimpleInput]("sub", "desc", func(_ RunContext, _ schematest.SimpleInput) (any, error) {
+		handlerCalled = true
+		return nil, nil
+	})
+
+	err := executeCmdWithStdin(t, cmd, bytes.NewReader([]byte(`{"name":"ok","extra":"bad"}`)))
+
+	if handlerCalled {
+		t.Error("handler must not be called when an unknown field is present")
+	}
+	if err == nil {
+		t.Fatal("expected error for unknown field, got nil")
+	}
+	if !strings.Contains(err.Error(), "extra") {
+		t.Errorf("error should mention unknown field %q, got: %s", "extra", err.Error())
+	}
+}
+
+// TestNew_Validation_ValidInput verifies that valid input passes validation and
+// the handler is called exactly once.
+func TestNew_Validation_ValidInput(t *testing.T) {
+	t.Setenv("ELASTIC_CONFIG", factorytest.TempConfigFile(t, []byte("")))
+
+	callCount := 0
+	cmd := New[schematest.SimpleInput]("sub", "desc", func(_ RunContext, _ schematest.SimpleInput) (any, error) {
+		callCount++
+		return nil, nil
+	})
+
+	err := executeCmdWithStdin(t, cmd, bytes.NewReader([]byte(`{"name":"test"}`)))
+
+	if err != nil {
+		t.Fatalf("expected no error for valid input, got: %v", err)
+	}
+	if callCount != 1 {
+		t.Errorf("handler call count: got %d, want 1", callCount)
+	}
+}
+
+// TestNew_Validation_JSONErrorEnvelope verifies that a validation failure in
+// JSON mode produces an envelope with code "validation_error" on stdout and
+// that the missing field name appears in the error message.
+func TestNew_Validation_JSONErrorEnvelope(t *testing.T) {
+	t.Setenv("ELASTIC_CONFIG", factorytest.TempConfigFile(t, []byte("")))
+
+	cmd := New[schematest.SimpleInput]("sub", "desc", func(_ RunContext, _ schematest.SimpleInput) (any, error) {
+		return nil, nil
+	})
+	cmd.SetIn(bytes.NewReader([]byte(`{"count":5}`)))
+
+	stdout, err := executeCmdCapture(t, cmd, "--format=json")
+
+	if err == nil {
+		t.Fatal("expected error from executeCmdCapture, got nil")
+	}
+
+	var env output.Envelope
+	if jsonErr := json.Unmarshal([]byte(stdout), &env); jsonErr != nil {
+		t.Fatalf("stdout should be a valid JSON envelope, got %q: %v", stdout, jsonErr)
+	}
+	if env.Error == nil {
+		t.Fatal("envelope error field should be set")
+	}
+	if env.Error.Code != "validation_error" {
+		t.Errorf("error code: got %q, want %q", env.Error.Code, "validation_error")
+	}
+	if !strings.Contains(env.Error.Message, "name") {
+		t.Errorf("error message should mention missing field %q, got: %s", "name", env.Error.Message)
+	}
+}
+
+// TestNew_TypedInput_FieldsPopulated verifies the handler receives a fully
+// populated struct when valid JSON is piped.
+func TestNew_TypedInput_FieldsPopulated(t *testing.T) {
+	t.Setenv("ELASTIC_CONFIG", factorytest.TempConfigFile(t, []byte("")))
+
+	var received schematest.SimpleInput
+	cmd := New[schematest.SimpleInput]("sub", "desc", func(_ RunContext, input schematest.SimpleInput) (any, error) {
+		received = input
+		return nil, nil
+	})
+
+	err := executeCmdWithStdin(t, cmd, bytes.NewReader([]byte(`{"name":"test","count":5}`)))
+
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+	if received.Name != "test" {
+		t.Errorf("Name: got %q, want %q", received.Name, "test")
+	}
+	if received.Count != 5 {
+		t.Errorf("Count: got %d, want %d", received.Count, 5)
+	}
+}
+
+// TestNew_TypedInput_NoInputNilBody verifies a NoInput command succeeds with no
+// stdin and the handler is called.
+func TestNew_TypedInput_NoInputNilBody(t *testing.T) {
+	t.Setenv("ELASTIC_CONFIG", factorytest.TempConfigFile(t, []byte("")))
+
+	handlerCalled := false
+	cmd := New[schema.NoInput]("sub", "desc", func(_ RunContext, _ schema.NoInput) (any, error) {
+		handlerCalled = true
+		return nil, nil
+	})
+
+	// No stdin — TTY is not wired so readBody returns nil; ValidateAndDecode
+	// normalises nil to {} which is valid for NoInput.
+	if err := executeCmd(t, cmd); err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+	if !handlerCalled {
+		t.Error("handler should have been called")
+	}
+}
+
+// TestNew_TypedInput_AllOptionalEmptyBody verifies a command typed with an
+// all-optional schema receives a zero-value struct when {} is piped.
+func TestNew_TypedInput_AllOptionalEmptyBody(t *testing.T) {
+	t.Setenv("ELASTIC_CONFIG", factorytest.TempConfigFile(t, []byte("")))
+
+	var received schematest.AllOptionalInput
+	cmd := New[schematest.AllOptionalInput]("sub", "desc", func(_ RunContext, input schematest.AllOptionalInput) (any, error) {
+		received = input
+		return nil, nil
+	})
+
+	err := executeCmdWithStdin(t, cmd, bytes.NewReader([]byte(`{}`)))
+
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+	if received != (schematest.AllOptionalInput{}) {
+		t.Errorf("expected zero-value struct, got %+v", received)
 	}
 }

@@ -1,3 +1,4 @@
+// Package factory defines the factory for creating CLI commands with optional JSON schema validation.
 package factory
 
 import (
@@ -8,14 +9,14 @@ import (
 
 	apperrors "github.com/elastic/cli/internal/errors"
 	"github.com/elastic/cli/internal/output"
+	"github.com/elastic/cli/internal/schema"
 	"github.com/spf13/cobra"
 )
 
-// RunFunc is the handler type that every subcommand implements.
-// The factory calls it after fully populating RunContext.
+// RunFunc[T] is the handler type that accepts typed input T.
 // The first return value is the data payload written to output; the second is
 // any error that occurred. Both nil is valid (produces a null data envelope).
-type RunFunc func(ctx RunContext) (any, error)
+type RunFunc[T any] func(ctx RunContext, input T) (any, error)
 
 // RunContext is the per-invocation execution context passed to every handler.
 type RunContext struct {
@@ -30,32 +31,30 @@ type RunContext struct {
 	// Set from the --context flag if provided; otherwise from Config.CurrentContext.
 	ActiveContext string
 
-	// Body is the raw JSON request body supplied by the caller, either piped via
-	// stdin or read from the path given to --file. Nil when no input was provided.
-	// Validation and schema-based transformation are handled by a later layer.
-	Body []byte
 }
 
-// New creates a fully wired *cobra.Command from a name, short description, and handler.
+// New creates a fully wired *cobra.Command with generic input schema support.
 //
 // When the command runs, New's RunE:
-//  1. Resolves the config file path ($ELASTIC_CONFIG → $XDG_CONFIG_HOME →
-//     ~/.config/elastic/config.yml → %APPDATA%\elastic\config.yml on Windows).
-//  2. Reads and parses the file. Unknown YAML fields are silently ignored.
-//     A missing file is not an error — a zero-value Config is used instead.
-//  3. Resolves ActiveContext from the --context persistent flag (if set and
-//     non-empty) or falls back to Config.CurrentContext.
-//  4. Renders a context_not_found error envelope if --context names an unknown context.
-//  5. Reads the request body from --file or piped stdin (see readBody).
-//  6. Renders an input_error envelope if both --file and piped stdin provide data.
-//  7. Calls run with the fully populated RunContext.
+// 1. Resolves the config file path ($ELASTIC_CONFIG → $XDG_CONFIG_HOME →
+//    ~/.config/elastic/config.yml → %APPDATA%\elastic\config.yml on Windows).
+// 2. Reads and parses the file. Unknown YAML fields are silently ignored.
+//    A missing file is not an error — a zero-value Config is used instead.
+// 3. Resolves ActiveContext from the --context persistent flag (if set and
+//    non-empty) or falls back to Config.CurrentContext.
+// 4. Renders a context_not_found error envelope if --context names an unknown context.
+// 5. Reads the request body from --file or piped stdin (see readBody).
+// 6. Renders an input_error envelope if both --file and piped stdin provide data.
+// 7. Validates the input against the schema for T using schema.ValidateAndDecode.
+// 8. Renders a validation_error envelope if input is invalid.
+// 9. Calls run with the fully populated RunContext and typed input T.
 //
-// All errors (config, context, input, and RunFunc errors) are handled inside
+// All errors (config, context, input, validation, and RunFunc errors) are handled inside
 // RunE via output.Render and written to cmd.OutOrStdout(). In JSON mode Render
 // writes the error envelope and returns nil, so Cobra never sees the error. In
 // text mode Render returns the error so that executeRoot can write it to stderr.
 // No os.Exit calls appear inside this package.
-func New(name, description string, run RunFunc) *cobra.Command {
+func New[T any](name, description string, run RunFunc[T]) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   name,
 		Short: description,
@@ -111,14 +110,21 @@ func New(name, description string, run RunFunc) *cobra.Command {
 				return output.Render(cmd.OutOrStdout(), format, nil, &apperrors.InputError{Cause: err})
 			}
 
+			// Validate and decode input
+			input, validationErr := schema.ValidateAndDecode[T](body)
+			if validationErr != nil {
+				// Wrap validation error in SchemaValidationError
+				outErr := &apperrors.SchemaValidationError{Violations: []string{validationErr.Error()}}
+				return output.Render(cmd.OutOrStdout(), format, nil, outErr)
+			}
+
 			ctx := RunContext{
 				Config:        cfg,
 				ConfigPath:    configPath,
 				ActiveContext: activeContext,
-				Body:          body,
 			}
 
-			data, runErr := run(ctx)
+			data, runErr := run(ctx, input)
 			var outErr output.OutputError
 			if runErr != nil {
 				outErr = &apperrors.CommandError{Cause: runErr}
@@ -133,10 +139,10 @@ func New(name, description string, run RunFunc) *cobra.Command {
 // readBody resolves the request body for a command invocation.
 //
 // Resolution rules:
-//  1. If --file is set, read the file. Return an error if it cannot be read.
-//  2. If stdin is not a TTY (i.e. it is piped or redirected), read it.
-//  3. If both --file and non-TTY stdin provide data, return an error.
-//  4. Empty input (zero bytes from either source) yields a nil body.
+// 1. If --file is set, read the file. Return an error if it cannot be read.
+// 2. If stdin is not a TTY (i.e. it is piped or redirected), read it.
+// 3. If both --file and non-TTY stdin provide data, return an error.
+// 4. Empty input (zero bytes from either source) yields a nil body.
 func readBody(cmd *cobra.Command) ([]byte, error) {
 	filePath, _ := cmd.Flags().GetString("file")
 
