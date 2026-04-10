@@ -4,7 +4,7 @@ on:
   pull_request:
   push:
     branches:
-      - mvp
+      - main
 
 permissions:
   contents: read
@@ -26,6 +26,18 @@ jobs:
         run: npm install
       - name: Run unit tests
         run: npm test
+        shell: bash
+
+  license-header:
+    name: Check SPDX license header
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+      - name: Install
+        run: npm install
+      - name: License header check
+        run: npm run test:spdx
 
   test-bun:
     name: Test Bun
