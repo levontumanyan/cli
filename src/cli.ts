@@ -51,7 +51,8 @@ program.addCommand(versionCmd)
 // invoked. For all other invocations (including `elastic --help`), a lightweight stub
 // is registered so the group appears in help text without paying the cost of loading
 // and compiling all API schemas.
-const firstArg = process.argv[2]
+const { operands } = program.parseOptions(process.argv.slice(2))
+const firstArg = operands[0]
 
 if (firstArg === 'es') {
   const { registerEsCommands } = await import('./es/register.ts')
