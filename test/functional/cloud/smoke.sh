@@ -142,32 +142,24 @@ else
   fail "deployments list-deployments" "empty response"
 fi
 
-# stack get-version-stacks
-output=$(retry_with_backoff $CLI cloud stack get-version-stacks --json 2>&1) || true
-if [ -n "$output" ]; then
-  assert_exit_zero "stack get-version-stacks" $CLI cloud stack get-version-stacks --json
-else
-  fail "stack get-version-stacks" "empty response"
-fi
-
 echo ""
 
 # ── Serverless ───────────────────────────────────────────────────────
 
 echo "Serverless API:"
 
-# elasticsearch-projects list-elasticsearch-projects
-output=$(retry_with_backoff $CLI cloud elasticsearch-projects list-elasticsearch-projects --json 2>&1) || true
+# serverless es projects list
+output=$(retry_with_backoff $CLI serverless es projects list --json 2>&1) || true
 if [ -n "$output" ]; then
-  assert_exit_zero "elasticsearch-projects list" $CLI cloud elasticsearch-projects list-elasticsearch-projects --json
+  assert_exit_zero "serverless es projects list" $CLI serverless es projects list --json
 else
-  fail "elasticsearch-projects list" "empty response"
+  fail "serverless es projects list" "empty response"
 fi
 
-# regions list-regions
-output=$(retry_with_backoff $CLI cloud regions list-regions --json 2>&1) || true
+# serverless regions list-regions
+output=$(retry_with_backoff $CLI serverless regions list-regions --json 2>&1) || true
 if [ -n "$output" ]; then
-  assert_exit_zero "regions list-regions" $CLI cloud regions list-regions --json
+  assert_exit_zero "serverless regions list-regions" $CLI serverless regions list-regions --json
 else
-  fail "regions list-regions" "empty response"
+  fail "serverless regions list-regions" "empty response"
 fi
