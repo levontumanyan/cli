@@ -171,12 +171,13 @@ elastic --json version
 
 ### `stack` - Elastic Stack
 
-Interact with Elastic Stack components. Today only `stack es` (Elasticsearch) is
-wired up; `stack kibana` and `stack fleet` are reserved for future work.
+Interact with Elastic Stack components. Both `stack es` (Elasticsearch) and
+`stack kb` (Kibana) are available. Full-name aliases also work:
 
 ```bash
 elastic stack --help
-elastic stack es --help
+elastic stack es --help          # or: elastic stack elasticsearch --help
+elastic stack kb --help          # or: elastic stack kibana --help
 ```
 
 #### `stack es` - Elasticsearch API
@@ -229,6 +230,27 @@ elastic stack es update --index my-index --id abc123
 ```
 
 Run `elastic stack es <command> --help` for all available options on any command.
+
+#### `stack kb` - Kibana API
+
+Run Kibana API calls. Commands are organised by namespace (e.g. `data-views`,
+`cases`, `alerting`). Requires a `kibana` service block in the active context.
+
+All `stack kb` subcommands support:
+
+| Option | Description |
+|---|---|
+| `--dry-run` | Validate inputs and exit without making any API call |
+| `--input-file <path>` | Load command input from a JSON file instead of CLI flags |
+
+```bash
+elastic stack kb data-views list
+elastic stack kb data-views get --data-view-id <id>
+elastic stack kb cases list
+elastic stack kb alerting list-rule-types
+```
+
+Run `elastic stack kb <namespace> --help` for all available commands in a namespace.
 
 ### `cloud` - Elastic Cloud
 

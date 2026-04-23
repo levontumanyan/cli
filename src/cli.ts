@@ -6,6 +6,7 @@
 
 import { Command } from 'commander'
 import { defineCommand, defineGroup, hideBlockedCommands } from './factory.js'
+import type { OpaqueCommandHandle } from './factory.js'
 import { loadConfig, type LoadConfigResult } from './config/loader.ts'
 import { setResolvedConfig } from './config/store.ts'
 
@@ -71,13 +72,49 @@ program.addCommand(versionCmd)
 // is registered so the group appears in help text without paying the cost of loading
 // and compiling all API schemas.
 const { operands } = program.parseOptions(process.argv.slice(2))
-const firstArg = operands[0]
+let firstArg = operands[0]
+
+// Deprecation redirect: `elastic kb ...` → `elastic stack kb ...`
+if (firstArg === 'kb') {
+  process.stderr.write('Warning: "elastic kb" is deprecated. Use "elastic stack kb" instead.\n')
+  const kbIdx = process.argv.indexOf('kb', 2)
+  if (kbIdx !== -1) process.argv.splice(kbIdx, 0, 'stack')
+  operands.splice(0, 0, 'stack')
+  firstArg = 'stack'
+}
 
 if (firstArg === 'stack') {
-  const { registerEsCommands } = await import('./es/register.ts')
+  const stackChildren: OpaqueCommandHandle[] = []
+
+  const secondArg = operands[1]
+  const esArgs = new Set(['es', 'elasticsearch'])
+  const kbArgs = new Set(['kb', 'kibana'])
+
+  if (secondArg == null || esArgs.has(secondArg)) {
+    const { registerEsCommands } = await import('./es/register.ts')
+    const esGroup = registerEsCommands()
+    esGroup.alias('elasticsearch')
+    stackChildren.push(esGroup)
+  } else {
+    const esStub = defineGroup({ name: 'es', description: 'Interact with the Elasticsearch API' })
+    esStub.alias('elasticsearch')
+    stackChildren.push(esStub)
+  }
+
+  if (secondArg == null || kbArgs.has(secondArg)) {
+    const { registerKbCommands } = await import('./kb/register.ts')
+    const kbGroup = registerKbCommands()
+    kbGroup.alias('kibana')
+    stackChildren.push(kbGroup)
+  } else {
+    const kbStub = defineGroup({ name: 'kb', description: 'Interact with the Kibana API' })
+    kbStub.alias('kibana')
+    stackChildren.push(kbStub)
+  }
+
   program.addCommand(defineGroup(
     { name: 'stack', description: 'Interact with Elastic Stack components (Elasticsearch, Kibana, Fleet)' },
-    registerEsCommands()
+    ...stackChildren
   ))
 } else {
   program.addCommand(defineGroup({ name: 'stack', description: 'Interact with Elastic Stack components (Elasticsearch, Kibana, Fleet)' }))
@@ -95,13 +132,6 @@ if (firstArg === 'docs') {
   program.addCommand(registerDocsCommands())
 } else {
   program.addCommand(defineGroup({ name: 'docs', description: 'Search, read, and ask questions about Elastic documentation' }))
-}
-
-if (firstArg === 'kb') {
-  const { registerKbCommands } = await import('./kb/register.ts')
-  program.addCommand(registerKbCommands())
-} else {
-  program.addCommand(defineGroup({ name: 'kb', description: 'Interact with the Kibana API' }))
 }
 
 // Load config early so --help can hide blocked commands. Skip for commands
