@@ -11,7 +11,7 @@ import { loadConfig, type LoadConfigResult } from './config/loader.ts'
 import { setResolvedConfig } from './config/store.ts'
 
 // x-release-please-start-version
-const VERSION = '0.1.0-alpha.1';
+const VERSION = '0.1.0';
 // x-release-please-end
 
 const program = new Command()
