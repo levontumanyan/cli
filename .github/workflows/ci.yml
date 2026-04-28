@@ -83,6 +83,29 @@ jobs:
           task_types: '["feat","fix","docs","test","ci","refactor","perf","chore","revert"]'
           add_label: "false"
 
+  docs-check:
+    name: Check CLI docs generate without errors
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+      - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6
+        with:
+          node-version: 22.x
+      - name: Install
+        run: npm install
+      - name: Verify docs generate without errors
+        run: npm run docs:generate
+      - name: Verify committed docs are up-to-date
+        run: |
+          if [ -n "$(git diff --name-only docs/)" ]; then
+            echo "::error::Generated docs are out of date. Run 'npm run docs:generate' and commit the result."
+            git diff --stat docs/
+            exit 1
+          fi
+      - name: Check all commands have descriptions
+        run: npm run docs:check
+        continue-on-error: true
+
   megalinter:
     name: MegaLinter
     runs-on: ubuntu-latest
@@ -106,6 +129,7 @@ jobs:
       - notice-file
       - test-bun
       - validate-pr-title
+      - docs-check
       - megalinter
     steps:
       - run: |
