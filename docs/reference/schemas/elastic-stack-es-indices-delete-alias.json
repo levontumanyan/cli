@@ -1,0 +1,121 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "index": {
+      "$ref": "#/$defs/__schema0"
+    },
+    "name": {
+      "$ref": "#/$defs/__schema3"
+    },
+    "master_timeout": {
+      "$ref": "#/$defs/__schema6"
+    },
+    "timeout": {
+      "$ref": "#/$defs/__schema11"
+    }
+  },
+  "required": [
+    "index",
+    "name"
+  ],
+  "additionalProperties": false,
+  "id": "IndicesDeleteAliasRequest",
+  "$defs": {
+    "__schema0": {
+      "description": "Comma-separated list of data streams or indices used to limit the request. Supports wildcards (`*`).",
+      "$ref": "#/$defs/Indices"
+    },
+    "Indices": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/__schema1"
+        },
+        {
+          "$ref": "#/$defs/__schema2"
+        }
+      ],
+      "id": "Indices"
+    },
+    "__schema1": {
+      "$ref": "#/$defs/IndexName"
+    },
+    "IndexName": {
+      "type": "string",
+      "id": "IndexName"
+    },
+    "__schema2": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/IndexName"
+      }
+    },
+    "__schema3": {
+      "description": "Comma-separated list of aliases to remove. Supports wildcards (`*`). To remove all aliases, use `*` or `_all`.",
+      "$ref": "#/$defs/Names"
+    },
+    "Names": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/__schema4"
+        },
+        {
+          "$ref": "#/$defs/__schema5"
+        }
+      ],
+      "id": "Names"
+    },
+    "__schema4": {
+      "$ref": "#/$defs/Name"
+    },
+    "Name": {
+      "type": "string",
+      "id": "Name"
+    },
+    "__schema5": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/Name"
+      }
+    },
+    "__schema6": {
+      "$ref": "#/$defs/__schema7"
+    },
+    "__schema7": {
+      "description": "Period to wait for a connection to the master node. If no response is received before the timeout expires, the request fails and returns an error.",
+      "$ref": "#/$defs/Duration"
+    },
+    "Duration": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/__schema8"
+        },
+        {
+          "$ref": "#/$defs/__schema9"
+        },
+        {
+          "$ref": "#/$defs/__schema10"
+        }
+      ],
+      "id": "Duration"
+    },
+    "__schema8": {
+      "type": "string"
+    },
+    "__schema9": {
+      "type": "number",
+      "const": -1
+    },
+    "__schema10": {
+      "type": "number",
+      "const": 0
+    },
+    "__schema11": {
+      "$ref": "#/$defs/__schema12"
+    },
+    "__schema12": {
+      "description": "Period to wait for a response. If no response is received before the timeout expires, the request fails and returns an error.",
+      "$ref": "#/$defs/Duration"
+    }
+  }
+}

@@ -1,0 +1,94 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "alertsIndexPattern": {
+      "type": "string",
+      "description": "The (space specific) index pattern that contains the alerts to use as"
+    },
+    "anonymizationFields": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/__schema0"
+      },
+      "description": "The list of fields, and whether or not they are anonymized, allowed to be sent to LLMs. Consider using the output of the `/api/security_ai_assistant/anonymization_fields/_find` API (for a specific Kibana space) to provide this value."
+    },
+    "apiConfig": {
+      "type": "object",
+      "propertyNames": {
+        "$ref": "#/$defs/__schema1"
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/__schema2"
+      },
+      "description": ""
+    },
+    "connectorName": {
+      "type": "string",
+      "description": ""
+    },
+    "end": {
+      "type": "string",
+      "description": ""
+    },
+    "filter": {
+      "type": "object",
+      "propertyNames": {
+        "$ref": "#/$defs/__schema3"
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/__schema4"
+      },
+      "description": "An Elasticsearch-style query DSL object used to filter alerts. For example:"
+    },
+    "model": {
+      "type": "string",
+      "description": ""
+    },
+    "replacements": {
+      "type": "object",
+      "propertyNames": {
+        "$ref": "#/$defs/__schema5"
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/__schema6"
+      },
+      "description": "Replacements object used to anonymize/deanonymize messages"
+    },
+    "size": {
+      "type": "number",
+      "description": ""
+    },
+    "start": {
+      "type": "string",
+      "description": ""
+    },
+    "subAction": {
+      "type": "string",
+      "description": ""
+    }
+  },
+  "required": [
+    "alertsIndexPattern",
+    "anonymizationFields",
+    "apiConfig",
+    "size",
+    "subAction"
+  ],
+  "additionalProperties": {},
+  "$defs": {
+    "__schema0": {},
+    "__schema1": {
+      "type": "string"
+    },
+    "__schema2": {},
+    "__schema3": {
+      "type": "string"
+    },
+    "__schema4": {},
+    "__schema5": {
+      "type": "string"
+    },
+    "__schema6": {}
+  }
+}

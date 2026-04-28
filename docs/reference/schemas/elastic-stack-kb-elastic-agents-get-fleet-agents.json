@@ -1,0 +1,63 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "page": {
+      "type": "number",
+      "description": ""
+    },
+    "perPage": {
+      "type": "number",
+      "description": ""
+    },
+    "kuery": {
+      "type": "string",
+      "description": ""
+    },
+    "showAgentless": {
+      "type": "boolean",
+      "description": ""
+    },
+    "showInactive": {
+      "type": "boolean",
+      "description": ""
+    },
+    "withMetrics": {
+      "type": "boolean",
+      "description": ""
+    },
+    "showUpgradeable": {
+      "type": "boolean",
+      "description": ""
+    },
+    "getStatusSummary": {
+      "type": "boolean",
+      "description": ""
+    },
+    "sortField": {
+      "type": "string",
+      "description": ""
+    },
+    "sortOrder": {
+      "type": "string",
+      "description": ""
+    },
+    "searchAfter": {
+      "type": "string",
+      "description": ""
+    },
+    "openPit": {
+      "type": "boolean",
+      "description": ""
+    },
+    "pitId": {
+      "type": "string",
+      "description": ""
+    },
+    "pitKeepAlive": {
+      "type": "string",
+      "description": ""
+    }
+  },
+  "additionalProperties": {}
+}

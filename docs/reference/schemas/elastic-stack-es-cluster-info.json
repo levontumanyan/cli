@@ -1,0 +1,48 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "target": {
+      "$ref": "#/$defs/__schema0"
+    }
+  },
+  "required": [
+    "target"
+  ],
+  "additionalProperties": false,
+  "id": "ClusterInfoRequest",
+  "$defs": {
+    "__schema0": {
+      "description": "Limits the information returned to the specific target. Supports a comma-separated list, such as http,ingest.",
+      "$ref": "#/$defs/ClusterInfoTargets"
+    },
+    "ClusterInfoTargets": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/ClusterInfoTarget"
+        },
+        {
+          "$ref": "#/$defs/__schema1"
+        }
+      ],
+      "id": "ClusterInfoTargets"
+    },
+    "ClusterInfoTarget": {
+      "type": "string",
+      "enum": [
+        "_all",
+        "http",
+        "ingest",
+        "thread_pool",
+        "script"
+      ],
+      "id": "ClusterInfoTarget"
+    },
+    "__schema1": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/ClusterInfoTarget"
+      }
+    }
+  }
+}

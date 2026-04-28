@@ -1,0 +1,297 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "connector_id": {
+      "$ref": "#/$defs/__schema0"
+    },
+    "filtering": {
+      "$ref": "#/$defs/__schema1"
+    },
+    "rules": {
+      "$ref": "#/$defs/__schema19"
+    },
+    "advanced_snippet": {
+      "$ref": "#/$defs/__schema21"
+    }
+  },
+  "required": [
+    "connector_id"
+  ],
+  "additionalProperties": false,
+  "id": "ConnectorUpdateFilteringRequest",
+  "$defs": {
+    "__schema0": {
+      "description": "The unique identifier of the connector to be updated",
+      "$ref": "#/$defs/Id"
+    },
+    "Id": {
+      "type": "string",
+      "id": "Id"
+    },
+    "__schema1": {
+      "$ref": "#/$defs/__schema2"
+    },
+    "__schema2": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/ConnectorFilteringConfig"
+      }
+    },
+    "ConnectorFilteringConfig": {
+      "type": "object",
+      "properties": {
+        "active": {
+          "$ref": "#/$defs/ConnectorFilteringRules"
+        },
+        "domain": {
+          "$ref": "#/$defs/__schema18"
+        },
+        "draft": {
+          "$ref": "#/$defs/ConnectorFilteringRules"
+        }
+      },
+      "required": [
+        "active",
+        "draft"
+      ],
+      "additionalProperties": false,
+      "id": "ConnectorFilteringConfig"
+    },
+    "ConnectorFilteringRules": {
+      "type": "object",
+      "properties": {
+        "advanced_snippet": {
+          "$ref": "#/$defs/ConnectorFilteringAdvancedSnippet"
+        },
+        "rules": {
+          "$ref": "#/$defs/__schema8"
+        },
+        "validation": {
+          "$ref": "#/$defs/ConnectorFilteringRulesValidation"
+        }
+      },
+      "required": [
+        "advanced_snippet",
+        "rules",
+        "validation"
+      ],
+      "additionalProperties": false,
+      "id": "ConnectorFilteringRules"
+    },
+    "ConnectorFilteringAdvancedSnippet": {
+      "type": "object",
+      "properties": {
+        "created_at": {
+          "$ref": "#/$defs/__schema3"
+        },
+        "updated_at": {
+          "$ref": "#/$defs/__schema6"
+        },
+        "value": {
+          "$ref": "#/$defs/__schema7"
+        }
+      },
+      "required": [
+        "value"
+      ],
+      "additionalProperties": false,
+      "id": "ConnectorFilteringAdvancedSnippet"
+    },
+    "__schema3": {
+      "$ref": "#/$defs/DateTime"
+    },
+    "DateTime": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/__schema4"
+        },
+        {
+          "$ref": "#/$defs/__schema5"
+        }
+      ],
+      "id": "DateTime"
+    },
+    "__schema4": {
+      "type": "string"
+    },
+    "__schema5": {
+      "$ref": "#/$defs/EpochTime"
+    },
+    "EpochTime": {
+      "id": "EpochTime"
+    },
+    "__schema6": {
+      "$ref": "#/$defs/DateTime"
+    },
+    "__schema7": {},
+    "__schema8": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/ConnectorFilteringRule"
+      }
+    },
+    "ConnectorFilteringRule": {
+      "type": "object",
+      "properties": {
+        "created_at": {
+          "$ref": "#/$defs/__schema9"
+        },
+        "field": {
+          "$ref": "#/$defs/__schema10"
+        },
+        "id": {
+          "$ref": "#/$defs/__schema11"
+        },
+        "order": {
+          "$ref": "#/$defs/__schema12"
+        },
+        "policy": {
+          "$ref": "#/$defs/ConnectorFilteringPolicy"
+        },
+        "rule": {
+          "$ref": "#/$defs/ConnectorFilteringRuleRule"
+        },
+        "updated_at": {
+          "$ref": "#/$defs/__schema13"
+        },
+        "value": {
+          "$ref": "#/$defs/__schema14"
+        }
+      },
+      "required": [
+        "field",
+        "id",
+        "order",
+        "policy",
+        "rule",
+        "value"
+      ],
+      "additionalProperties": false,
+      "id": "ConnectorFilteringRule"
+    },
+    "__schema9": {
+      "$ref": "#/$defs/DateTime"
+    },
+    "__schema10": {
+      "$ref": "#/$defs/Field"
+    },
+    "Field": {
+      "type": "string",
+      "id": "Field"
+    },
+    "__schema11": {
+      "$ref": "#/$defs/Id"
+    },
+    "__schema12": {
+      "$ref": "#/$defs/integer"
+    },
+    "integer": {
+      "type": "number",
+      "id": "integer"
+    },
+    "ConnectorFilteringPolicy": {
+      "type": "string",
+      "enum": [
+        "exclude",
+        "include"
+      ],
+      "id": "ConnectorFilteringPolicy"
+    },
+    "ConnectorFilteringRuleRule": {
+      "type": "string",
+      "enum": [
+        "contains",
+        "ends_with",
+        "equals",
+        "regex",
+        "starts_with",
+        ">",
+        "<"
+      ],
+      "id": "ConnectorFilteringRuleRule"
+    },
+    "__schema13": {
+      "$ref": "#/$defs/DateTime"
+    },
+    "__schema14": {
+      "type": "string"
+    },
+    "ConnectorFilteringRulesValidation": {
+      "type": "object",
+      "properties": {
+        "errors": {
+          "$ref": "#/$defs/__schema15"
+        },
+        "state": {
+          "$ref": "#/$defs/ConnectorFilteringValidationState"
+        }
+      },
+      "required": [
+        "errors",
+        "state"
+      ],
+      "additionalProperties": false,
+      "id": "ConnectorFilteringRulesValidation"
+    },
+    "__schema15": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/ConnectorFilteringValidation"
+      }
+    },
+    "ConnectorFilteringValidation": {
+      "type": "object",
+      "properties": {
+        "ids": {
+          "$ref": "#/$defs/__schema16"
+        },
+        "messages": {
+          "$ref": "#/$defs/__schema17"
+        }
+      },
+      "required": [
+        "ids",
+        "messages"
+      ],
+      "additionalProperties": false,
+      "id": "ConnectorFilteringValidation"
+    },
+    "__schema16": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/Id"
+      }
+    },
+    "__schema17": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "ConnectorFilteringValidationState": {
+      "type": "string",
+      "enum": [
+        "edited",
+        "invalid",
+        "valid"
+      ],
+      "id": "ConnectorFilteringValidationState"
+    },
+    "__schema18": {
+      "type": "string"
+    },
+    "__schema19": {
+      "$ref": "#/$defs/__schema20"
+    },
+    "__schema20": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/ConnectorFilteringRule"
+      }
+    },
+    "__schema21": {
+      "$ref": "#/$defs/ConnectorFilteringAdvancedSnippet"
+    }
+  }
+}

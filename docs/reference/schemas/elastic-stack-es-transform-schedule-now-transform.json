@@ -1,0 +1,59 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "transform_id": {
+      "$ref": "#/$defs/__schema0"
+    },
+    "timeout": {
+      "$ref": "#/$defs/__schema1"
+    }
+  },
+  "required": [
+    "transform_id"
+  ],
+  "additionalProperties": false,
+  "id": "TransformScheduleNowTransformRequest",
+  "$defs": {
+    "__schema0": {
+      "description": "Identifier for the transform.",
+      "$ref": "#/$defs/Id"
+    },
+    "Id": {
+      "type": "string",
+      "id": "Id"
+    },
+    "__schema1": {
+      "$ref": "#/$defs/__schema2"
+    },
+    "__schema2": {
+      "description": "Controls the time to wait for the scheduling to take place",
+      "$ref": "#/$defs/Duration"
+    },
+    "Duration": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/__schema3"
+        },
+        {
+          "$ref": "#/$defs/__schema4"
+        },
+        {
+          "$ref": "#/$defs/__schema5"
+        }
+      ],
+      "id": "Duration"
+    },
+    "__schema3": {
+      "type": "string"
+    },
+    "__schema4": {
+      "type": "number",
+      "const": -1
+    },
+    "__schema5": {
+      "type": "number",
+      "const": 0
+    }
+  }
+}

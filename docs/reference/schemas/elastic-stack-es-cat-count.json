@@ -1,0 +1,135 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "index": {
+      "$ref": "#/$defs/__schema0"
+    },
+    "h": {
+      "$ref": "#/$defs/__schema4"
+    },
+    "s": {
+      "$ref": "#/$defs/__schema9"
+    }
+  },
+  "additionalProperties": false,
+  "id": "CatCountRequest",
+  "$defs": {
+    "__schema0": {
+      "$ref": "#/$defs/__schema1"
+    },
+    "__schema1": {
+      "description": "A comma-separated list of data streams, indices, and aliases used to limit the request. It supports wildcards (`*`). To target all data streams and indices, omit this parameter or use `*` or `_all`.",
+      "$ref": "#/$defs/Indices"
+    },
+    "Indices": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/__schema2"
+        },
+        {
+          "$ref": "#/$defs/__schema3"
+        }
+      ],
+      "id": "Indices"
+    },
+    "__schema2": {
+      "$ref": "#/$defs/IndexName"
+    },
+    "IndexName": {
+      "type": "string",
+      "id": "IndexName"
+    },
+    "__schema3": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/IndexName"
+      }
+    },
+    "__schema4": {
+      "$ref": "#/$defs/__schema5"
+    },
+    "__schema5": {
+      "description": "A comma-separated list of columns names to display. It supports simple wildcards.",
+      "$ref": "#/$defs/CatCatCountColumns"
+    },
+    "CatCatCountColumn": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/__schema6"
+        },
+        {
+          "$ref": "#/$defs/__schema7"
+        }
+      ],
+      "id": "CatCatCountColumn"
+    },
+    "__schema6": {
+      "type": "string",
+      "enum": [
+        "epoch",
+        "t",
+        "time",
+        "timestamp",
+        "ts",
+        "hms",
+        "hhmmss",
+        "count",
+        "dc",
+        "docs.count",
+        "docsCount"
+      ]
+    },
+    "__schema7": {
+      "type": "string"
+    },
+    "__schema8": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/CatCatCountColumn"
+      }
+    },
+    "CatCatCountColumns": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/CatCatCountColumn"
+        },
+        {
+          "$ref": "#/$defs/__schema8"
+        }
+      ],
+      "id": "CatCatCountColumns"
+    },
+    "__schema9": {
+      "$ref": "#/$defs/__schema10"
+    },
+    "__schema10": {
+      "description": "List of columns that determine how the table should be sorted. Sorting defaults to ascending and can be changed by setting `:asc` or `:desc` as a suffix to the column name.",
+      "$ref": "#/$defs/Names"
+    },
+    "Names": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/__schema11"
+        },
+        {
+          "$ref": "#/$defs/__schema12"
+        }
+      ],
+      "id": "Names"
+    },
+    "__schema11": {
+      "$ref": "#/$defs/Name"
+    },
+    "Name": {
+      "type": "string",
+      "id": "Name"
+    },
+    "__schema12": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/Name"
+      }
+    }
+  }
+}

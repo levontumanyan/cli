@@ -1,0 +1,113 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "transform_id": {
+      "$ref": "#/$defs/__schema0"
+    },
+    "allow_no_match": {
+      "$ref": "#/$defs/__schema3"
+    },
+    "from": {
+      "$ref": "#/$defs/__schema5"
+    },
+    "size": {
+      "$ref": "#/$defs/__schema7"
+    },
+    "timeout": {
+      "$ref": "#/$defs/__schema9"
+    }
+  },
+  "required": [
+    "transform_id"
+  ],
+  "additionalProperties": false,
+  "id": "TransformGetTransformStatsRequest",
+  "$defs": {
+    "__schema0": {
+      "description": "Identifier for the transform. It can be a transform identifier or a wildcard expression. You can get information for all transforms by using `_all`, by specifying `*` as the `<transform_id>`, or by omitting the `<transform_id>`.",
+      "$ref": "#/$defs/Names"
+    },
+    "Names": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/__schema1"
+        },
+        {
+          "$ref": "#/$defs/__schema2"
+        }
+      ],
+      "id": "Names"
+    },
+    "__schema1": {
+      "$ref": "#/$defs/Name"
+    },
+    "Name": {
+      "type": "string",
+      "id": "Name"
+    },
+    "__schema2": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/Name"
+      }
+    },
+    "__schema3": {
+      "$ref": "#/$defs/__schema4"
+    },
+    "__schema4": {
+      "type": "boolean",
+      "description": "Specifies what to do when the request: 1. Contains wildcard expressions and there are no transforms that match. 2. Contains the _all string or no identifiers and there are no matches. 3. Contains wildcard expressions and there are only partial matches. If this parameter is false, the request returns a 404 status code when there are no matches or only partial matches."
+    },
+    "__schema5": {
+      "$ref": "#/$defs/__schema6"
+    },
+    "__schema6": {
+      "description": "Skips the specified number of transforms.",
+      "$ref": "#/$defs/long"
+    },
+    "long": {
+      "type": "number",
+      "id": "long"
+    },
+    "__schema7": {
+      "$ref": "#/$defs/__schema8"
+    },
+    "__schema8": {
+      "description": "Specifies the maximum number of transforms to obtain.",
+      "$ref": "#/$defs/long"
+    },
+    "__schema9": {
+      "$ref": "#/$defs/__schema10"
+    },
+    "__schema10": {
+      "description": "Controls the time to wait for the stats",
+      "$ref": "#/$defs/Duration"
+    },
+    "Duration": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/__schema11"
+        },
+        {
+          "$ref": "#/$defs/__schema12"
+        },
+        {
+          "$ref": "#/$defs/__schema13"
+        }
+      ],
+      "id": "Duration"
+    },
+    "__schema11": {
+      "type": "string"
+    },
+    "__schema12": {
+      "type": "number",
+      "const": -1
+    },
+    "__schema13": {
+      "type": "number",
+      "const": 0
+    }
+  }
+}

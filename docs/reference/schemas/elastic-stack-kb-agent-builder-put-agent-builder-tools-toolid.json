@@ -1,0 +1,42 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "toolId": {
+      "type": "string",
+      "description": "The unique identifier of the tool to update."
+    },
+    "configuration": {
+      "type": "object",
+      "propertyNames": {
+        "$ref": "#/$defs/__schema0"
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/__schema1"
+      },
+      "description": "Updated tool-specific configuration parameters. See examples for details."
+    },
+    "description": {
+      "type": "string",
+      "description": "Updated description of what the tool does."
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/__schema2"
+      },
+      "description": "Updated tags for categorizing and organizing tools."
+    }
+  },
+  "required": [
+    "toolId"
+  ],
+  "additionalProperties": {},
+  "$defs": {
+    "__schema0": {
+      "type": "string"
+    },
+    "__schema1": {},
+    "__schema2": {}
+  }
+}

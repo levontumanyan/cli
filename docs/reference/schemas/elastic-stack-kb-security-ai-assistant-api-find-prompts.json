@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "fields": {
+      "type": "string",
+      "description": "List of specific fields to include in each returned prompt."
+    },
+    "filter": {
+      "type": "string",
+      "description": "Search query string to filter prompts by matching fields."
+    },
+    "sort_field": {
+      "type": "string",
+      "description": "Field to sort prompts by."
+    },
+    "sort_order": {
+      "type": "string",
+      "description": "Sort order, either asc or desc."
+    },
+    "page": {
+      "type": "number",
+      "description": "Page number for pagination."
+    },
+    "per_page": {
+      "type": "number",
+      "description": "Number of prompts per page."
+    }
+  },
+  "additionalProperties": {}
+}

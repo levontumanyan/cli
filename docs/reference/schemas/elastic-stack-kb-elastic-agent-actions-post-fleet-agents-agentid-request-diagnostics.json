@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "agentId": {
+      "type": "string",
+      "description": "The agentId parameter"
+    },
+    "additional_metrics": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/__schema0"
+      },
+      "description": ""
+    }
+  },
+  "required": [
+    "agentId"
+  ],
+  "additionalProperties": {},
+  "$defs": {
+    "__schema0": {}
+  }
+}

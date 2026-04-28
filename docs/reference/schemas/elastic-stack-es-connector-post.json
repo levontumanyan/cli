@@ -1,0 +1,68 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "description": {
+      "$ref": "#/$defs/__schema0"
+    },
+    "index_name": {
+      "$ref": "#/$defs/__schema2"
+    },
+    "is_native": {
+      "$ref": "#/$defs/__schema4"
+    },
+    "language": {
+      "$ref": "#/$defs/__schema6"
+    },
+    "name": {
+      "$ref": "#/$defs/__schema8"
+    },
+    "service_type": {
+      "$ref": "#/$defs/__schema10"
+    }
+  },
+  "additionalProperties": false,
+  "id": "ConnectorPostRequest",
+  "$defs": {
+    "__schema0": {
+      "$ref": "#/$defs/__schema1"
+    },
+    "__schema1": {
+      "type": "string"
+    },
+    "__schema2": {
+      "$ref": "#/$defs/__schema3"
+    },
+    "__schema3": {
+      "$ref": "#/$defs/IndexName"
+    },
+    "IndexName": {
+      "type": "string",
+      "id": "IndexName"
+    },
+    "__schema4": {
+      "$ref": "#/$defs/__schema5"
+    },
+    "__schema5": {
+      "type": "boolean"
+    },
+    "__schema6": {
+      "$ref": "#/$defs/__schema7"
+    },
+    "__schema7": {
+      "type": "string"
+    },
+    "__schema8": {
+      "$ref": "#/$defs/__schema9"
+    },
+    "__schema9": {
+      "type": "string"
+    },
+    "__schema10": {
+      "$ref": "#/$defs/__schema11"
+    },
+    "__schema11": {
+      "type": "string"
+    }
+  }
+}

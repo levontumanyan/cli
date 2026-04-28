@@ -1,0 +1,34 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "sort_field": {
+      "type": "string",
+      "description": ""
+    },
+    "sort_order": {
+      "type": "string",
+      "description": ""
+    },
+    "page": {
+      "type": "number",
+      "description": ""
+    },
+    "per_page": {
+      "type": "number",
+      "description": ""
+    },
+    "filterQuery": {
+      "type": "string",
+      "description": "An ES query to filter by."
+    },
+    "entity_types": {
+      "type": "string",
+      "description": ""
+    }
+  },
+  "required": [
+    "entity_types"
+  ],
+  "additionalProperties": {}
+}

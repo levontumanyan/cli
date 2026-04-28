@@ -1,0 +1,80 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "connector_id": {
+      "$ref": "#/$defs/__schema0"
+    },
+    "scheduling": {
+      "$ref": "#/$defs/__schema1"
+    }
+  },
+  "required": [
+    "connector_id",
+    "scheduling"
+  ],
+  "additionalProperties": false,
+  "id": "ConnectorUpdateSchedulingRequest",
+  "$defs": {
+    "__schema0": {
+      "description": "The unique identifier of the connector to be updated",
+      "$ref": "#/$defs/Id"
+    },
+    "Id": {
+      "type": "string",
+      "id": "Id"
+    },
+    "__schema1": {
+      "$ref": "#/$defs/ConnectorSchedulingConfiguration"
+    },
+    "__schema2": {
+      "$ref": "#/$defs/ConnectorConnectorScheduling"
+    },
+    "ConnectorConnectorScheduling": {
+      "type": "object",
+      "properties": {
+        "enabled": {
+          "$ref": "#/$defs/__schema3"
+        },
+        "interval": {
+          "$ref": "#/$defs/__schema4"
+        }
+      },
+      "required": [
+        "enabled",
+        "interval"
+      ],
+      "additionalProperties": false,
+      "id": "ConnectorConnectorScheduling"
+    },
+    "__schema3": {
+      "type": "boolean"
+    },
+    "__schema4": {
+      "type": "string",
+      "description": "The interval is expressed using the crontab syntax"
+    },
+    "__schema5": {
+      "$ref": "#/$defs/ConnectorConnectorScheduling"
+    },
+    "__schema6": {
+      "$ref": "#/$defs/ConnectorConnectorScheduling"
+    },
+    "ConnectorSchedulingConfiguration": {
+      "type": "object",
+      "properties": {
+        "access_control": {
+          "$ref": "#/$defs/__schema2"
+        },
+        "full": {
+          "$ref": "#/$defs/__schema5"
+        },
+        "incremental": {
+          "$ref": "#/$defs/__schema6"
+        }
+      },
+      "additionalProperties": false,
+      "id": "ConnectorSchedulingConfiguration"
+    }
+  }
+}

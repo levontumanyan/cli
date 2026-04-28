@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "traffic_filter": {
+      "type": "string",
+      "description": "traffic filters associated with this project"
+    },
+    "linked": {
+      "type": "string",
+      "description": "Contains a project ID. If specified, the result will be filtered to only those origin projects that are linked to the specified project ID in a cross-project search configuration."
+    }
+  },
+  "additionalProperties": {}
+}

@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "spaceId": {
+      "type": "string",
+      "description": "The spaceId parameter"
+    },
+    "list": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/__schema0"
+      },
+      "description": "An array of slo id and instance id"
+    }
+  },
+  "required": [
+    "spaceId",
+    "list"
+  ],
+  "additionalProperties": {},
+  "$defs": {
+    "__schema0": {}
+  }
+}

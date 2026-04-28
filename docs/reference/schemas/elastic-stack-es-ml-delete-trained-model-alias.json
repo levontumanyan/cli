@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "model_alias": {
+      "$ref": "#/$defs/__schema0"
+    },
+    "model_id": {
+      "$ref": "#/$defs/__schema1"
+    }
+  },
+  "required": [
+    "model_alias",
+    "model_id"
+  ],
+  "additionalProperties": false,
+  "id": "MlDeleteTrainedModelAliasRequest",
+  "$defs": {
+    "__schema0": {
+      "description": "The model alias to delete.",
+      "$ref": "#/$defs/Name"
+    },
+    "Name": {
+      "type": "string",
+      "id": "Name"
+    },
+    "__schema1": {
+      "description": "The trained model ID to which the model alias refers.",
+      "$ref": "#/$defs/Id"
+    },
+    "Id": {
+      "type": "string",
+      "id": "Id"
+    }
+  }
+}

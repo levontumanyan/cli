@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "page": {
+      "type": "string",
+      "description": "The page number for pagination."
+    },
+    "perPage": {
+      "type": "string",
+      "description": "The number of items per page."
+    },
+    "kuery": {
+      "type": "string",
+      "description": "KQL query to filter cloud connectors."
+    }
+  },
+  "additionalProperties": {}
+}

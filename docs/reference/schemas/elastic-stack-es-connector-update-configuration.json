@@ -1,0 +1,434 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "connector_id": {
+      "$ref": "#/$defs/__schema0"
+    },
+    "configuration": {
+      "$ref": "#/$defs/__schema1"
+    },
+    "values": {
+      "$ref": "#/$defs/__schema36"
+    }
+  },
+  "required": [
+    "connector_id"
+  ],
+  "additionalProperties": false,
+  "id": "ConnectorUpdateConfigurationRequest",
+  "$defs": {
+    "__schema0": {
+      "description": "The unique identifier of the connector to be updated",
+      "$ref": "#/$defs/Id"
+    },
+    "Id": {
+      "type": "string",
+      "id": "Id"
+    },
+    "__schema1": {
+      "$ref": "#/$defs/ConnectorConnectorConfiguration"
+    },
+    "ConnectorConnectorConfiguration": {
+      "type": "object",
+      "propertyNames": {
+        "$ref": "#/$defs/__schema2"
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/ConnectorConnectorConfigProperties"
+      },
+      "id": "ConnectorConnectorConfiguration"
+    },
+    "__schema2": {
+      "type": "string"
+    },
+    "ConnectorConnectorConfigProperties": {
+      "type": "object",
+      "properties": {
+        "category": {
+          "$ref": "#/$defs/__schema3"
+        },
+        "default_value": {
+          "$ref": "#/$defs/__schema4"
+        },
+        "depends_on": {
+          "$ref": "#/$defs/__schema10"
+        },
+        "display": {
+          "$ref": "#/$defs/ConnectorDisplayType"
+        },
+        "label": {
+          "$ref": "#/$defs/__schema13"
+        },
+        "options": {
+          "$ref": "#/$defs/__schema14"
+        },
+        "order": {
+          "$ref": "#/$defs/__schema17"
+        },
+        "placeholder": {
+          "$ref": "#/$defs/__schema18"
+        },
+        "required": {
+          "$ref": "#/$defs/__schema19"
+        },
+        "sensitive": {
+          "$ref": "#/$defs/__schema20"
+        },
+        "tooltip": {
+          "$ref": "#/$defs/__schema21"
+        },
+        "type": {
+          "$ref": "#/$defs/__schema22"
+        },
+        "ui_restrictions": {
+          "$ref": "#/$defs/__schema23"
+        },
+        "validations": {
+          "$ref": "#/$defs/__schema24"
+        },
+        "value": {
+          "$ref": "#/$defs/__schema35"
+        }
+      },
+      "required": [
+        "default_value",
+        "depends_on",
+        "display",
+        "label",
+        "options",
+        "required",
+        "sensitive",
+        "value"
+      ],
+      "additionalProperties": false,
+      "id": "ConnectorConnectorConfigProperties"
+    },
+    "__schema3": {
+      "type": "string"
+    },
+    "__schema4": {
+      "$ref": "#/$defs/ScalarValue"
+    },
+    "ScalarValue": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/__schema5"
+        },
+        {
+          "$ref": "#/$defs/__schema6"
+        },
+        {
+          "$ref": "#/$defs/__schema7"
+        },
+        {
+          "$ref": "#/$defs/__schema8"
+        },
+        {
+          "$ref": "#/$defs/__schema9"
+        }
+      ],
+      "id": "ScalarValue"
+    },
+    "__schema5": {
+      "$ref": "#/$defs/long"
+    },
+    "long": {
+      "type": "number",
+      "id": "long"
+    },
+    "__schema6": {
+      "$ref": "#/$defs/double"
+    },
+    "double": {
+      "type": "number",
+      "id": "double"
+    },
+    "__schema7": {
+      "type": "string"
+    },
+    "__schema8": {
+      "type": "boolean"
+    },
+    "__schema9": {
+      "type": "null"
+    },
+    "__schema10": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/ConnectorDependency"
+      }
+    },
+    "ConnectorDependency": {
+      "type": "object",
+      "properties": {
+        "field": {
+          "$ref": "#/$defs/__schema11"
+        },
+        "value": {
+          "$ref": "#/$defs/__schema12"
+        }
+      },
+      "required": [
+        "field",
+        "value"
+      ],
+      "additionalProperties": false,
+      "id": "ConnectorDependency"
+    },
+    "__schema11": {
+      "type": "string"
+    },
+    "__schema12": {
+      "$ref": "#/$defs/ScalarValue"
+    },
+    "ConnectorDisplayType": {
+      "type": "string",
+      "enum": [
+        "textbox",
+        "textarea",
+        "numeric",
+        "toggle",
+        "dropdown"
+      ],
+      "id": "ConnectorDisplayType"
+    },
+    "__schema13": {
+      "type": "string"
+    },
+    "__schema14": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/ConnectorSelectOption"
+      }
+    },
+    "ConnectorSelectOption": {
+      "type": "object",
+      "properties": {
+        "label": {
+          "$ref": "#/$defs/__schema15"
+        },
+        "value": {
+          "$ref": "#/$defs/__schema16"
+        }
+      },
+      "required": [
+        "label",
+        "value"
+      ],
+      "additionalProperties": false,
+      "id": "ConnectorSelectOption"
+    },
+    "__schema15": {
+      "type": "string"
+    },
+    "__schema16": {
+      "$ref": "#/$defs/ScalarValue"
+    },
+    "__schema17": {
+      "$ref": "#/$defs/integer"
+    },
+    "integer": {
+      "type": "number",
+      "id": "integer"
+    },
+    "__schema18": {
+      "type": "string"
+    },
+    "__schema19": {
+      "type": "boolean"
+    },
+    "__schema20": {
+      "type": "boolean"
+    },
+    "__schema21": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "__schema22": {
+      "$ref": "#/$defs/ConnectorConnectorFieldType"
+    },
+    "ConnectorConnectorFieldType": {
+      "type": "string",
+      "enum": [
+        "str",
+        "int",
+        "list",
+        "bool"
+      ],
+      "id": "ConnectorConnectorFieldType"
+    },
+    "__schema23": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "__schema24": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/ConnectorValidation"
+      }
+    },
+    "ConnectorValidation": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/ConnectorLessThanValidation"
+        },
+        {
+          "$ref": "#/$defs/ConnectorGreaterThanValidation"
+        },
+        {
+          "$ref": "#/$defs/ConnectorListTypeValidation"
+        },
+        {
+          "$ref": "#/$defs/ConnectorIncludedInValidation"
+        },
+        {
+          "$ref": "#/$defs/ConnectorRegexValidation"
+        }
+      ],
+      "id": "ConnectorValidation"
+    },
+    "ConnectorLessThanValidation": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "$ref": "#/$defs/__schema25"
+        },
+        "constraint": {
+          "$ref": "#/$defs/__schema26"
+        }
+      },
+      "required": [
+        "type",
+        "constraint"
+      ],
+      "additionalProperties": false,
+      "id": "ConnectorLessThanValidation"
+    },
+    "__schema25": {
+      "type": "string",
+      "const": "less_than"
+    },
+    "__schema26": {
+      "$ref": "#/$defs/double"
+    },
+    "ConnectorGreaterThanValidation": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "$ref": "#/$defs/__schema27"
+        },
+        "constraint": {
+          "$ref": "#/$defs/__schema28"
+        }
+      },
+      "required": [
+        "type",
+        "constraint"
+      ],
+      "additionalProperties": false,
+      "id": "ConnectorGreaterThanValidation"
+    },
+    "__schema27": {
+      "type": "string",
+      "const": "greater_than"
+    },
+    "__schema28": {
+      "$ref": "#/$defs/double"
+    },
+    "ConnectorListTypeValidation": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "$ref": "#/$defs/__schema29"
+        },
+        "constraint": {
+          "$ref": "#/$defs/__schema30"
+        }
+      },
+      "required": [
+        "type",
+        "constraint"
+      ],
+      "additionalProperties": false,
+      "id": "ConnectorListTypeValidation"
+    },
+    "__schema29": {
+      "type": "string",
+      "const": "list_type"
+    },
+    "__schema30": {
+      "type": "string"
+    },
+    "ConnectorIncludedInValidation": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "$ref": "#/$defs/__schema31"
+        },
+        "constraint": {
+          "$ref": "#/$defs/__schema32"
+        }
+      },
+      "required": [
+        "type",
+        "constraint"
+      ],
+      "additionalProperties": false,
+      "id": "ConnectorIncludedInValidation"
+    },
+    "__schema31": {
+      "type": "string",
+      "const": "included_in"
+    },
+    "__schema32": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/ScalarValue"
+      }
+    },
+    "ConnectorRegexValidation": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "$ref": "#/$defs/__schema33"
+        },
+        "constraint": {
+          "$ref": "#/$defs/__schema34"
+        }
+      },
+      "required": [
+        "type",
+        "constraint"
+      ],
+      "additionalProperties": false,
+      "id": "ConnectorRegexValidation"
+    },
+    "__schema33": {
+      "type": "string",
+      "const": "regex"
+    },
+    "__schema34": {
+      "type": "string"
+    },
+    "__schema35": {},
+    "__schema36": {
+      "$ref": "#/$defs/__schema37"
+    },
+    "__schema37": {
+      "type": "object",
+      "propertyNames": {
+        "type": "string"
+      },
+      "additionalProperties": {}
+    }
+  }
+}

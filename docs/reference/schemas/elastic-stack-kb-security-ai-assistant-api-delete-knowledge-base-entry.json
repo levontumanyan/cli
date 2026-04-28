@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "The unique identifier (`id`) of the Knowledge Base Entry to delete."
+    }
+  },
+  "required": [
+    "id"
+  ],
+  "additionalProperties": {}
+}

@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "records": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/__schema0"
+      },
+      "description": ""
+    }
+  },
+  "required": [
+    "records"
+  ],
+  "additionalProperties": {},
+  "$defs": {
+    "__schema0": {}
+  }
+}

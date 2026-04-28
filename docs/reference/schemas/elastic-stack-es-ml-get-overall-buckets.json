@@ -1,0 +1,147 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "job_id": {
+      "$ref": "#/$defs/__schema0"
+    },
+    "allow_no_match": {
+      "$ref": "#/$defs/__schema1"
+    },
+    "bucket_span": {
+      "$ref": "#/$defs/__schema3"
+    },
+    "end": {
+      "$ref": "#/$defs/__schema8"
+    },
+    "exclude_interim": {
+      "$ref": "#/$defs/__schema12"
+    },
+    "overall_score": {
+      "$ref": "#/$defs/__schema14"
+    },
+    "start": {
+      "$ref": "#/$defs/__schema16"
+    },
+    "top_n": {
+      "$ref": "#/$defs/__schema18"
+    }
+  },
+  "required": [
+    "job_id"
+  ],
+  "additionalProperties": false,
+  "id": "MlGetOverallBucketsRequest",
+  "$defs": {
+    "__schema0": {
+      "description": "Identifier for the anomaly detection job. It can be a job identifier, a group name, a comma-separated list of jobs or groups, or a wildcard expression. You can summarize the bucket results for all anomaly detection jobs by using `_all` or by specifying `*` as the `<job_id>`.",
+      "$ref": "#/$defs/Id"
+    },
+    "Id": {
+      "type": "string",
+      "id": "Id"
+    },
+    "__schema1": {
+      "$ref": "#/$defs/__schema2"
+    },
+    "__schema2": {
+      "type": "boolean",
+      "description": "Refer to the description for the `allow_no_match` query parameter."
+    },
+    "__schema3": {
+      "$ref": "#/$defs/__schema4"
+    },
+    "__schema4": {
+      "description": "Refer to the description for the `bucket_span` query parameter.",
+      "$ref": "#/$defs/Duration"
+    },
+    "Duration": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/__schema5"
+        },
+        {
+          "$ref": "#/$defs/__schema6"
+        },
+        {
+          "$ref": "#/$defs/__schema7"
+        }
+      ],
+      "id": "Duration"
+    },
+    "__schema5": {
+      "type": "string"
+    },
+    "__schema6": {
+      "type": "number",
+      "const": -1
+    },
+    "__schema7": {
+      "type": "number",
+      "const": 0
+    },
+    "__schema8": {
+      "$ref": "#/$defs/__schema9"
+    },
+    "__schema9": {
+      "description": "Refer to the description for the `end` query parameter.",
+      "$ref": "#/$defs/DateTime"
+    },
+    "DateTime": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/__schema10"
+        },
+        {
+          "$ref": "#/$defs/__schema11"
+        }
+      ],
+      "id": "DateTime"
+    },
+    "__schema10": {
+      "type": "string"
+    },
+    "__schema11": {
+      "$ref": "#/$defs/EpochTime"
+    },
+    "EpochTime": {
+      "id": "EpochTime"
+    },
+    "__schema12": {
+      "$ref": "#/$defs/__schema13"
+    },
+    "__schema13": {
+      "type": "boolean",
+      "description": "Refer to the description for the `exclude_interim` query parameter."
+    },
+    "__schema14": {
+      "$ref": "#/$defs/__schema15"
+    },
+    "__schema15": {
+      "description": "Refer to the description for the `overall_score` query parameter.",
+      "$ref": "#/$defs/double"
+    },
+    "double": {
+      "type": "number",
+      "id": "double"
+    },
+    "__schema16": {
+      "$ref": "#/$defs/__schema17"
+    },
+    "__schema17": {
+      "description": "Refer to the description for the `start` query parameter.",
+      "$ref": "#/$defs/DateTime"
+    },
+    "__schema18": {
+      "$ref": "#/$defs/__schema19"
+    },
+    "__schema19": {
+      "description": "Refer to the description for the `top_n` query parameter.",
+      "$ref": "#/$defs/integer"
+    },
+    "integer": {
+      "type": "number",
+      "id": "integer"
+    }
+  }
+}

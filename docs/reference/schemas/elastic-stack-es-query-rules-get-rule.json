@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "ruleset_id": {
+      "$ref": "#/$defs/__schema0"
+    },
+    "rule_id": {
+      "$ref": "#/$defs/__schema1"
+    }
+  },
+  "required": [
+    "ruleset_id",
+    "rule_id"
+  ],
+  "additionalProperties": false,
+  "id": "QueryRulesGetRuleRequest",
+  "$defs": {
+    "__schema0": {
+      "description": "The unique identifier of the query ruleset containing the rule to retrieve",
+      "$ref": "#/$defs/Id"
+    },
+    "Id": {
+      "type": "string",
+      "id": "Id"
+    },
+    "__schema1": {
+      "description": "The unique identifier of the query rule within the specified ruleset to retrieve",
+      "$ref": "#/$defs/Id"
+    }
+  }
+}

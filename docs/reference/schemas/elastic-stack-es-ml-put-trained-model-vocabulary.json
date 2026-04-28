@@ -1,0 +1,74 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "model_id": {
+      "$ref": "#/$defs/__schema0"
+    },
+    "vocabulary": {
+      "$ref": "#/$defs/__schema1"
+    },
+    "merges": {
+      "$ref": "#/$defs/__schema3"
+    },
+    "scores": {
+      "$ref": "#/$defs/__schema6"
+    }
+  },
+  "required": [
+    "model_id",
+    "vocabulary"
+  ],
+  "additionalProperties": false,
+  "id": "MlPutTrainedModelVocabularyRequest",
+  "$defs": {
+    "__schema0": {
+      "description": "The unique identifier of the trained model.",
+      "$ref": "#/$defs/Id"
+    },
+    "Id": {
+      "type": "string",
+      "id": "Id"
+    },
+    "__schema1": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/__schema2"
+      },
+      "description": "The model vocabulary, which must not be empty."
+    },
+    "__schema2": {
+      "type": "string"
+    },
+    "__schema3": {
+      "$ref": "#/$defs/__schema4"
+    },
+    "__schema4": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/__schema5"
+      },
+      "description": "The optional model merges if required by the tokenizer."
+    },
+    "__schema5": {
+      "type": "string"
+    },
+    "__schema6": {
+      "$ref": "#/$defs/__schema7"
+    },
+    "__schema7": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/__schema8"
+      },
+      "description": "The optional vocabulary value scores if required by the tokenizer."
+    },
+    "__schema8": {
+      "$ref": "#/$defs/double"
+    },
+    "double": {
+      "type": "number",
+      "id": "double"
+    }
+  }
+}

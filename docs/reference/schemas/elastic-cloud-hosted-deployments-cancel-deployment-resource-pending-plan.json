@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "deployment_id": {
+      "type": "string",
+      "description": "Identifier for the Deployment"
+    },
+    "resource_kind": {
+      "type": "string",
+      "description": "The kind of resource"
+    },
+    "ref_id": {
+      "type": "string",
+      "description": "User-specified RefId for the Resource (or '_main' if there is only one)"
+    },
+    "force_delete": {
+      "type": "boolean",
+      "description": "When `true`, deletes the pending plan instead of attempting a graceful cancellation. The default is `false`."
+    },
+    "ignore_missing": {
+      "type": "boolean",
+      "description": "When `true`, returns successfully, even when plans are missing. The default is `false`."
+    }
+  },
+  "required": [
+    "deployment_id",
+    "resource_kind",
+    "ref_id"
+  ],
+  "additionalProperties": {}
+}

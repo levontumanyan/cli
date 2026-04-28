@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "include_by_default": {
+      "type": "boolean",
+      "description": "Retrieves a list of resources that have include_by_default set or not set"
+    },
+    "region": {
+      "type": "string",
+      "description": "If provided limits the traffic filters to that region only."
+    }
+  },
+  "additionalProperties": {}
+}

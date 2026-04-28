@@ -1,0 +1,44 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "scroll_id": {
+      "$ref": "#/$defs/__schema0"
+    }
+  },
+  "additionalProperties": false,
+  "id": "ClearScrollRequest",
+  "$defs": {
+    "__schema0": {
+      "$ref": "#/$defs/__schema1"
+    },
+    "__schema1": {
+      "description": "The scroll IDs to clear. To clear all scroll IDs, use `_all`.",
+      "$ref": "#/$defs/ScrollIds"
+    },
+    "ScrollIds": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/__schema2"
+        },
+        {
+          "$ref": "#/$defs/__schema3"
+        }
+      ],
+      "id": "ScrollIds"
+    },
+    "__schema2": {
+      "$ref": "#/$defs/ScrollId"
+    },
+    "ScrollId": {
+      "type": "string",
+      "id": "ScrollId"
+    },
+    "__schema3": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/ScrollId"
+      }
+    }
+  }
+}

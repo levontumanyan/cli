@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "The ID of the watchlist to update"
+    },
+    "description": {
+      "type": "string",
+      "description": "Description of the watchlist"
+    },
+    "managed": {
+      "type": "boolean",
+      "description": "Indicates if the watchlist is managed by the system"
+    },
+    "name": {
+      "type": "string",
+      "description": "Unique name of the watchlist"
+    },
+    "riskModifier": {
+      "type": "number",
+      "description": "Risk score modifier associated with the watchlist"
+    }
+  },
+  "required": [
+    "id",
+    "name",
+    "riskModifier"
+  ],
+  "additionalProperties": {}
+}

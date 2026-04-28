@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "connector_id": {
+      "$ref": "#/$defs/__schema0"
+    },
+    "service_type": {
+      "$ref": "#/$defs/__schema1"
+    }
+  },
+  "required": [
+    "connector_id",
+    "service_type"
+  ],
+  "additionalProperties": false,
+  "id": "ConnectorUpdateServiceTypeRequest",
+  "$defs": {
+    "__schema0": {
+      "description": "The unique identifier of the connector to be updated",
+      "$ref": "#/$defs/Id"
+    },
+    "Id": {
+      "type": "string",
+      "id": "Id"
+    },
+    "__schema1": {
+      "type": "string"
+    }
+  }
+}

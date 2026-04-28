@@ -1,0 +1,52 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "agent_id": {
+      "type": "string",
+      "description": "The unique identifier of the agent."
+    },
+    "has_warnings": {
+      "type": "boolean",
+      "description": "Filter to conversations with or without high-token warnings."
+    },
+    "search": {
+      "type": "string",
+      "description": "Free-text search filter on conversation title."
+    },
+    "search_after": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/__schema0"
+      },
+      "description": "Cursor for pagination. Pass the search_after value from the previous response."
+    },
+    "size": {
+      "type": "number",
+      "description": "Number of results per page."
+    },
+    "sort_field": {
+      "type": "string",
+      "description": "Field to sort results by."
+    },
+    "sort_order": {
+      "type": "string",
+      "description": "Sort direction."
+    },
+    "usernames": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/__schema1"
+      },
+      "description": "Filter results to conversations by these usernames."
+    }
+  },
+  "required": [
+    "agent_id"
+  ],
+  "additionalProperties": {},
+  "$defs": {
+    "__schema0": {},
+    "__schema1": {}
+  }
+}

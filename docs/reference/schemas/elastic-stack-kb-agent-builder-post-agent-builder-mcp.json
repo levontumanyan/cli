@@ -1,0 +1,11 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "namespace": {
+      "type": "string",
+      "description": "Comma-separated list of namespaces to filter tools. Only tools matching the specified namespaces will be returned."
+    }
+  },
+  "additionalProperties": {}
+}

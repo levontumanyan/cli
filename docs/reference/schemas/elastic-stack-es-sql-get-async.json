@@ -1,0 +1,89 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "id": {
+      "$ref": "#/$defs/__schema0"
+    },
+    "delimiter": {
+      "$ref": "#/$defs/__schema1"
+    },
+    "format": {
+      "$ref": "#/$defs/__schema3"
+    },
+    "keep_alive": {
+      "$ref": "#/$defs/__schema5"
+    },
+    "wait_for_completion_timeout": {
+      "$ref": "#/$defs/__schema10"
+    }
+  },
+  "required": [
+    "id"
+  ],
+  "additionalProperties": false,
+  "id": "SqlGetAsyncRequest",
+  "$defs": {
+    "__schema0": {
+      "description": "The identifier for the search.",
+      "$ref": "#/$defs/Id"
+    },
+    "Id": {
+      "type": "string",
+      "id": "Id"
+    },
+    "__schema1": {
+      "$ref": "#/$defs/__schema2"
+    },
+    "__schema2": {
+      "type": "string",
+      "description": "The separator for CSV results. The API supports this parameter only for CSV responses."
+    },
+    "__schema3": {
+      "$ref": "#/$defs/__schema4"
+    },
+    "__schema4": {
+      "type": "string",
+      "description": "The format for the response. You must specify a format using this parameter or the `Accept` HTTP header. If you specify both, the API uses this parameter."
+    },
+    "__schema5": {
+      "$ref": "#/$defs/__schema6"
+    },
+    "__schema6": {
+      "description": "The retention period for the search and its results. It defaults to the `keep_alive` period for the original SQL search.",
+      "$ref": "#/$defs/Duration"
+    },
+    "Duration": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/__schema7"
+        },
+        {
+          "$ref": "#/$defs/__schema8"
+        },
+        {
+          "$ref": "#/$defs/__schema9"
+        }
+      ],
+      "id": "Duration"
+    },
+    "__schema7": {
+      "type": "string"
+    },
+    "__schema8": {
+      "type": "number",
+      "const": -1
+    },
+    "__schema9": {
+      "type": "number",
+      "const": 0
+    },
+    "__schema10": {
+      "$ref": "#/$defs/__schema11"
+    },
+    "__schema11": {
+      "description": "The period to wait for complete results. It defaults to no timeout, meaning the request waits for complete search results.",
+      "$ref": "#/$defs/Duration"
+    }
+  }
+}

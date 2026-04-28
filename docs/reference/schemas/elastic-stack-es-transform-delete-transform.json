@@ -1,0 +1,79 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "transform_id": {
+      "$ref": "#/$defs/__schema0"
+    },
+    "force": {
+      "$ref": "#/$defs/__schema1"
+    },
+    "delete_dest_index": {
+      "$ref": "#/$defs/__schema3"
+    },
+    "timeout": {
+      "$ref": "#/$defs/__schema5"
+    }
+  },
+  "required": [
+    "transform_id"
+  ],
+  "additionalProperties": false,
+  "id": "TransformDeleteTransformRequest",
+  "$defs": {
+    "__schema0": {
+      "description": "Identifier for the transform.",
+      "$ref": "#/$defs/Id"
+    },
+    "Id": {
+      "type": "string",
+      "id": "Id"
+    },
+    "__schema1": {
+      "$ref": "#/$defs/__schema2"
+    },
+    "__schema2": {
+      "type": "boolean",
+      "description": "If this value is false, the transform must be stopped before it can be deleted. If true, the transform is deleted regardless of its current state."
+    },
+    "__schema3": {
+      "$ref": "#/$defs/__schema4"
+    },
+    "__schema4": {
+      "type": "boolean",
+      "description": "If this value is true, the destination index is deleted together with the transform. If false, the destination index will not be deleted"
+    },
+    "__schema5": {
+      "$ref": "#/$defs/__schema6"
+    },
+    "__schema6": {
+      "description": "Period to wait for a response. If no response is received before the timeout expires, the request fails and returns an error.",
+      "$ref": "#/$defs/Duration"
+    },
+    "Duration": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/__schema7"
+        },
+        {
+          "$ref": "#/$defs/__schema8"
+        },
+        {
+          "$ref": "#/$defs/__schema9"
+        }
+      ],
+      "id": "Duration"
+    },
+    "__schema7": {
+      "type": "string"
+    },
+    "__schema8": {
+      "type": "number",
+      "const": -1
+    },
+    "__schema9": {
+      "type": "number",
+      "const": 0
+    }
+  }
+}

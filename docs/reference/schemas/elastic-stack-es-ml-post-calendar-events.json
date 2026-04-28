@@ -1,0 +1,126 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "calendar_id": {
+      "$ref": "#/$defs/__schema0"
+    },
+    "events": {
+      "$ref": "#/$defs/__schema1"
+    }
+  },
+  "required": [
+    "calendar_id",
+    "events"
+  ],
+  "additionalProperties": false,
+  "id": "MlPostCalendarEventsRequest",
+  "$defs": {
+    "__schema0": {
+      "description": "A string that uniquely identifies a calendar.",
+      "$ref": "#/$defs/Id"
+    },
+    "Id": {
+      "type": "string",
+      "id": "Id"
+    },
+    "__schema1": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/MlCalendarEvent"
+      },
+      "description": "A list of one of more scheduled events. The event’s start and end times can be specified as integer milliseconds since the epoch or as a string in ISO 8601 format."
+    },
+    "MlCalendarEvent": {
+      "type": "object",
+      "properties": {
+        "calendar_id": {
+          "$ref": "#/$defs/__schema2"
+        },
+        "event_id": {
+          "$ref": "#/$defs/__schema3"
+        },
+        "description": {
+          "$ref": "#/$defs/__schema4"
+        },
+        "end_time": {
+          "$ref": "#/$defs/__schema5"
+        },
+        "start_time": {
+          "$ref": "#/$defs/__schema8"
+        },
+        "skip_result": {
+          "$ref": "#/$defs/__schema9"
+        },
+        "skip_model_update": {
+          "$ref": "#/$defs/__schema10"
+        },
+        "force_time_shift": {
+          "$ref": "#/$defs/__schema11"
+        }
+      },
+      "required": [
+        "description",
+        "end_time",
+        "start_time"
+      ],
+      "additionalProperties": false,
+      "id": "MlCalendarEvent"
+    },
+    "__schema2": {
+      "description": "A string that uniquely identifies a calendar.",
+      "$ref": "#/$defs/Id"
+    },
+    "__schema3": {
+      "$ref": "#/$defs/Id"
+    },
+    "__schema4": {
+      "type": "string",
+      "description": "A description of the scheduled event."
+    },
+    "__schema5": {
+      "description": "The timestamp for the end of the scheduled event in milliseconds since the epoch or ISO 8601 format.",
+      "$ref": "#/$defs/DateTime"
+    },
+    "DateTime": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/__schema6"
+        },
+        {
+          "$ref": "#/$defs/__schema7"
+        }
+      ],
+      "id": "DateTime"
+    },
+    "__schema6": {
+      "type": "string"
+    },
+    "__schema7": {
+      "$ref": "#/$defs/EpochTime"
+    },
+    "EpochTime": {
+      "id": "EpochTime"
+    },
+    "__schema8": {
+      "description": "The timestamp for the beginning of the scheduled event in milliseconds since the epoch or ISO 8601 format.",
+      "$ref": "#/$defs/DateTime"
+    },
+    "__schema9": {
+      "type": "boolean",
+      "description": "When true the model will not create results for this calendar period."
+    },
+    "__schema10": {
+      "type": "boolean",
+      "description": "When true the model will not be updated for this calendar period."
+    },
+    "__schema11": {
+      "description": "Shift time by this many seconds. For example adjust time for daylight savings changes",
+      "$ref": "#/$defs/integer"
+    },
+    "integer": {
+      "type": "number",
+      "id": "integer"
+    }
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "spaceId": {
+      "type": "string",
+      "description": "The spaceId parameter"
+    },
+    "sloId": {
+      "type": "string",
+      "description": "The sloId parameter"
+    },
+    "instanceId": {
+      "type": "string",
+      "description": "the specific instanceId used by the summary calculation"
+    }
+  },
+  "required": [
+    "spaceId",
+    "sloId"
+  ],
+  "additionalProperties": {}
+}

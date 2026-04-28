@@ -1,0 +1,245 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "index": {
+      "$ref": "#/$defs/__schema0"
+    },
+    "include_source_on_error": {
+      "$ref": "#/$defs/__schema1"
+    },
+    "list_executed_pipelines": {
+      "$ref": "#/$defs/__schema2"
+    },
+    "pipeline": {
+      "$ref": "#/$defs/__schema3"
+    },
+    "refresh": {
+      "$ref": "#/$defs/__schema4"
+    },
+    "routing": {
+      "$ref": "#/$defs/__schema7"
+    },
+    "_source": {
+      "$ref": "#/$defs/__schema10"
+    },
+    "_source_excludes": {
+      "$ref": "#/$defs/__schema15"
+    },
+    "_source_includes": {
+      "$ref": "#/$defs/__schema16"
+    },
+    "timeout": {
+      "$ref": "#/$defs/__schema17"
+    },
+    "wait_for_active_shards": {
+      "$ref": "#/$defs/__schema21"
+    },
+    "require_alias": {
+      "$ref": "#/$defs/__schema23"
+    },
+    "require_data_stream": {
+      "$ref": "#/$defs/__schema24"
+    },
+    "operations": {
+      "$ref": "#/$defs/__schema25"
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "__schema0": {
+      "description": "The name of the data stream, index, or index alias to perform bulk actions on.",
+      "$ref": "#/$defs/IndexName"
+    },
+    "IndexName": {
+      "type": "string",
+      "id": "IndexName"
+    },
+    "__schema1": {
+      "type": "boolean",
+      "description": "True or false if to include the document source in the error message in case of parsing errors."
+    },
+    "__schema2": {
+      "type": "boolean",
+      "description": "If `true`, the response will include the ingest pipelines that were run for each index or create."
+    },
+    "__schema3": {
+      "type": "string",
+      "description": "The pipeline identifier to use to preprocess incoming documents. If the index has a default ingest pipeline specified, setting the value to `_none` turns off the default ingest pipeline for this request. If a final pipeline is configured, it will always run regardless of the value of this parameter."
+    },
+    "__schema4": {
+      "description": "If `true`, Elasticsearch refreshes the affected shards to make this operation visible to search. If `wait_for`, wait for a refresh to make this operation visible to search. If `false`, do nothing with refreshes. Valid values: `true`, `false`, `wait_for`.",
+      "$ref": "#/$defs/Refresh"
+    },
+    "Refresh": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/__schema5"
+        },
+        {
+          "$ref": "#/$defs/__schema6"
+        }
+      ],
+      "id": "Refresh"
+    },
+    "__schema5": {
+      "type": "boolean"
+    },
+    "__schema6": {
+      "type": "string",
+      "enum": [
+        "true",
+        "false",
+        "wait_for"
+      ]
+    },
+    "__schema7": {
+      "description": "A custom value that is used to route operations to a specific shard.",
+      "$ref": "#/$defs/Routing"
+    },
+    "Routing": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/__schema8"
+        },
+        {
+          "$ref": "#/$defs/__schema9"
+        }
+      ],
+      "id": "Routing"
+    },
+    "__schema8": {
+      "type": "string"
+    },
+    "__schema9": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "__schema10": {
+      "description": "Indicates whether to return the `_source` field (`true` or `false`) or contains a list of fields to return.",
+      "$ref": "#/$defs/SearchSourceConfigParam"
+    },
+    "__schema11": {
+      "type": "boolean"
+    },
+    "__schema12": {
+      "$ref": "#/$defs/Fields"
+    },
+    "Fields": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/__schema13"
+        },
+        {
+          "$ref": "#/$defs/__schema14"
+        }
+      ],
+      "id": "Fields"
+    },
+    "__schema13": {
+      "$ref": "#/$defs/Field"
+    },
+    "Field": {
+      "type": "string",
+      "id": "Field"
+    },
+    "__schema14": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/Field"
+      }
+    },
+    "SearchSourceConfigParam": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/__schema11"
+        },
+        {
+          "$ref": "#/$defs/__schema12"
+        }
+      ],
+      "id": "SearchSourceConfigParam"
+    },
+    "__schema15": {
+      "description": "A comma-separated list of source fields to exclude from the response. You can also use this parameter to exclude fields from the subset specified in `_source_includes` query parameter. If the `_source` parameter is `false`, this parameter is ignored.",
+      "$ref": "#/$defs/Fields"
+    },
+    "__schema16": {
+      "description": "A comma-separated list of source fields to include in the response. If this parameter is specified, only these source fields are returned. You can exclude fields from this subset using the `_source_excludes` query parameter. If the `_source` parameter is `false`, this parameter is ignored.",
+      "$ref": "#/$defs/Fields"
+    },
+    "__schema17": {
+      "description": "The period each action waits for the following operations: automatic index creation, dynamic mapping updates, and waiting for active shards. The default is `1m` (one minute), which guarantees Elasticsearch waits for at least the timeout before failing. The actual wait time could be longer, particularly when multiple waits occur.",
+      "$ref": "#/$defs/Duration"
+    },
+    "Duration": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/__schema18"
+        },
+        {
+          "$ref": "#/$defs/__schema19"
+        },
+        {
+          "$ref": "#/$defs/__schema20"
+        }
+      ],
+      "id": "Duration"
+    },
+    "__schema18": {
+      "type": "string"
+    },
+    "__schema19": {
+      "type": "number",
+      "const": -1
+    },
+    "__schema20": {
+      "type": "number",
+      "const": 0
+    },
+    "__schema21": {
+      "description": "The number of shard copies that must be active before proceeding with the operation. Set to `all` or any positive integer up to the total number of shards in the index (`number_of_replicas+1`). The default is `1`, which waits for each primary shard to be active.",
+      "$ref": "#/$defs/WaitForActiveShards"
+    },
+    "WaitForActiveShards": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/__schema22"
+        },
+        {
+          "$ref": "#/$defs/WaitForActiveShardOptions"
+        }
+      ],
+      "id": "WaitForActiveShards"
+    },
+    "__schema22": {
+      "$ref": "#/$defs/integer"
+    },
+    "integer": {
+      "type": "number",
+      "id": "integer"
+    },
+    "WaitForActiveShardOptions": {
+      "type": "string",
+      "enum": [
+        "all",
+        "index-setting"
+      ],
+      "id": "WaitForActiveShardOptions"
+    },
+    "__schema23": {
+      "type": "boolean",
+      "description": "If `true`, the request's actions must target an index alias."
+    },
+    "__schema24": {
+      "type": "boolean",
+      "description": "If `true`, the request's actions must target a data stream (existing or to be created)."
+    },
+    "__schema25": {
+      "type": "array",
+      "items": {}
+    }
+  }
+}

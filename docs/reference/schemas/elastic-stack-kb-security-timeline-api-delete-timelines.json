@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "savedObjectIds": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/__schema0"
+      },
+      "description": "The list of IDs of the Timelines or Timeline templates to delete"
+    },
+    "searchIds": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/__schema1"
+      },
+      "description": "Saved search IDs that should be deleted alongside the timelines"
+    }
+  },
+  "required": [
+    "savedObjectIds"
+  ],
+  "additionalProperties": {},
+  "$defs": {
+    "__schema0": {},
+    "__schema1": {}
+  }
+}

@@ -1,0 +1,89 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "name": {
+      "$ref": "#/$defs/__schema0"
+    },
+    "master_timeout": {
+      "$ref": "#/$defs/__schema3"
+    },
+    "timeout": {
+      "$ref": "#/$defs/__schema8"
+    }
+  },
+  "required": [
+    "name"
+  ],
+  "additionalProperties": false,
+  "id": "ClusterDeleteComponentTemplateRequest",
+  "$defs": {
+    "__schema0": {
+      "description": "Comma-separated list or wildcard expression of component template names used to limit the request.",
+      "$ref": "#/$defs/Names"
+    },
+    "Names": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/__schema1"
+        },
+        {
+          "$ref": "#/$defs/__schema2"
+        }
+      ],
+      "id": "Names"
+    },
+    "__schema1": {
+      "$ref": "#/$defs/Name"
+    },
+    "Name": {
+      "type": "string",
+      "id": "Name"
+    },
+    "__schema2": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/Name"
+      }
+    },
+    "__schema3": {
+      "$ref": "#/$defs/__schema4"
+    },
+    "__schema4": {
+      "description": "Period to wait for a connection to the master node. If no response is received before the timeout expires, the request fails and returns an error.",
+      "$ref": "#/$defs/Duration"
+    },
+    "Duration": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/__schema5"
+        },
+        {
+          "$ref": "#/$defs/__schema6"
+        },
+        {
+          "$ref": "#/$defs/__schema7"
+        }
+      ],
+      "id": "Duration"
+    },
+    "__schema5": {
+      "type": "string"
+    },
+    "__schema6": {
+      "type": "number",
+      "const": -1
+    },
+    "__schema7": {
+      "type": "number",
+      "const": 0
+    },
+    "__schema8": {
+      "$ref": "#/$defs/__schema9"
+    },
+    "__schema9": {
+      "description": "Period to wait for a response. If no response is received before the timeout expires, the request fails and returns an error.",
+      "$ref": "#/$defs/Duration"
+    }
+  }
+}

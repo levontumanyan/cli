@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "end": {
+      "type": "string",
+      "description": "The end date for filtering backfills."
+    },
+    "page": {
+      "type": "number",
+      "description": "The page number to return."
+    },
+    "per_page": {
+      "type": "number",
+      "description": "The number of backfills to return per page."
+    },
+    "rule_ids": {
+      "type": "string",
+      "description": "A comma-separated list of rule identifiers."
+    },
+    "initiator": {
+      "type": "string",
+      "description": "The initiator of the backfill, either `user` for manual backfills or `system` for automatic gap fills."
+    },
+    "start": {
+      "type": "string",
+      "description": "The start date for filtering backfills."
+    },
+    "sort_field": {
+      "type": "string",
+      "description": "The field to sort backfills by."
+    },
+    "sort_order": {
+      "type": "string",
+      "description": "The sort order."
+    }
+  },
+  "additionalProperties": {}
+}

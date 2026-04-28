@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": ""
+    },
+    "deleteReferences": {
+      "type": "boolean",
+      "description": "Determines whether exception items referencing this value list should be deleted."
+    },
+    "ignoreReferences": {
+      "type": "boolean",
+      "description": "Determines whether to delete value list without performing any additional checks of where this list may be utilized."
+    }
+  },
+  "required": [
+    "id"
+  ],
+  "additionalProperties": {}
+}

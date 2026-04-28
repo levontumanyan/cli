@@ -1,0 +1,230 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "id": {
+      "$ref": "#/$defs/__schema0"
+    },
+    "index": {
+      "$ref": "#/$defs/__schema1"
+    },
+    "if_primary_term": {
+      "$ref": "#/$defs/__schema2"
+    },
+    "if_seq_no": {
+      "$ref": "#/$defs/__schema4"
+    },
+    "refresh": {
+      "$ref": "#/$defs/__schema6"
+    },
+    "routing": {
+      "$ref": "#/$defs/__schema10"
+    },
+    "timeout": {
+      "$ref": "#/$defs/__schema14"
+    },
+    "version": {
+      "$ref": "#/$defs/__schema19"
+    },
+    "version_type": {
+      "$ref": "#/$defs/__schema21"
+    },
+    "wait_for_active_shards": {
+      "$ref": "#/$defs/__schema23"
+    }
+  },
+  "required": [
+    "id",
+    "index"
+  ],
+  "additionalProperties": false,
+  "id": "DeleteRequest",
+  "$defs": {
+    "__schema0": {
+      "description": "A unique identifier for the document.",
+      "$ref": "#/$defs/Id"
+    },
+    "Id": {
+      "type": "string",
+      "id": "Id"
+    },
+    "__schema1": {
+      "description": "The name of the target index.",
+      "$ref": "#/$defs/IndexName"
+    },
+    "IndexName": {
+      "type": "string",
+      "id": "IndexName"
+    },
+    "__schema2": {
+      "$ref": "#/$defs/__schema3"
+    },
+    "__schema3": {
+      "description": "Only perform the operation if the document has this primary term.",
+      "$ref": "#/$defs/long"
+    },
+    "long": {
+      "type": "number",
+      "id": "long"
+    },
+    "__schema4": {
+      "$ref": "#/$defs/__schema5"
+    },
+    "__schema5": {
+      "description": "Only perform the operation if the document has this sequence number.",
+      "$ref": "#/$defs/SequenceNumber"
+    },
+    "SequenceNumber": {
+      "id": "SequenceNumber",
+      "$ref": "#/$defs/long"
+    },
+    "__schema6": {
+      "$ref": "#/$defs/__schema7"
+    },
+    "__schema7": {
+      "description": "If `true`, Elasticsearch refreshes the affected shards to make this operation visible to search. If `wait_for`, it waits for a refresh to make this operation visible to search. If `false`, it does nothing with refreshes.",
+      "$ref": "#/$defs/Refresh"
+    },
+    "Refresh": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/__schema8"
+        },
+        {
+          "$ref": "#/$defs/__schema9"
+        }
+      ],
+      "id": "Refresh"
+    },
+    "__schema8": {
+      "type": "boolean"
+    },
+    "__schema9": {
+      "type": "string",
+      "enum": [
+        "true",
+        "false",
+        "wait_for"
+      ]
+    },
+    "__schema10": {
+      "$ref": "#/$defs/__schema11"
+    },
+    "__schema11": {
+      "description": "A custom value used to route operations to a specific shard.",
+      "$ref": "#/$defs/Routing"
+    },
+    "Routing": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/__schema12"
+        },
+        {
+          "$ref": "#/$defs/__schema13"
+        }
+      ],
+      "id": "Routing"
+    },
+    "__schema12": {
+      "type": "string"
+    },
+    "__schema13": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "__schema14": {
+      "$ref": "#/$defs/__schema15"
+    },
+    "__schema15": {
+      "description": "The period to wait for active shards. This parameter is useful for situations where the primary shard assigned to perform the delete operation might not be available when the delete operation runs. Some reasons for this might be that the primary shard is currently recovering from a store or undergoing relocation. By default, the delete operation will wait on the primary shard to become available for up to 1 minute before failing and responding with an error.",
+      "$ref": "#/$defs/Duration"
+    },
+    "Duration": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/__schema16"
+        },
+        {
+          "$ref": "#/$defs/__schema17"
+        },
+        {
+          "$ref": "#/$defs/__schema18"
+        }
+      ],
+      "id": "Duration"
+    },
+    "__schema16": {
+      "type": "string"
+    },
+    "__schema17": {
+      "type": "number",
+      "const": -1
+    },
+    "__schema18": {
+      "type": "number",
+      "const": 0
+    },
+    "__schema19": {
+      "$ref": "#/$defs/__schema20"
+    },
+    "__schema20": {
+      "description": "An explicit version number for concurrency control. It must match the current version of the document for the request to succeed.",
+      "$ref": "#/$defs/VersionNumber"
+    },
+    "VersionNumber": {
+      "id": "VersionNumber",
+      "$ref": "#/$defs/long"
+    },
+    "__schema21": {
+      "$ref": "#/$defs/__schema22"
+    },
+    "__schema22": {
+      "description": "The version type.",
+      "$ref": "#/$defs/VersionType"
+    },
+    "VersionType": {
+      "type": "string",
+      "enum": [
+        "internal",
+        "external",
+        "external_gte"
+      ],
+      "id": "VersionType"
+    },
+    "__schema23": {
+      "$ref": "#/$defs/__schema24"
+    },
+    "__schema24": {
+      "description": "The minimum number of shard copies that must be active before proceeding with the operation. You can set it to `all` or any positive integer up to the total number of shards in the index (`number_of_replicas+1`). The default value of `1` means it waits for each primary shard to be active.",
+      "$ref": "#/$defs/WaitForActiveShards"
+    },
+    "WaitForActiveShards": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/__schema25"
+        },
+        {
+          "$ref": "#/$defs/WaitForActiveShardOptions"
+        }
+      ],
+      "id": "WaitForActiveShards"
+    },
+    "__schema25": {
+      "$ref": "#/$defs/integer"
+    },
+    "integer": {
+      "type": "number",
+      "id": "integer"
+    },
+    "WaitForActiveShardOptions": {
+      "type": "string",
+      "enum": [
+        "all",
+        "index-setting"
+      ],
+      "id": "WaitForActiveShardOptions"
+    }
+  }
+}

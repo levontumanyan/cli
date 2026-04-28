@@ -1,0 +1,44 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "index": {
+      "$ref": "#/$defs/__schema0"
+    }
+  },
+  "required": [
+    "index"
+  ],
+  "additionalProperties": false,
+  "id": "IndicesCancelMigrateReindexRequest",
+  "$defs": {
+    "__schema0": {
+      "description": "The index or data stream name",
+      "$ref": "#/$defs/Indices"
+    },
+    "Indices": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/__schema1"
+        },
+        {
+          "$ref": "#/$defs/__schema2"
+        }
+      ],
+      "id": "Indices"
+    },
+    "__schema1": {
+      "$ref": "#/$defs/IndexName"
+    },
+    "IndexName": {
+      "type": "string",
+      "id": "IndexName"
+    },
+    "__schema2": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/IndexName"
+      }
+    }
+  }
+}

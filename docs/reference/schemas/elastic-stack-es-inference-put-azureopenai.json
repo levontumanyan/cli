@@ -1,0 +1,362 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "task_type": {
+      "$ref": "#/$defs/__schema0"
+    },
+    "azureopenai_inference_id": {
+      "$ref": "#/$defs/__schema1"
+    },
+    "timeout": {
+      "$ref": "#/$defs/__schema2"
+    },
+    "chunking_settings": {
+      "$ref": "#/$defs/__schema7"
+    },
+    "service": {
+      "$ref": "#/$defs/__schema16"
+    },
+    "service_settings": {
+      "$ref": "#/$defs/__schema17"
+    },
+    "task_settings": {
+      "$ref": "#/$defs/__schema30"
+    }
+  },
+  "required": [
+    "task_type",
+    "azureopenai_inference_id",
+    "service",
+    "service_settings"
+  ],
+  "additionalProperties": false,
+  "id": "InferencePutAzureopenaiRequest",
+  "$defs": {
+    "__schema0": {
+      "type": "string",
+      "enum": [
+        "completion",
+        "chat_completion",
+        "text_embedding"
+      ],
+      "description": "The type of the inference task that the model will perform. NOTE: The `chat_completion` task type only supports streaming and only through the _stream API.",
+      "$ref": "#/$defs/InferenceAzureOpenAITaskType"
+    },
+    "InferenceAzureOpenAITaskType": {
+      "type": "string",
+      "enum": [
+        "completion",
+        "chat_completion",
+        "text_embedding"
+      ],
+      "id": "InferenceAzureOpenAITaskType"
+    },
+    "__schema1": {
+      "description": "The unique identifier of the inference endpoint.",
+      "$ref": "#/$defs/Id"
+    },
+    "Id": {
+      "type": "string",
+      "id": "Id"
+    },
+    "__schema2": {
+      "$ref": "#/$defs/__schema3"
+    },
+    "__schema3": {
+      "description": "Specifies the amount of time to wait for the inference endpoint to be created.",
+      "$ref": "#/$defs/Duration"
+    },
+    "Duration": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/__schema4"
+        },
+        {
+          "$ref": "#/$defs/__schema5"
+        },
+        {
+          "$ref": "#/$defs/__schema6"
+        }
+      ],
+      "id": "Duration"
+    },
+    "__schema4": {
+      "type": "string"
+    },
+    "__schema5": {
+      "type": "number",
+      "const": -1
+    },
+    "__schema6": {
+      "type": "number",
+      "const": 0
+    },
+    "__schema7": {
+      "$ref": "#/$defs/__schema8"
+    },
+    "__schema8": {
+      "description": "The chunking configuration object. Applies only to the `text_embedding` task type. Not applicable to the `completion` and `chat_completion` task types.",
+      "$ref": "#/$defs/InferenceInferenceChunkingSettings"
+    },
+    "__schema9": {
+      "description": "The maximum size of a chunk in words. This value cannot be lower than `20` (for `sentence` strategy) or `10` (for `word` strategy). This value should not exceed the window size for the associated model.",
+      "$ref": "#/$defs/integer"
+    },
+    "integer": {
+      "type": "number",
+      "id": "integer"
+    },
+    "__schema10": {
+      "description": "The number of overlapping words for chunks. It is applicable only to a `word` chunking strategy. This value cannot be higher than half the `max_chunk_size` value.",
+      "$ref": "#/$defs/integer"
+    },
+    "__schema11": {
+      "description": "The number of overlapping sentences for chunks. It is applicable only for a `sentence` chunking strategy. It can be either `1` or `0`.",
+      "$ref": "#/$defs/integer"
+    },
+    "__schema12": {
+      "type": "string",
+      "description": "Only applicable to the `recursive` strategy and required when using it. Sets a predefined list of separators in the saved chunking settings based on the selected text type. Values can be `markdown` or `plaintext`. Using this parameter is an alternative to manually specifying a custom `separators` list."
+    },
+    "__schema13": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/__schema14"
+      },
+      "description": "Only applicable to the `recursive` strategy and required when using it. A list of strings used as possible split points when chunking text. Each string can be a plain string or a regular expression (regex) pattern. The system tries each separator in order to split the text, starting from the first item in the list. After splitting, it attempts to recombine smaller pieces into larger chunks that stay within the `max_chunk_size` limit, to reduce the total number of chunks generated."
+    },
+    "__schema14": {
+      "type": "string"
+    },
+    "__schema15": {
+      "type": "string",
+      "description": "The chunking strategy: `sentence`, `word`, `none` or `recursive`.  * If `strategy` is set to `recursive`, you must also specify: - `max_chunk_size` - either `separators` or`separator_group` Learn more about different chunking strategies in the linked documentation."
+    },
+    "InferenceInferenceChunkingSettings": {
+      "type": "object",
+      "properties": {
+        "max_chunk_size": {
+          "$ref": "#/$defs/__schema9"
+        },
+        "overlap": {
+          "$ref": "#/$defs/__schema10"
+        },
+        "sentence_overlap": {
+          "$ref": "#/$defs/__schema11"
+        },
+        "separator_group": {
+          "$ref": "#/$defs/__schema12"
+        },
+        "separators": {
+          "$ref": "#/$defs/__schema13"
+        },
+        "strategy": {
+          "$ref": "#/$defs/__schema15"
+        }
+      },
+      "additionalProperties": false,
+      "id": "InferenceInferenceChunkingSettings"
+    },
+    "__schema16": {
+      "type": "string",
+      "enum": [
+        "azureopenai"
+      ],
+      "description": "The type of service supported for the specified task type. In this case, `azureopenai`.",
+      "$ref": "#/$defs/InferenceAzureOpenAIServiceType"
+    },
+    "InferenceAzureOpenAIServiceType": {
+      "type": "string",
+      "enum": [
+        "azureopenai"
+      ],
+      "id": "InferenceAzureOpenAIServiceType"
+    },
+    "__schema17": {
+      "type": "object",
+      "properties": {
+        "api_key": {
+          "$ref": "#/$defs/__schema18"
+        },
+        "api_version": {
+          "$ref": "#/$defs/__schema19"
+        },
+        "client_id": {
+          "$ref": "#/$defs/__schema20"
+        },
+        "client_secret": {
+          "$ref": "#/$defs/__schema21"
+        },
+        "deployment_id": {
+          "$ref": "#/$defs/__schema22"
+        },
+        "entra_id": {
+          "$ref": "#/$defs/__schema23"
+        },
+        "rate_limit": {
+          "$ref": "#/$defs/__schema24"
+        },
+        "resource_name": {
+          "$ref": "#/$defs/__schema26"
+        },
+        "scopes": {
+          "$ref": "#/$defs/__schema27"
+        },
+        "tenant_id": {
+          "$ref": "#/$defs/__schema29"
+        }
+      },
+      "required": [
+        "api_version",
+        "deployment_id",
+        "resource_name"
+      ],
+      "additionalProperties": false,
+      "description": "Settings used to install the inference model. These settings are specific to the `azureopenai` service.",
+      "$ref": "#/$defs/InferenceAzureOpenAIServiceSettings"
+    },
+    "__schema18": {
+      "type": "string",
+      "description": "A valid API key for your Azure OpenAI account. IMPORTANT: You must specify either `api_key`, `entra_id`, or `client_secret`. If you do not provide one or you provide more than one of them, you will receive an error when you try to create your endpoint."
+    },
+    "__schema19": {
+      "type": "string",
+      "description": "The Azure API version ID to use. It is recommended to use the latest supported non-preview version."
+    },
+    "__schema20": {
+      "type": "string",
+      "description": "For OAuth 2.0 authentication using the client credentials grant flow. The application ID that's assigned to your app. IMPORTANT: To configure OAuth 2.0, you must specify client_id, scopes, tenant_id, and client_secret together. If one of the fields is missing, you will receive an error when you try to create your endpoint."
+    },
+    "__schema21": {
+      "type": "string",
+      "description": "For OAuth 2.0 authentication using the client credentials grant flow. The application secret that you created in the Microsoft app registration portal for your app. IMPORTANT: You must specify either `api_key`, `entra_id`, or `client_secret`. If you do not provide one or you provide more than one of them, you will receive an error when you try to create your endpoint. IMPORTANT: To configure OAuth 2.0, you must specify client_id, scopes, tenant_id, and client_secret together. If one of the fields is missing, you will receive an error when you try to create your endpoint."
+    },
+    "__schema22": {
+      "type": "string",
+      "description": "The deployment name of your deployed models. Your Azure OpenAI deployments can be found though the Azure OpenAI Studio portal that is linked to your subscription."
+    },
+    "__schema23": {
+      "type": "string",
+      "description": "A valid Microsoft Entra token. IMPORTANT: You must specify either `api_key`, `entra_id`, or `client_secret`. If you do not provide one or you provide more than one of them, you will receive an error when you try to create your endpoint."
+    },
+    "__schema24": {
+      "description": "This setting helps to minimize the number of rate limit errors returned from Azure. The `azureopenai` service sets a default number of requests allowed per minute depending on the task type. For `text_embedding`, it is set to `1440`. For `completion` and `chat_completion`, it is set to `120`.",
+      "$ref": "#/$defs/InferenceRateLimitSetting"
+    },
+    "__schema25": {
+      "description": "The number of requests allowed per minute. By default, the number of requests allowed per minute is set by each service as follows: * `alibabacloud-ai-search` service: `1000` * `amazonbedrock` service: `240` * `anthropic` service: `50` * `azureaistudio` service: `240` * `azureopenai` service and task type `text_embedding`: `1440` * `azureopenai` service and task types `completion` or `chat_completion`: `120` * `cohere` service: `10000` * `contextualai` service: `1000` * `elastic` service and task type `chat_completion`: `240` * `fireworksai` service: `6000` * `googleaistudio` service: `360` * `googlevertexai` service: `30000` * `hugging_face` service: `3000` * `jinaai` service: `2000` * `llama` service: `3000` * `mistral` service: `240` * `openai` service and task type `text_embedding`: `3000` * `openai` service and task type `completion`: `500` * `openshift_ai` service: `3000` * `voyageai` service: `2000` * `watsonxai` service: `120`",
+      "$ref": "#/$defs/integer"
+    },
+    "InferenceRateLimitSetting": {
+      "type": "object",
+      "properties": {
+        "requests_per_minute": {
+          "$ref": "#/$defs/__schema25"
+        }
+      },
+      "additionalProperties": false,
+      "id": "InferenceRateLimitSetting"
+    },
+    "__schema26": {
+      "type": "string",
+      "description": "The name of your Azure OpenAI resource. You can find this from the list of resources in the Azure Portal for your subscription."
+    },
+    "__schema27": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/__schema28"
+      },
+      "description": "For OAuth 2.0 authentication using the client credentials grant flow. The resource identifier (application ID URI) of the resource you want, suffixed with .default For example: ``` \"scopes\": [   \"https://cognitiveservices.azure.com/.default\" ] ``` IMPORTANT: To configure OAuth 2.0, you must specify client_id, scopes, tenant_id, and client_secret together. If one of the fields is missing, you will receive an error when you try to create your endpoint."
+    },
+    "__schema28": {
+      "type": "string"
+    },
+    "__schema29": {
+      "type": "string",
+      "description": "For OAuth 2.0 authentication using the client credentials grant flow. The directory tenant the application plans to operate against. IMPORTANT: To configure OAuth 2.0, you must specify client_id, scopes, tenant_id, and client_secret together. If one of the fields is missing, you will receive an error when you try to create your endpoint."
+    },
+    "InferenceAzureOpenAIServiceSettings": {
+      "type": "object",
+      "properties": {
+        "api_key": {
+          "$ref": "#/$defs/__schema18"
+        },
+        "api_version": {
+          "$ref": "#/$defs/__schema19"
+        },
+        "client_id": {
+          "$ref": "#/$defs/__schema20"
+        },
+        "client_secret": {
+          "$ref": "#/$defs/__schema21"
+        },
+        "deployment_id": {
+          "$ref": "#/$defs/__schema22"
+        },
+        "entra_id": {
+          "$ref": "#/$defs/__schema23"
+        },
+        "rate_limit": {
+          "$ref": "#/$defs/__schema24"
+        },
+        "resource_name": {
+          "$ref": "#/$defs/__schema26"
+        },
+        "scopes": {
+          "$ref": "#/$defs/__schema27"
+        },
+        "tenant_id": {
+          "$ref": "#/$defs/__schema29"
+        }
+      },
+      "required": [
+        "api_version",
+        "deployment_id",
+        "resource_name"
+      ],
+      "additionalProperties": false,
+      "id": "InferenceAzureOpenAIServiceSettings"
+    },
+    "__schema30": {
+      "$ref": "#/$defs/__schema31"
+    },
+    "__schema31": {
+      "description": "Settings to configure the inference task. These settings are specific to the task type you specified.",
+      "$ref": "#/$defs/InferenceAzureOpenAITaskSettings"
+    },
+    "__schema32": {
+      "type": "string",
+      "description": "Specifies the user issuing the request. This information can be used for abuse detection."
+    },
+    "__schema33": {
+      "type": "object",
+      "propertyNames": {
+        "$ref": "#/$defs/__schema34"
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/__schema35"
+      },
+      "description": "Specifies custom HTTP header parameters. For example: ``` \"headers\": {   \"Custom-Header\": \"Some-Value\",   \"Another-Custom-Header\": \"Another-Value\" } ```"
+    },
+    "__schema34": {
+      "type": "string"
+    },
+    "__schema35": {
+      "type": "string"
+    },
+    "InferenceAzureOpenAITaskSettings": {
+      "type": "object",
+      "properties": {
+        "user": {
+          "$ref": "#/$defs/__schema32"
+        },
+        "headers": {
+          "$ref": "#/$defs/__schema33"
+        }
+      },
+      "additionalProperties": false,
+      "id": "InferenceAzureOpenAITaskSettings"
+    }
+  }
+}

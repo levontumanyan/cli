@@ -1,0 +1,92 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "connector_id": {
+      "$ref": "#/$defs/__schema0"
+    },
+    "validation": {
+      "$ref": "#/$defs/__schema1"
+    }
+  },
+  "required": [
+    "connector_id",
+    "validation"
+  ],
+  "additionalProperties": false,
+  "id": "ConnectorUpdateFilteringValidationRequest",
+  "$defs": {
+    "__schema0": {
+      "description": "The unique identifier of the connector to be updated",
+      "$ref": "#/$defs/Id"
+    },
+    "Id": {
+      "type": "string",
+      "id": "Id"
+    },
+    "__schema1": {
+      "$ref": "#/$defs/ConnectorFilteringRulesValidation"
+    },
+    "__schema2": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/ConnectorFilteringValidation"
+      }
+    },
+    "ConnectorFilteringValidation": {
+      "type": "object",
+      "properties": {
+        "ids": {
+          "$ref": "#/$defs/__schema3"
+        },
+        "messages": {
+          "$ref": "#/$defs/__schema4"
+        }
+      },
+      "required": [
+        "ids",
+        "messages"
+      ],
+      "additionalProperties": false,
+      "id": "ConnectorFilteringValidation"
+    },
+    "__schema3": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/Id"
+      }
+    },
+    "__schema4": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "ConnectorFilteringValidationState": {
+      "type": "string",
+      "enum": [
+        "edited",
+        "invalid",
+        "valid"
+      ],
+      "id": "ConnectorFilteringValidationState"
+    },
+    "ConnectorFilteringRulesValidation": {
+      "type": "object",
+      "properties": {
+        "errors": {
+          "$ref": "#/$defs/__schema2"
+        },
+        "state": {
+          "$ref": "#/$defs/ConnectorFilteringValidationState"
+        }
+      },
+      "required": [
+        "errors",
+        "state"
+      ],
+      "additionalProperties": false,
+      "id": "ConnectorFilteringRulesValidation"
+    }
+  }
+}

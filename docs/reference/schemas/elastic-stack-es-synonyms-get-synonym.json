@@ -1,0 +1,48 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "id": {
+      "$ref": "#/$defs/__schema0"
+    },
+    "from": {
+      "$ref": "#/$defs/__schema1"
+    },
+    "size": {
+      "$ref": "#/$defs/__schema3"
+    }
+  },
+  "required": [
+    "id"
+  ],
+  "additionalProperties": false,
+  "id": "SynonymsGetSynonymRequest",
+  "$defs": {
+    "__schema0": {
+      "description": "The synonyms set identifier to retrieve.",
+      "$ref": "#/$defs/Id"
+    },
+    "Id": {
+      "type": "string",
+      "id": "Id"
+    },
+    "__schema1": {
+      "$ref": "#/$defs/__schema2"
+    },
+    "__schema2": {
+      "description": "The starting offset for query rules to retrieve.",
+      "$ref": "#/$defs/integer"
+    },
+    "integer": {
+      "type": "number",
+      "id": "integer"
+    },
+    "__schema3": {
+      "$ref": "#/$defs/__schema4"
+    },
+    "__schema4": {
+      "description": "The max number of query rules to retrieve.",
+      "$ref": "#/$defs/integer"
+    }
+  }
+}

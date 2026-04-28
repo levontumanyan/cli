@@ -1,0 +1,68 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "id": {
+      "$ref": "#/$defs/__schema0"
+    },
+    "description": {
+      "$ref": "#/$defs/__schema1"
+    },
+    "model_memory_limit": {
+      "$ref": "#/$defs/__schema3"
+    },
+    "max_num_threads": {
+      "$ref": "#/$defs/__schema5"
+    },
+    "allow_lazy_start": {
+      "$ref": "#/$defs/__schema7"
+    }
+  },
+  "required": [
+    "id"
+  ],
+  "additionalProperties": false,
+  "id": "MlUpdateDataFrameAnalyticsRequest",
+  "$defs": {
+    "__schema0": {
+      "description": "Identifier for the data frame analytics job. This identifier can contain lowercase alphanumeric characters (a-z and 0-9), hyphens, and underscores. It must start and end with alphanumeric characters.",
+      "$ref": "#/$defs/Id"
+    },
+    "Id": {
+      "type": "string",
+      "id": "Id"
+    },
+    "__schema1": {
+      "$ref": "#/$defs/__schema2"
+    },
+    "__schema2": {
+      "type": "string",
+      "description": "A description of the job."
+    },
+    "__schema3": {
+      "$ref": "#/$defs/__schema4"
+    },
+    "__schema4": {
+      "type": "string",
+      "description": "The approximate maximum amount of memory resources that are permitted for analytical processing. If your `elasticsearch.yml` file contains an `xpack.ml.max_model_memory_limit` setting, an error occurs when you try to create data frame analytics jobs that have `model_memory_limit` values greater than that setting."
+    },
+    "__schema5": {
+      "$ref": "#/$defs/__schema6"
+    },
+    "__schema6": {
+      "description": "The maximum number of threads to be used by the analysis. Using more threads may decrease the time necessary to complete the analysis at the cost of using more CPU. Note that the process may use additional threads for operational functionality other than the analysis itself.",
+      "$ref": "#/$defs/integer"
+    },
+    "integer": {
+      "type": "number",
+      "id": "integer"
+    },
+    "__schema7": {
+      "$ref": "#/$defs/__schema8"
+    },
+    "__schema8": {
+      "type": "boolean",
+      "description": "Specifies whether this job can start when there is insufficient machine learning node capacity for it to be immediately assigned to a node."
+    }
+  }
+}

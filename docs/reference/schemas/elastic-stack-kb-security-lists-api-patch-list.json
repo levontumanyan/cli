@@ -1,0 +1,46 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "_version": {
+      "type": "string",
+      "description": "The version id, normally returned by the API when the document is retrieved. Use it ensure updates are done against the latest version."
+    },
+    "description": {
+      "type": "string",
+      "description": "Describes the value list."
+    },
+    "id": {
+      "type": "string",
+      "description": "Value list's identifier."
+    },
+    "meta": {
+      "type": "object",
+      "propertyNames": {
+        "$ref": "#/$defs/__schema0"
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/__schema1"
+      },
+      "description": "Placeholder for metadata about the value list."
+    },
+    "name": {
+      "type": "string",
+      "description": "Value list's name."
+    },
+    "kb-version": {
+      "type": "number",
+      "description": "The document version number."
+    }
+  },
+  "required": [
+    "id"
+  ],
+  "additionalProperties": {},
+  "$defs": {
+    "__schema0": {
+      "type": "string"
+    },
+    "__schema1": {}
+  }
+}

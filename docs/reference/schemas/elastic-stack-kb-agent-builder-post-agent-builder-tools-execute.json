@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "connector_id": {
+      "type": "string",
+      "description": "Optional connector ID for tools that require external integrations."
+    },
+    "tool_id": {
+      "type": "string",
+      "description": "The ID of the tool to execute."
+    },
+    "tool_params": {
+      "type": "object",
+      "propertyNames": {
+        "$ref": "#/$defs/__schema0"
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/__schema1"
+      },
+      "description": "Parameters to pass to the tool execution. See examples for details"
+    }
+  },
+  "required": [
+    "tool_id",
+    "tool_params"
+  ],
+  "additionalProperties": {},
+  "$defs": {
+    "__schema0": {
+      "type": "string"
+    },
+    "__schema1": {}
+  }
+}

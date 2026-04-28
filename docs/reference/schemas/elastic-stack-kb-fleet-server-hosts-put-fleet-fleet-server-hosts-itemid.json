@@ -1,0 +1,69 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "itemId": {
+      "type": "string",
+      "description": "The itemId parameter"
+    },
+    "host_urls": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/__schema0"
+      },
+      "description": ""
+    },
+    "is_default": {
+      "type": "boolean",
+      "description": ""
+    },
+    "is_internal": {
+      "type": "boolean",
+      "description": ""
+    },
+    "name": {
+      "type": "string",
+      "description": ""
+    },
+    "proxy_id": {
+      "type": "string",
+      "description": ""
+    },
+    "secrets": {
+      "type": "object",
+      "propertyNames": {
+        "$ref": "#/$defs/__schema1"
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/__schema2"
+      },
+      "description": ""
+    },
+    "ssl": {
+      "type": "object",
+      "propertyNames": {
+        "$ref": "#/$defs/__schema3"
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/__schema4"
+      },
+      "description": ""
+    }
+  },
+  "required": [
+    "itemId",
+    "proxy_id"
+  ],
+  "additionalProperties": {},
+  "$defs": {
+    "__schema0": {},
+    "__schema1": {
+      "type": "string"
+    },
+    "__schema2": {},
+    "__schema3": {
+      "type": "string"
+    },
+    "__schema4": {}
+  }
+}

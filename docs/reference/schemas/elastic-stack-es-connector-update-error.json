@@ -1,0 +1,47 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "connector_id": {
+      "$ref": "#/$defs/__schema0"
+    },
+    "error": {
+      "$ref": "#/$defs/__schema1"
+    }
+  },
+  "required": [
+    "connector_id",
+    "error"
+  ],
+  "additionalProperties": false,
+  "id": "ConnectorUpdateErrorRequest",
+  "$defs": {
+    "__schema0": {
+      "description": "The unique identifier of the connector to be updated",
+      "$ref": "#/$defs/Id"
+    },
+    "Id": {
+      "type": "string",
+      "id": "Id"
+    },
+    "__schema1": {
+      "$ref": "#/$defs/SpecUtilsWithNullValue"
+    },
+    "SpecUtilsWithNullValue": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/__schema2"
+        },
+        {
+          "$ref": "#/$defs/SpecUtilsNullValue"
+        }
+      ],
+      "id": "SpecUtilsWithNullValue"
+    },
+    "__schema2": {},
+    "SpecUtilsNullValue": {
+      "type": "null",
+      "id": "SpecUtilsNullValue"
+    }
+  }
+}

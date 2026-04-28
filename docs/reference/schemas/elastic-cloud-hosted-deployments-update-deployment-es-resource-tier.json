@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "deployment_id": {
+      "type": "string",
+      "description": "Identifier for the Deployment"
+    },
+    "ref_id": {
+      "type": "string",
+      "description": "User-specified RefId for the Resource (or '_main' if there is only one)"
+    }
+  },
+  "required": [
+    "deployment_id",
+    "ref_id"
+  ],
+  "additionalProperties": {}
+}

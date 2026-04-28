@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "rule_id": {
+      "type": "string",
+      "description": "The identifier for the rule."
+    },
+    "alert_id": {
+      "type": "string",
+      "description": "The identifier for the alert."
+    }
+  },
+  "required": [
+    "rule_id",
+    "alert_id"
+  ],
+  "additionalProperties": {}
+}

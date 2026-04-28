@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Workflow ID"
+    },
+    "inputs": {
+      "type": "object",
+      "propertyNames": {
+        "$ref": "#/$defs/__schema0"
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/__schema1"
+      },
+      "description": "Key-value inputs for the workflow execution."
+    },
+    "metadata": {
+      "type": "object",
+      "propertyNames": {
+        "$ref": "#/$defs/__schema2"
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/__schema3"
+      },
+      "description": "Optional metadata for the execution."
+    }
+  },
+  "required": [
+    "id",
+    "inputs"
+  ],
+  "additionalProperties": {},
+  "$defs": {
+    "__schema0": {
+      "type": "string"
+    },
+    "__schema1": {},
+    "__schema2": {
+      "type": "string"
+    },
+    "__schema3": {}
+  }
+}

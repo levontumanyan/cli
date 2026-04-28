@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "ruleset_id": {
+      "type": "string",
+      "description": "The mandatory ruleset ID."
+    },
+    "association_type": {
+      "type": "string",
+      "description": "Association type"
+    },
+    "associated_entity_id": {
+      "type": "string",
+      "description": "Associated entity ID"
+    }
+  },
+  "required": [
+    "ruleset_id",
+    "association_type",
+    "associated_entity_id"
+  ],
+  "additionalProperties": {}
+}

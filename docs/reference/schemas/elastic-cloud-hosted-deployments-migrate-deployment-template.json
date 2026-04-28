@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "deployment_id": {
+      "type": "string",
+      "description": "Identifier for the Deployment"
+    },
+    "template_id": {
+      "type": "string",
+      "description": "The ID of the deployment template to migrate to"
+    },
+    "skip_instance_metrics_check": {
+      "type": "boolean",
+      "description": "If true, will skip the instance metrics check for memory and disk usage calculations"
+    }
+  },
+  "required": [
+    "deployment_id",
+    "template_id"
+  ],
+  "additionalProperties": {}
+}

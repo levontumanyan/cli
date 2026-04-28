@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "query": {
+      "type": "string",
+      "description": "Free-text search query."
+    },
+    "size": {
+      "type": "number",
+      "description": "Number of results per page."
+    },
+    "page": {
+      "type": "number",
+      "description": "Page number."
+    },
+    "enabled": {
+      "type": "string",
+      "description": "Filter by enabled state."
+    },
+    "createdBy": {
+      "type": "string",
+      "description": "Filter by creator."
+    },
+    "tags": {
+      "type": "string",
+      "description": "Filter by tags."
+    }
+  },
+  "additionalProperties": {}
+}

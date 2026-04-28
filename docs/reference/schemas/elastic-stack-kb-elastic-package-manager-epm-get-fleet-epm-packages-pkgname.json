@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "pkgName": {
+      "type": "string",
+      "description": "The pkgName parameter"
+    },
+    "ignoreUnverified": {
+      "type": "boolean",
+      "description": ""
+    },
+    "prerelease": {
+      "type": "boolean",
+      "description": ""
+    },
+    "full": {
+      "type": "boolean",
+      "description": ""
+    },
+    "withMetadata": {
+      "type": "boolean",
+      "description": ""
+    }
+  },
+  "required": [
+    "pkgName"
+  ],
+  "additionalProperties": {}
+}

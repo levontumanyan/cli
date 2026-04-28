@@ -1,0 +1,87 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "id": {
+      "$ref": "#/$defs/__schema0"
+    },
+    "ids": {
+      "$ref": "#/$defs/__schema2"
+    },
+    "name": {
+      "$ref": "#/$defs/__schema5"
+    },
+    "owner": {
+      "$ref": "#/$defs/__schema7"
+    },
+    "realm_name": {
+      "$ref": "#/$defs/__schema9"
+    },
+    "username": {
+      "$ref": "#/$defs/__schema11"
+    }
+  },
+  "additionalProperties": false,
+  "id": "SecurityInvalidateApiKeyRequest",
+  "$defs": {
+    "__schema0": {
+      "$ref": "#/$defs/__schema1"
+    },
+    "__schema1": {
+      "$ref": "#/$defs/Id"
+    },
+    "Id": {
+      "type": "string",
+      "id": "Id"
+    },
+    "__schema2": {
+      "$ref": "#/$defs/__schema3"
+    },
+    "__schema3": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/__schema4"
+      },
+      "description": "A list of API key ids. This parameter cannot be used with any of `name`, `realm_name`, or `username`."
+    },
+    "__schema4": {
+      "$ref": "#/$defs/Id"
+    },
+    "__schema5": {
+      "$ref": "#/$defs/__schema6"
+    },
+    "__schema6": {
+      "description": "An API key name. This parameter cannot be used with any of `ids`, `realm_name` or `username`.",
+      "$ref": "#/$defs/Name"
+    },
+    "Name": {
+      "type": "string",
+      "id": "Name"
+    },
+    "__schema7": {
+      "$ref": "#/$defs/__schema8"
+    },
+    "__schema8": {
+      "type": "boolean",
+      "description": "Query API keys owned by the currently authenticated user. The `realm_name` or `username` parameters cannot be specified when this parameter is set to `true` as they are assumed to be the currently authenticated ones. NOTE: At least one of `ids`, `name`, `username`, and `realm_name` must be specified if `owner` is `false`."
+    },
+    "__schema9": {
+      "$ref": "#/$defs/__schema10"
+    },
+    "__schema10": {
+      "type": "string",
+      "description": "The name of an authentication realm. This parameter cannot be used with either `ids` or `name`, or when `owner` flag is set to `true`."
+    },
+    "__schema11": {
+      "$ref": "#/$defs/__schema12"
+    },
+    "__schema12": {
+      "description": "The username of a user. This parameter cannot be used with either `ids` or `name` or when `owner` flag is set to `true`.",
+      "$ref": "#/$defs/Username"
+    },
+    "Username": {
+      "type": "string",
+      "id": "Username"
+    }
+  }
+}

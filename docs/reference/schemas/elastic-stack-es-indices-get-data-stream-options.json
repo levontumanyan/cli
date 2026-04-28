@@ -1,0 +1,117 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "name": {
+      "$ref": "#/$defs/__schema0"
+    },
+    "expand_wildcards": {
+      "$ref": "#/$defs/__schema3"
+    },
+    "master_timeout": {
+      "$ref": "#/$defs/__schema6"
+    }
+  },
+  "required": [
+    "name"
+  ],
+  "additionalProperties": false,
+  "id": "IndicesGetDataStreamOptionsRequest",
+  "$defs": {
+    "__schema0": {
+      "description": "Comma-separated list of data streams to limit the request. Supports wildcards (`*`). To target all data streams, omit this parameter or use `*` or `_all`.",
+      "$ref": "#/$defs/DataStreamNames"
+    },
+    "DataStreamNames": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/__schema1"
+        },
+        {
+          "$ref": "#/$defs/__schema2"
+        }
+      ],
+      "id": "DataStreamNames"
+    },
+    "__schema1": {
+      "$ref": "#/$defs/DataStreamName"
+    },
+    "DataStreamName": {
+      "type": "string",
+      "id": "DataStreamName"
+    },
+    "__schema2": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/DataStreamName"
+      }
+    },
+    "__schema3": {
+      "$ref": "#/$defs/__schema4"
+    },
+    "__schema4": {
+      "description": "Type of data stream that wildcard patterns can match. Supports comma-separated values, such as `open,hidden`.",
+      "$ref": "#/$defs/ExpandWildcards"
+    },
+    "ExpandWildcards": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/ExpandWildcard"
+        },
+        {
+          "$ref": "#/$defs/__schema5"
+        }
+      ],
+      "id": "ExpandWildcards"
+    },
+    "ExpandWildcard": {
+      "type": "string",
+      "enum": [
+        "all",
+        "open",
+        "closed",
+        "hidden",
+        "none"
+      ],
+      "id": "ExpandWildcard"
+    },
+    "__schema5": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/ExpandWildcard"
+      }
+    },
+    "__schema6": {
+      "$ref": "#/$defs/__schema7"
+    },
+    "__schema7": {
+      "description": "Period to wait for a connection to the master node. If no response is received before the timeout expires, the request fails and returns an error.",
+      "$ref": "#/$defs/Duration"
+    },
+    "Duration": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/__schema8"
+        },
+        {
+          "$ref": "#/$defs/__schema9"
+        },
+        {
+          "$ref": "#/$defs/__schema10"
+        }
+      ],
+      "id": "Duration"
+    },
+    "__schema8": {
+      "type": "string"
+    },
+    "__schema9": {
+      "type": "number",
+      "const": -1
+    },
+    "__schema10": {
+      "type": "number",
+      "const": 0
+    }
+  }
+}

@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "spaceId": {
+      "type": "string",
+      "description": "The spaceId parameter"
+    },
+    "list": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/__schema0"
+      },
+      "description": "An array of slo ids"
+    },
+    "purgePolicy": {
+      "type": "object",
+      "propertyNames": {
+        "$ref": "#/$defs/__schema1"
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/__schema2"
+      },
+      "description": "Policy that dictates which SLI documents to purge based on age"
+    }
+  },
+  "required": [
+    "spaceId",
+    "list",
+    "purgePolicy"
+  ],
+  "additionalProperties": {},
+  "$defs": {
+    "__schema0": {},
+    "__schema1": {
+      "type": "string"
+    },
+    "__schema2": {}
+  }
+}

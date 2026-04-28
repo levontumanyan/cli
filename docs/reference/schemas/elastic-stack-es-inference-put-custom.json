@@ -1,0 +1,430 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "task_type": {
+      "$ref": "#/$defs/__schema0"
+    },
+    "custom_inference_id": {
+      "$ref": "#/$defs/__schema1"
+    },
+    "chunking_settings": {
+      "$ref": "#/$defs/__schema2"
+    },
+    "service": {
+      "$ref": "#/$defs/__schema11"
+    },
+    "service_settings": {
+      "$ref": "#/$defs/__schema12"
+    },
+    "task_settings": {
+      "$ref": "#/$defs/__schema31"
+    }
+  },
+  "required": [
+    "task_type",
+    "custom_inference_id",
+    "service",
+    "service_settings"
+  ],
+  "additionalProperties": false,
+  "id": "InferencePutCustomRequest",
+  "$defs": {
+    "__schema0": {
+      "type": "string",
+      "enum": [
+        "text_embedding",
+        "sparse_embedding",
+        "rerank",
+        "completion"
+      ],
+      "description": "The type of the inference task that the model will perform.",
+      "$ref": "#/$defs/InferenceCustomTaskType"
+    },
+    "InferenceCustomTaskType": {
+      "type": "string",
+      "enum": [
+        "text_embedding",
+        "sparse_embedding",
+        "rerank",
+        "completion"
+      ],
+      "id": "InferenceCustomTaskType"
+    },
+    "__schema1": {
+      "description": "The unique identifier of the inference endpoint.",
+      "$ref": "#/$defs/Id"
+    },
+    "Id": {
+      "type": "string",
+      "id": "Id"
+    },
+    "__schema2": {
+      "$ref": "#/$defs/__schema3"
+    },
+    "__schema3": {
+      "description": "The chunking configuration object. Applies only to the `sparse_embedding` or `text_embedding` task types. Not applicable to the `rerank` or `completion` task types.",
+      "$ref": "#/$defs/InferenceInferenceChunkingSettings"
+    },
+    "__schema4": {
+      "description": "The maximum size of a chunk in words. This value cannot be lower than `20` (for `sentence` strategy) or `10` (for `word` strategy). This value should not exceed the window size for the associated model.",
+      "$ref": "#/$defs/integer"
+    },
+    "integer": {
+      "type": "number",
+      "id": "integer"
+    },
+    "__schema5": {
+      "description": "The number of overlapping words for chunks. It is applicable only to a `word` chunking strategy. This value cannot be higher than half the `max_chunk_size` value.",
+      "$ref": "#/$defs/integer"
+    },
+    "__schema6": {
+      "description": "The number of overlapping sentences for chunks. It is applicable only for a `sentence` chunking strategy. It can be either `1` or `0`.",
+      "$ref": "#/$defs/integer"
+    },
+    "__schema7": {
+      "type": "string",
+      "description": "Only applicable to the `recursive` strategy and required when using it. Sets a predefined list of separators in the saved chunking settings based on the selected text type. Values can be `markdown` or `plaintext`. Using this parameter is an alternative to manually specifying a custom `separators` list."
+    },
+    "__schema8": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/__schema9"
+      },
+      "description": "Only applicable to the `recursive` strategy and required when using it. A list of strings used as possible split points when chunking text. Each string can be a plain string or a regular expression (regex) pattern. The system tries each separator in order to split the text, starting from the first item in the list. After splitting, it attempts to recombine smaller pieces into larger chunks that stay within the `max_chunk_size` limit, to reduce the total number of chunks generated."
+    },
+    "__schema9": {
+      "type": "string"
+    },
+    "__schema10": {
+      "type": "string",
+      "description": "The chunking strategy: `sentence`, `word`, `none` or `recursive`.  * If `strategy` is set to `recursive`, you must also specify: - `max_chunk_size` - either `separators` or`separator_group` Learn more about different chunking strategies in the linked documentation."
+    },
+    "InferenceInferenceChunkingSettings": {
+      "type": "object",
+      "properties": {
+        "max_chunk_size": {
+          "$ref": "#/$defs/__schema4"
+        },
+        "overlap": {
+          "$ref": "#/$defs/__schema5"
+        },
+        "sentence_overlap": {
+          "$ref": "#/$defs/__schema6"
+        },
+        "separator_group": {
+          "$ref": "#/$defs/__schema7"
+        },
+        "separators": {
+          "$ref": "#/$defs/__schema8"
+        },
+        "strategy": {
+          "$ref": "#/$defs/__schema10"
+        }
+      },
+      "additionalProperties": false,
+      "id": "InferenceInferenceChunkingSettings"
+    },
+    "__schema11": {
+      "type": "string",
+      "enum": [
+        "custom"
+      ],
+      "description": "The type of service supported for the specified task type. In this case, `custom`.",
+      "$ref": "#/$defs/InferenceCustomServiceType"
+    },
+    "InferenceCustomServiceType": {
+      "type": "string",
+      "enum": [
+        "custom"
+      ],
+      "id": "InferenceCustomServiceType"
+    },
+    "__schema12": {
+      "type": "object",
+      "properties": {
+        "batch_size": {
+          "$ref": "#/$defs/__schema13"
+        },
+        "headers": {
+          "$ref": "#/$defs/__schema14"
+        },
+        "input_type": {
+          "$ref": "#/$defs/__schema17"
+        },
+        "query_parameters": {
+          "$ref": "#/$defs/__schema19"
+        },
+        "request": {
+          "$ref": "#/$defs/__schema21"
+        },
+        "response": {
+          "$ref": "#/$defs/__schema23"
+        },
+        "secret_parameters": {
+          "$ref": "#/$defs/__schema27"
+        },
+        "url": {
+          "$ref": "#/$defs/__schema30"
+        }
+      },
+      "required": [
+        "request",
+        "response",
+        "secret_parameters"
+      ],
+      "additionalProperties": false,
+      "description": "Settings used to install the inference model. These settings are specific to the `custom` service.",
+      "$ref": "#/$defs/InferenceCustomServiceSettings"
+    },
+    "__schema13": {
+      "description": "Specifies the batch size used for the semantic_text field. If the field is not provided, the default is 10. The batch size is the maximum number of inputs in a single request to the upstream service. The chunk within the batch are controlled by the selected chunking strategy for the semantic_text field.",
+      "$ref": "#/$defs/integer"
+    },
+    "__schema14": {
+      "type": "object",
+      "propertyNames": {
+        "$ref": "#/$defs/__schema15"
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/__schema16"
+      },
+      "description": "Specifies the HTTP header parameters – such as `Authentication` or `Content-Type` – that are required to access the custom service. For example: ``` \"headers\": {   \"Authorization\": \"Bearer {api_key}\",   \"Content-Type\": \"application/json;charset=utf-8\" } ```"
+    },
+    "__schema15": {
+      "type": "string"
+    },
+    "__schema16": {
+      "type": "string"
+    },
+    "__schema17": {
+      "type": "object",
+      "propertyNames": {
+        "$ref": "#/$defs/InferenceCustomServiceInputType"
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/__schema18"
+      },
+      "required": [
+        "classification",
+        "clustering",
+        "ingest",
+        "search"
+      ],
+      "description": "Specifies the input type translation values that are used to replace the `{input_type}` template in the request body. For example: ``` \"input_type\": {   \"translation\": {     \"ingest\": \"do_ingest\",     \"search\": \"do_search\"   },   \"default\": \"a_default\" }, ``` If the subsequent inference requests come from a search context, the `search` key will be used and the template will be replaced with `do_search`. If it comes from the ingest context `do_ingest` is used. If it's a different context that is not specified, the default value will be used. If no default is specified an empty string is used. `translation` can be: * `classification` * `clustering` * `ingest` * `search`"
+    },
+    "InferenceCustomServiceInputType": {
+      "type": "string",
+      "enum": [
+        "classification",
+        "clustering",
+        "ingest",
+        "search"
+      ],
+      "id": "InferenceCustomServiceInputType"
+    },
+    "__schema18": {
+      "type": "string"
+    },
+    "__schema19": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/InferenceCustomServiceQueryParameter"
+      },
+      "description": "Specifies the query parameters as a list of tuples. The arrays inside the `query_parameters` must have two items, a key and a value. For example: ``` \"query_parameters\":[   [\"param_key\", \"some_value\"],   [\"param_key\", \"another_value\"],   [\"other_key\", \"other_value\"] ] ``` If the base url is `https://www.elastic.co` it results in: `https://www.elastic.co?param_key=some_value&param_key=another_value&other_key=other_value`."
+    },
+    "InferenceCustomServiceQueryParameter": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/__schema20"
+      },
+      "id": "InferenceCustomServiceQueryParameter"
+    },
+    "__schema20": {
+      "type": "string"
+    },
+    "__schema21": {
+      "description": "The request configuration object.",
+      "$ref": "#/$defs/InferenceCustomRequestParams"
+    },
+    "__schema22": {
+      "type": "string",
+      "description": "The body structure of the request. It requires passing in the string-escaped result of the JSON format HTTP request body. For example: ``` \"request\": \"{\"input\":{input}}\" ``` > info > The content string needs to be a single line except when using the Kibana console."
+    },
+    "InferenceCustomRequestParams": {
+      "type": "object",
+      "properties": {
+        "content": {
+          "$ref": "#/$defs/__schema22"
+        }
+      },
+      "required": [
+        "content"
+      ],
+      "additionalProperties": false,
+      "id": "InferenceCustomRequestParams"
+    },
+    "__schema23": {
+      "description": "The response configuration object.",
+      "$ref": "#/$defs/InferenceCustomResponseParams"
+    },
+    "__schema24": {
+      "type": "object",
+      "propertyNames": {
+        "$ref": "#/$defs/__schema25"
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/__schema26"
+      },
+      "description": "Specifies the JSON parser that is used to parse the response from the custom service. Different task types require different json_parser parameters. For example: ``` # text_embedding # For a response like this: {  \"object\": \"list\",  \"data\": [      {        \"object\": \"embedding\",        \"index\": 0,        \"embedding\": [            0.014539449,            -0.015288644        ]      }  ],  \"model\": \"text-embedding-ada-002-v2\",  \"usage\": {      \"prompt_tokens\": 8,      \"total_tokens\": 8  } } # the json_parser definition should look like this: \"response\":{   \"json_parser\":{     \"text_embeddings\":\"$.data[*].embedding[*]\"   } } # Elasticsearch supports the following embedding types: * float * byte * bit (or binary) To specify the embedding type for the response, the `embedding_type` field should be added in the `json_parser` object. Here's an example: \"response\":{   \"json_parser\":{     \"text_embeddings\":\"$.data[*].embedding[*]\",     \"embedding_type\":\"bit\"   } } If `embedding_type` is not specified, it defaults to `float`. # sparse_embedding # For a response like this: {   \"request_id\": \"75C50B5B-E79E-4930-****-F48DBB392231\",   \"latency\": 22,   \"usage\": {      \"token_count\": 11   },   \"result\": {      \"sparse_embeddings\": [         {           \"index\": 0,           \"embedding\": [             {               \"token_id\": 6,               \"weight\": 0.101             },             {               \"token_id\": 163040,               \"weight\": 0.28417             }           ]         }      ]   } } # the json_parser definition should look like this: \"response\":{   \"json_parser\":{     \"token_path\":\"$.result.sparse_embeddings[*].embedding[*].token_id\",     \"weight_path\":\"$.result.sparse_embeddings[*].embedding[*].weight\"   } } # rerank # For a response like this: {   \"results\": [     {       \"index\": 3,       \"relevance_score\": 0.999071,       \"document\": \"abc\"     },     {       \"index\": 4,       \"relevance_score\": 0.7867867,       \"document\": \"123\"     },     {       \"index\": 0,       \"relevance_score\": 0.32713068,       \"document\": \"super\"     }   ], } # the json_parser definition should look like this: \"response\":{   \"json_parser\":{     \"reranked_index\":\"$.result.scores[*].index\",    // optional     \"relevance_score\":\"$.result.scores[*].score\",     \"document_text\":\"xxx\"    // optional   } } # completion # For a response like this: {  \"id\": \"chatcmpl-B9MBs8CjcvOU2jLn4n570S5qMJKcT\",  \"object\": \"chat.completion\",  \"created\": 1741569952,  \"model\": \"gpt-4.1-2025-04-14\",  \"choices\": [    {     \"index\": 0,     \"message\": {       \"role\": \"assistant\",       \"content\": \"Hello! How can I assist you today?\",       \"refusal\": null,       \"annotations\": []     },     \"logprobs\": null,     \"finish_reason\": \"stop\"   }  ] } # the json_parser definition should look like this: \"response\":{   \"json_parser\":{     \"completion_result\":\"$.choices[*].message.content\"   } }"
+    },
+    "__schema25": {
+      "type": "string"
+    },
+    "__schema26": {
+      "type": "string"
+    },
+    "InferenceCustomResponseParams": {
+      "type": "object",
+      "properties": {
+        "json_parser": {
+          "$ref": "#/$defs/__schema24"
+        }
+      },
+      "required": [
+        "json_parser"
+      ],
+      "additionalProperties": false,
+      "id": "InferenceCustomResponseParams"
+    },
+    "__schema27": {
+      "type": "object",
+      "propertyNames": {
+        "$ref": "#/$defs/__schema28"
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/__schema29"
+      },
+      "description": "Specifies secret parameters, like `api_key` or `api_token`, that are required to access the custom service. For example: ``` \"secret_parameters\":{   \"api_key\":\"<api_key>\" } ```"
+    },
+    "__schema28": {
+      "type": "string"
+    },
+    "__schema29": {
+      "type": "string"
+    },
+    "__schema30": {
+      "type": "string",
+      "description": "The URL endpoint to use for the requests."
+    },
+    "InferenceCustomServiceSettings": {
+      "type": "object",
+      "properties": {
+        "batch_size": {
+          "$ref": "#/$defs/__schema13"
+        },
+        "headers": {
+          "$ref": "#/$defs/__schema14"
+        },
+        "input_type": {
+          "$ref": "#/$defs/__schema17"
+        },
+        "query_parameters": {
+          "$ref": "#/$defs/__schema19"
+        },
+        "request": {
+          "$ref": "#/$defs/__schema21"
+        },
+        "response": {
+          "$ref": "#/$defs/__schema23"
+        },
+        "secret_parameters": {
+          "$ref": "#/$defs/__schema27"
+        },
+        "url": {
+          "$ref": "#/$defs/__schema30"
+        }
+      },
+      "required": [
+        "request",
+        "response",
+        "secret_parameters"
+      ],
+      "additionalProperties": false,
+      "id": "InferenceCustomServiceSettings"
+    },
+    "__schema31": {
+      "$ref": "#/$defs/__schema32"
+    },
+    "__schema32": {
+      "description": "Settings to configure the inference task. These settings are specific to the task type you specified.",
+      "$ref": "#/$defs/InferenceCustomTaskSettings"
+    },
+    "__schema33": {
+      "type": "object",
+      "propertyNames": {
+        "$ref": "#/$defs/__schema34"
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/InferenceCustomTaskParameter"
+      },
+      "description": "Specifies parameters that are required to run the custom service. The parameters depend on the model your custom service uses. For example: ``` \"task_settings\":{   \"parameters\":{     \"input_type\":\"query\",     \"return_token\":true   } } ```"
+    },
+    "__schema34": {
+      "type": "string"
+    },
+    "InferenceCustomTaskParameter": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/__schema35"
+        },
+        {
+          "$ref": "#/$defs/__schema36"
+        },
+        {
+          "$ref": "#/$defs/__schema37"
+        },
+        {
+          "$ref": "#/$defs/__schema38"
+        },
+        {
+          "$ref": "#/$defs/__schema39"
+        }
+      ],
+      "id": "InferenceCustomTaskParameter"
+    },
+    "__schema35": {
+      "type": "string"
+    },
+    "__schema36": {
+      "$ref": "#/$defs/integer"
+    },
+    "__schema37": {
+      "$ref": "#/$defs/double"
+    },
+    "double": {
+      "type": "number",
+      "id": "double"
+    },
+    "__schema38": {
+      "$ref": "#/$defs/float"
+    },
+    "float": {
+      "type": "number",
+      "id": "float"
+    },
+    "__schema39": {
+      "type": "boolean"
+    },
+    "InferenceCustomTaskSettings": {
+      "type": "object",
+      "properties": {
+        "parameters": {
+          "$ref": "#/$defs/__schema33"
+        }
+      },
+      "additionalProperties": false,
+      "id": "InferenceCustomTaskSettings"
+    }
+  }
+}

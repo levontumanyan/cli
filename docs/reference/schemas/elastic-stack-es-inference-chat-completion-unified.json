@@ -1,0 +1,714 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "inference_id": {
+      "$ref": "#/$defs/__schema0"
+    },
+    "timeout": {
+      "$ref": "#/$defs/__schema1"
+    },
+    "chat_completion_request": {
+      "$ref": "#/$defs/__schema6"
+    }
+  },
+  "required": [
+    "inference_id"
+  ],
+  "additionalProperties": false,
+  "id": "InferenceChatCompletionUnifiedRequest",
+  "$defs": {
+    "__schema0": {
+      "description": "The inference Id",
+      "$ref": "#/$defs/Id"
+    },
+    "Id": {
+      "type": "string",
+      "id": "Id"
+    },
+    "__schema1": {
+      "$ref": "#/$defs/__schema2"
+    },
+    "__schema2": {
+      "description": "Specifies the amount of time to wait for the inference request to complete.",
+      "$ref": "#/$defs/Duration"
+    },
+    "Duration": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/__schema3"
+        },
+        {
+          "$ref": "#/$defs/__schema4"
+        },
+        {
+          "$ref": "#/$defs/__schema5"
+        }
+      ],
+      "id": "Duration"
+    },
+    "__schema3": {
+      "type": "string"
+    },
+    "__schema4": {
+      "type": "number",
+      "const": -1
+    },
+    "__schema5": {
+      "type": "number",
+      "const": 0
+    },
+    "__schema6": {
+      "$ref": "#/$defs/InferenceRequestChatCompletion"
+    },
+    "InferenceRequestChatCompletion": {
+      "type": "object",
+      "properties": {
+        "messages": {
+          "$ref": "#/$defs/__schema7"
+        },
+        "model": {
+          "$ref": "#/$defs/__schema39"
+        },
+        "max_completion_tokens": {
+          "$ref": "#/$defs/__schema40"
+        },
+        "reasoning": {
+          "$ref": "#/$defs/__schema41"
+        },
+        "stop": {
+          "$ref": "#/$defs/__schema46"
+        },
+        "temperature": {
+          "$ref": "#/$defs/__schema48"
+        },
+        "tool_choice": {
+          "$ref": "#/$defs/__schema49"
+        },
+        "tools": {
+          "$ref": "#/$defs/__schema54"
+        },
+        "top_p": {
+          "$ref": "#/$defs/__schema61"
+        }
+      },
+      "required": [
+        "messages"
+      ],
+      "additionalProperties": false,
+      "id": "InferenceRequestChatCompletion"
+    },
+    "__schema7": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/InferenceMessage"
+      },
+      "description": "A list of objects representing the conversation. Requests should generally only add new messages from the user (role `user`). The other message roles (`assistant`, `system`, or `tool`) should generally only be copied from the response to a previous completion request, such that the messages array is built up throughout a conversation."
+    },
+    "InferenceMessage": {
+      "type": "object",
+      "properties": {
+        "content": {
+          "$ref": "#/$defs/__schema8"
+        },
+        "role": {
+          "$ref": "#/$defs/__schema19"
+        },
+        "tool_call_id": {
+          "$ref": "#/$defs/__schema20"
+        },
+        "tool_calls": {
+          "$ref": "#/$defs/__schema21"
+        },
+        "reasoning": {
+          "$ref": "#/$defs/__schema27"
+        },
+        "reasoning_details": {
+          "$ref": "#/$defs/__schema28"
+        }
+      },
+      "required": [
+        "role"
+      ],
+      "additionalProperties": false,
+      "id": "InferenceMessage"
+    },
+    "__schema8": {
+      "description": "The content of the message. String example: ``` {    \"content\": \"Some string\" } ``` Text example: ``` {   \"content\": [       {        \"text\": \"Some text\",        \"type\": \"text\"       }    ] } ``` Image example: ``` {   \"content\": [       {        \"image_url\": {          \"url\": \"data:image/jpeg;base64,...\"        },        \"type\": \"image_url\"       }    ] } ``` File example: ``` {   \"content\": [       {        \"file\": {          \"file_data\": \"data:application/pdf;base64,...\",          \"filename\": \"somePDF\"        },        \"type\": \"file\"       }    ] } ```",
+      "$ref": "#/$defs/InferenceMessageContent"
+    },
+    "__schema9": {
+      "type": "string"
+    },
+    "__schema10": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/InferenceContentObject"
+      }
+    },
+    "InferenceContentObject": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "$ref": "#/$defs/__schema11"
+        },
+        "text": {
+          "$ref": "#/$defs/__schema12"
+        },
+        "image_url": {
+          "$ref": "#/$defs/__schema13"
+        },
+        "file": {
+          "$ref": "#/$defs/__schema16"
+        }
+      },
+      "required": [
+        "type",
+        "text",
+        "image_url",
+        "file"
+      ],
+      "additionalProperties": false,
+      "id": "InferenceContentObject"
+    },
+    "__schema11": {
+      "description": "The type of content. Must be one of `text`, `image_url` or `file`. Not all services/models support content types other than \"text\"",
+      "$ref": "#/$defs/InferenceContentType"
+    },
+    "InferenceContentType": {
+      "type": "string",
+      "enum": [
+        "text",
+        "image_url",
+        "file"
+      ],
+      "id": "InferenceContentType"
+    },
+    "__schema12": {
+      "type": "string",
+      "description": "The text content. Only applicable for the `text` type"
+    },
+    "__schema13": {
+      "description": "The image content. Only applicable for the `image_url` type",
+      "$ref": "#/$defs/InferenceImageUrl"
+    },
+    "__schema14": {
+      "type": "string",
+      "description": "The base64 encoded image data as a data URI"
+    },
+    "__schema15": {
+      "description": "Specifies the detail level of the image",
+      "$ref": "#/$defs/InferenceImageUrlDetail"
+    },
+    "InferenceImageUrlDetail": {
+      "type": "string",
+      "enum": [
+        "auto",
+        "low",
+        "high"
+      ],
+      "id": "InferenceImageUrlDetail"
+    },
+    "InferenceImageUrl": {
+      "type": "object",
+      "properties": {
+        "url": {
+          "$ref": "#/$defs/__schema14"
+        },
+        "detail": {
+          "$ref": "#/$defs/__schema15"
+        }
+      },
+      "required": [
+        "url"
+      ],
+      "additionalProperties": false,
+      "id": "InferenceImageUrl"
+    },
+    "__schema16": {
+      "description": "The file content. Only applicable for the `file` type",
+      "$ref": "#/$defs/InferenceFileContent"
+    },
+    "__schema17": {
+      "type": "string",
+      "description": "The base64 encoded file data"
+    },
+    "__schema18": {
+      "type": "string",
+      "description": "The name of the file"
+    },
+    "InferenceFileContent": {
+      "type": "object",
+      "properties": {
+        "file_data": {
+          "$ref": "#/$defs/__schema17"
+        },
+        "filename": {
+          "$ref": "#/$defs/__schema18"
+        }
+      },
+      "required": [
+        "file_data",
+        "filename"
+      ],
+      "additionalProperties": false,
+      "id": "InferenceFileContent"
+    },
+    "InferenceMessageContent": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/__schema9"
+        },
+        {
+          "$ref": "#/$defs/__schema10"
+        }
+      ],
+      "id": "InferenceMessageContent"
+    },
+    "__schema19": {
+      "type": "string",
+      "description": "The role of the message author. Valid values are `user`, `assistant`, `system`, and `tool`."
+    },
+    "__schema20": {
+      "description": "Only for `tool` role messages. The tool call that this message is responding to.",
+      "$ref": "#/$defs/Id"
+    },
+    "__schema21": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/InferenceToolCall"
+      },
+      "description": "Only for `assistant` role messages. The tool calls generated by the model. If it's specified, the `content` field is optional. Example: ``` {   \"tool_calls\": [       {           \"id\": \"call_KcAjWtAww20AihPHphUh46Gd\",           \"type\": \"function\",           \"function\": {               \"name\": \"get_current_weather\",               \"arguments\": \"{\"location\":\"Boston, MA\"}\"           }       }   ] } ```"
+    },
+    "InferenceToolCall": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/__schema22"
+        },
+        "function": {
+          "$ref": "#/$defs/__schema23"
+        },
+        "type": {
+          "$ref": "#/$defs/__schema26"
+        }
+      },
+      "required": [
+        "id",
+        "function",
+        "type"
+      ],
+      "additionalProperties": false,
+      "id": "InferenceToolCall"
+    },
+    "__schema22": {
+      "description": "The identifier of the tool call.",
+      "$ref": "#/$defs/Id"
+    },
+    "__schema23": {
+      "description": "The function that the model called.",
+      "$ref": "#/$defs/InferenceToolCallFunction"
+    },
+    "__schema24": {
+      "type": "string",
+      "description": "The arguments to call the function with in JSON format."
+    },
+    "__schema25": {
+      "type": "string",
+      "description": "The name of the function to call."
+    },
+    "InferenceToolCallFunction": {
+      "type": "object",
+      "properties": {
+        "arguments": {
+          "$ref": "#/$defs/__schema24"
+        },
+        "name": {
+          "$ref": "#/$defs/__schema25"
+        }
+      },
+      "required": [
+        "arguments",
+        "name"
+      ],
+      "additionalProperties": false,
+      "id": "InferenceToolCallFunction"
+    },
+    "__schema26": {
+      "type": "string",
+      "description": "The type of the tool call."
+    },
+    "__schema27": {
+      "type": "string",
+      "description": "Only for `assistant` role messages. The reasoning details generated by the model as plaintext. Currently supported only for `elastic` provider."
+    },
+    "__schema28": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/InferenceReasoningDetail"
+      },
+      "description": "Only for `assistant` role messages. The reasoning details generated by the model as structured data. Currently supported only for `elastic` provider."
+    },
+    "InferenceReasoningDetail": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/InferenceEncryptedReasoningDetail"
+        },
+        {
+          "$ref": "#/$defs/InferenceSummaryReasoningDetail"
+        },
+        {
+          "$ref": "#/$defs/InferenceTextReasoningDetail"
+        }
+      ],
+      "id": "InferenceReasoningDetail"
+    },
+    "InferenceEncryptedReasoningDetail": {
+      "type": "object",
+      "properties": {
+        "format": {
+          "$ref": "#/$defs/__schema29"
+        },
+        "id": {
+          "$ref": "#/$defs/__schema30"
+        },
+        "index": {
+          "$ref": "#/$defs/__schema31"
+        },
+        "type": {
+          "$ref": "#/$defs/__schema32"
+        },
+        "data": {
+          "$ref": "#/$defs/__schema33"
+        }
+      },
+      "required": [
+        "type",
+        "data"
+      ],
+      "additionalProperties": false,
+      "id": "InferenceEncryptedReasoningDetail"
+    },
+    "__schema29": {
+      "type": "string",
+      "description": "The format of the reasoning detail."
+    },
+    "__schema30": {
+      "type": "string",
+      "description": "The identifier of the reasoning detail."
+    },
+    "__schema31": {
+      "description": "The index of the reasoning detail, which indicates its position in the sequence of reasoning details generated by the model.",
+      "$ref": "#/$defs/integer"
+    },
+    "integer": {
+      "type": "number",
+      "id": "integer"
+    },
+    "__schema32": {
+      "type": "string",
+      "const": "reasoning.encrypted"
+    },
+    "__schema33": {
+      "type": "string",
+      "description": "The encrypted reasoning data generated by the model, which may be redacted or protected based on the model's configuration and the nature of the reasoning information."
+    },
+    "InferenceSummaryReasoningDetail": {
+      "type": "object",
+      "properties": {
+        "format": {
+          "$ref": "#/$defs/__schema29"
+        },
+        "id": {
+          "$ref": "#/$defs/__schema30"
+        },
+        "index": {
+          "$ref": "#/$defs/__schema31"
+        },
+        "type": {
+          "$ref": "#/$defs/__schema34"
+        },
+        "summary": {
+          "$ref": "#/$defs/__schema35"
+        }
+      },
+      "required": [
+        "type",
+        "summary"
+      ],
+      "additionalProperties": false,
+      "id": "InferenceSummaryReasoningDetail"
+    },
+    "__schema34": {
+      "type": "string",
+      "const": "reasoning.summary"
+    },
+    "__schema35": {
+      "type": "string",
+      "description": "The summary of the reasoning process generated by the model, which provides an overview of the key points and conclusions reached during the reasoning process."
+    },
+    "InferenceTextReasoningDetail": {
+      "type": "object",
+      "properties": {
+        "format": {
+          "$ref": "#/$defs/__schema29"
+        },
+        "id": {
+          "$ref": "#/$defs/__schema30"
+        },
+        "index": {
+          "$ref": "#/$defs/__schema31"
+        },
+        "type": {
+          "$ref": "#/$defs/__schema36"
+        },
+        "signature": {
+          "$ref": "#/$defs/__schema37"
+        },
+        "text": {
+          "$ref": "#/$defs/__schema38"
+        }
+      },
+      "required": [
+        "type"
+      ],
+      "additionalProperties": false,
+      "id": "InferenceTextReasoningDetail"
+    },
+    "__schema36": {
+      "type": "string",
+      "const": "reasoning.text"
+    },
+    "__schema37": {
+      "type": "string",
+      "description": "The signature of the reasoning text, which can be used to verify the authenticity and integrity of the reasoning information provided by the model."
+    },
+    "__schema38": {
+      "type": "string",
+      "description": "The plaintext reasoning generated by the model, which provides a detailed explanation of the model's reasoning process in human-readable form."
+    },
+    "__schema39": {
+      "type": "string",
+      "description": "The ID of the model to use. By default, the model ID is set to the value included when creating the inference endpoint."
+    },
+    "__schema40": {
+      "description": "The upper bound limit for the number of tokens that can be generated for a completion request.",
+      "$ref": "#/$defs/long"
+    },
+    "long": {
+      "type": "number",
+      "id": "long"
+    },
+    "__schema41": {
+      "description": "The reasoning configuration for the completion request. This controls the model's reasoning process in one of two ways: * By specifying the model’s reasoning effort level with the `effort` field. * By enabling reasoning with default settings by setting `enabled` field to `true`. It also includes optional settings to control: * The level of detail in the summary returned in the response with the `summary` field. * Whether reasoning details are included in the response at all with the `exclude` field. Example (effort): ``` {    \"reasoning\": {        \"effort\": \"high\",        \"summary\": \"concise\",        \"exclude\": false    } } ``` Example (enabled): ``` {    \"reasoning\": {        \"enabled\": true,        \"summary\": \"concise\",        \"exclude\": false    } } ``` Currently supported only for `elastic` provider.",
+      "$ref": "#/$defs/InferenceReasoning"
+    },
+    "__schema42": {
+      "description": "The level of effort the model should put into reasoning. This is a hint that guides the model in how much effort to put into reasoning, with `xhigh` being the most effort and `none` being no effort.",
+      "$ref": "#/$defs/InferenceReasoningEffort"
+    },
+    "InferenceReasoningEffort": {
+      "type": "string",
+      "enum": [
+        "xhigh",
+        "high",
+        "medium",
+        "low",
+        "minimal",
+        "none"
+      ],
+      "id": "InferenceReasoningEffort"
+    },
+    "__schema43": {
+      "type": "boolean",
+      "description": "Whether to enable reasoning with default settings. This is a shortcut for enabling reasoning without having to specify the other parameters. If `enabled` is set to `true`, then reasoning at the `medium` effort level is enabled. Ignored if `effort` is specified, in which case that parameter will control the reasoning process instead."
+    },
+    "__schema44": {
+      "type": "boolean",
+      "description": "Whether to exclude reasoning information from the response. If `true`, the response will not include any reasoning details."
+    },
+    "__schema45": {
+      "description": "The level of detail included in the reasoning summary returned in the response. This is a hint on how much detail to include in the summary of the reasoning that is returned in the response, with `auto` being the default level of detail, `concise` being less detail, and `detailed` being more detail.",
+      "$ref": "#/$defs/InferenceReasoningSummary"
+    },
+    "InferenceReasoningSummary": {
+      "type": "string",
+      "enum": [
+        "auto",
+        "concise",
+        "detailed"
+      ],
+      "id": "InferenceReasoningSummary"
+    },
+    "InferenceReasoning": {
+      "type": "object",
+      "properties": {
+        "effort": {
+          "$ref": "#/$defs/__schema42"
+        },
+        "enabled": {
+          "$ref": "#/$defs/__schema43"
+        },
+        "exclude": {
+          "$ref": "#/$defs/__schema44"
+        },
+        "summary": {
+          "$ref": "#/$defs/__schema45"
+        }
+      },
+      "additionalProperties": false,
+      "id": "InferenceReasoning"
+    },
+    "__schema46": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/__schema47"
+      },
+      "description": "A sequence of strings to control when the model should stop generating additional tokens."
+    },
+    "__schema47": {
+      "type": "string"
+    },
+    "__schema48": {
+      "description": "The sampling temperature to use.",
+      "$ref": "#/$defs/float"
+    },
+    "float": {
+      "type": "number",
+      "id": "float"
+    },
+    "__schema49": {
+      "description": "Controls which tool is called by the model. String representation: One of `auto`, `none`, or `requrired`. `auto` allows the model to choose between calling tools and generating a message. `none` causes the model to not call any tools. `required` forces the model to call one or more tools. Example (object representation): ``` {   \"tool_choice\": {       \"type\": \"function\",       \"function\": {           \"name\": \"get_current_weather\"       }   } } ```",
+      "$ref": "#/$defs/InferenceCompletionToolType"
+    },
+    "__schema50": {
+      "type": "string"
+    },
+    "InferenceCompletionToolChoice": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "$ref": "#/$defs/__schema51"
+        },
+        "function": {
+          "$ref": "#/$defs/__schema52"
+        }
+      },
+      "required": [
+        "type",
+        "function"
+      ],
+      "additionalProperties": false,
+      "id": "InferenceCompletionToolChoice"
+    },
+    "__schema51": {
+      "type": "string",
+      "description": "The type of the tool."
+    },
+    "__schema52": {
+      "description": "The tool choice function.",
+      "$ref": "#/$defs/InferenceCompletionToolChoiceFunction"
+    },
+    "__schema53": {
+      "type": "string",
+      "description": "The name of the function to call."
+    },
+    "InferenceCompletionToolChoiceFunction": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "$ref": "#/$defs/__schema53"
+        }
+      },
+      "required": [
+        "name"
+      ],
+      "additionalProperties": false,
+      "id": "InferenceCompletionToolChoiceFunction"
+    },
+    "InferenceCompletionToolType": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/__schema50"
+        },
+        {
+          "$ref": "#/$defs/InferenceCompletionToolChoice"
+        }
+      ],
+      "id": "InferenceCompletionToolType"
+    },
+    "__schema54": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/InferenceCompletionTool"
+      },
+      "description": "A list of tools that the model can call. Example: ``` {   \"tools\": [       {           \"type\": \"function\",           \"function\": {               \"name\": \"get_price_of_item\",               \"description\": \"Get the current price of an item\",               \"parameters\": {                   \"type\": \"object\",                   \"properties\": {                       \"item\": {                           \"id\": \"12345\"                       },                       \"unit\": {                           \"type\": \"currency\"                       }                   }               }           }       }   ] } ```"
+    },
+    "InferenceCompletionTool": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "$ref": "#/$defs/__schema55"
+        },
+        "function": {
+          "$ref": "#/$defs/__schema56"
+        }
+      },
+      "required": [
+        "type",
+        "function"
+      ],
+      "additionalProperties": false,
+      "id": "InferenceCompletionTool"
+    },
+    "__schema55": {
+      "type": "string",
+      "description": "The type of tool."
+    },
+    "__schema56": {
+      "description": "The function definition.",
+      "$ref": "#/$defs/InferenceCompletionToolFunction"
+    },
+    "__schema57": {
+      "type": "string",
+      "description": "A description of what the function does. This is used by the model to choose when and how to call the function."
+    },
+    "__schema58": {
+      "type": "string",
+      "description": "The name of the function."
+    },
+    "__schema59": {
+      "description": "The parameters the functional accepts. This should be formatted as a JSON object."
+    },
+    "__schema60": {
+      "type": "boolean",
+      "description": "Whether to enable schema adherence when generating the function call."
+    },
+    "InferenceCompletionToolFunction": {
+      "type": "object",
+      "properties": {
+        "description": {
+          "$ref": "#/$defs/__schema57"
+        },
+        "name": {
+          "$ref": "#/$defs/__schema58"
+        },
+        "parameters": {
+          "$ref": "#/$defs/__schema59"
+        },
+        "strict": {
+          "$ref": "#/$defs/__schema60"
+        }
+      },
+      "required": [
+        "name"
+      ],
+      "additionalProperties": false,
+      "id": "InferenceCompletionToolFunction"
+    },
+    "__schema61": {
+      "description": "Nucleus sampling, an alternative to sampling with temperature.",
+      "$ref": "#/$defs/float"
+    }
+  }
+}

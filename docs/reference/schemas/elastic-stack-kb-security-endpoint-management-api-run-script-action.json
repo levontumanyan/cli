@@ -1,0 +1,49 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "agent_type": {
+      "type": "string",
+      "description": "List of agent types to retrieve. Defaults to `endpoint`."
+    },
+    "alert_ids": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/__schema0"
+      },
+      "description": "If this action is associated with any alerts, they can be specified here. The action will be logged in any cases associated with the specified alerts. Max of 50."
+    },
+    "case_ids": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/__schema1"
+      },
+      "description": "The IDs of cases where the action taken will be logged. Max of 50."
+    },
+    "comment": {
+      "type": "string",
+      "description": "Optional comment"
+    },
+    "endpoint_ids": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/__schema2"
+      },
+      "description": "List of endpoint IDs (cannot contain empty strings). Max of 250."
+    },
+    "parameters": {
+      "type": "string",
+      "description": "One of the following set of parameters must be provided"
+    }
+  },
+  "required": [
+    "endpoint_ids",
+    "parameters"
+  ],
+  "additionalProperties": {},
+  "$defs": {
+    "__schema0": {},
+    "__schema1": {},
+    "__schema2": {}
+  }
+}

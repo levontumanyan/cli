@@ -1,0 +1,53 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "itemId": {
+      "type": "string",
+      "description": "The itemId parameter"
+    },
+    "certificate": {
+      "type": "string",
+      "description": ""
+    },
+    "certificate_authorities": {
+      "type": "string",
+      "description": ""
+    },
+    "certificate_key": {
+      "type": "string",
+      "description": ""
+    },
+    "name": {
+      "type": "string",
+      "description": ""
+    },
+    "proxy_headers": {
+      "type": "object",
+      "propertyNames": {
+        "$ref": "#/$defs/__schema0"
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/__schema1"
+      },
+      "description": ""
+    },
+    "url": {
+      "type": "string",
+      "description": ""
+    }
+  },
+  "required": [
+    "itemId",
+    "certificate",
+    "certificate_authorities",
+    "certificate_key"
+  ],
+  "additionalProperties": {},
+  "$defs": {
+    "__schema0": {
+      "type": "string"
+    },
+    "__schema1": {}
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "agentPolicyId": {
+      "type": "string",
+      "description": ""
+    },
+    "force": {
+      "type": "boolean",
+      "description": "bypass validation checks that can prevent agent policy deletion"
+    }
+  },
+  "required": [
+    "agentPolicyId"
+  ],
+  "additionalProperties": {}
+}

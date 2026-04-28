@@ -1,0 +1,34 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "executionId": {
+      "type": "string",
+      "description": "Workflow execution ID"
+    },
+    "stepExecutionId": {
+      "type": "string",
+      "description": "Filter logs by a specific step execution ID."
+    },
+    "size": {
+      "type": "number",
+      "description": "Number of log entries per page."
+    },
+    "page": {
+      "type": "number",
+      "description": "Page number."
+    },
+    "sortField": {
+      "type": "string",
+      "description": "Field to sort by."
+    },
+    "sortOrder": {
+      "type": "string",
+      "description": "Sort order."
+    }
+  },
+  "required": [
+    "executionId"
+  ],
+  "additionalProperties": {}
+}

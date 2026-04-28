@@ -1,0 +1,61 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "The role name."
+    },
+    "createOnly": {
+      "type": "boolean",
+      "description": "When true, a role is not overwritten if it already exists."
+    },
+    "description": {
+      "type": "string",
+      "description": "A description for the role."
+    },
+    "elasticsearch": {
+      "type": "object",
+      "propertyNames": {
+        "$ref": "#/$defs/__schema0"
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/__schema1"
+      },
+      "description": ""
+    },
+    "kibana": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/__schema2"
+      },
+      "description": ""
+    },
+    "metadata": {
+      "type": "object",
+      "propertyNames": {
+        "$ref": "#/$defs/__schema3"
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/__schema4"
+      },
+      "description": ""
+    }
+  },
+  "required": [
+    "name",
+    "elasticsearch"
+  ],
+  "additionalProperties": {},
+  "$defs": {
+    "__schema0": {
+      "type": "string"
+    },
+    "__schema1": {},
+    "__schema2": {},
+    "__schema3": {
+      "type": "string"
+    },
+    "__schema4": {}
+  }
+}

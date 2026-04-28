@@ -1,0 +1,44 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "skillId": {
+      "type": "string",
+      "description": "The unique identifier of the skill."
+    },
+    "content": {
+      "type": "string",
+      "description": "Updated skill instructions content."
+    },
+    "description": {
+      "type": "string",
+      "description": "Updated description."
+    },
+    "name": {
+      "type": "string",
+      "description": "Updated name for the skill."
+    },
+    "referenced_content": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/__schema0"
+      },
+      "description": ""
+    },
+    "tool_ids": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/__schema1"
+      },
+      "description": "Updated tool IDs from the tool registry."
+    }
+  },
+  "required": [
+    "skillId"
+  ],
+  "additionalProperties": {},
+  "$defs": {
+    "__schema0": {},
+    "__schema1": {}
+  }
+}

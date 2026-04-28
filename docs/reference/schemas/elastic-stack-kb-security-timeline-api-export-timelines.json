@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "file_name": {
+      "type": "string",
+      "description": "The name of the file to export"
+    },
+    "ids": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/__schema0"
+      },
+      "description": ""
+    }
+  },
+  "required": [
+    "file_name"
+  ],
+  "additionalProperties": {},
+  "$defs": {
+    "__schema0": {}
+  }
+}

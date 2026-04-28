@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "pkgName": {
+      "type": "string",
+      "description": "The pkgName parameter"
+    },
+    "categories": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/__schema0"
+      },
+      "description": ""
+    },
+    "readMeData": {
+      "type": "string",
+      "description": ""
+    }
+  },
+  "required": [
+    "pkgName",
+    "readMeData"
+  ],
+  "additionalProperties": {},
+  "$defs": {
+    "__schema0": {}
+  }
+}

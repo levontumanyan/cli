@@ -1,0 +1,324 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "task_type": {
+      "$ref": "#/$defs/__schema0"
+    },
+    "amazonbedrock_inference_id": {
+      "$ref": "#/$defs/__schema1"
+    },
+    "timeout": {
+      "$ref": "#/$defs/__schema2"
+    },
+    "chunking_settings": {
+      "$ref": "#/$defs/__schema7"
+    },
+    "service": {
+      "$ref": "#/$defs/__schema16"
+    },
+    "service_settings": {
+      "$ref": "#/$defs/__schema17"
+    },
+    "task_settings": {
+      "$ref": "#/$defs/__schema25"
+    }
+  },
+  "required": [
+    "task_type",
+    "amazonbedrock_inference_id",
+    "service",
+    "service_settings"
+  ],
+  "additionalProperties": false,
+  "id": "InferencePutAmazonbedrockRequest",
+  "$defs": {
+    "__schema0": {
+      "type": "string",
+      "enum": [
+        "chat_completion",
+        "completion",
+        "text_embedding"
+      ],
+      "description": "The type of the inference task that the model will perform.",
+      "$ref": "#/$defs/InferenceAmazonBedrockTaskType"
+    },
+    "InferenceAmazonBedrockTaskType": {
+      "type": "string",
+      "enum": [
+        "chat_completion",
+        "completion",
+        "text_embedding"
+      ],
+      "id": "InferenceAmazonBedrockTaskType"
+    },
+    "__schema1": {
+      "description": "The unique identifier of the inference endpoint.",
+      "$ref": "#/$defs/Id"
+    },
+    "Id": {
+      "type": "string",
+      "id": "Id"
+    },
+    "__schema2": {
+      "$ref": "#/$defs/__schema3"
+    },
+    "__schema3": {
+      "description": "Specifies the amount of time to wait for the inference endpoint to be created.",
+      "$ref": "#/$defs/Duration"
+    },
+    "Duration": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/__schema4"
+        },
+        {
+          "$ref": "#/$defs/__schema5"
+        },
+        {
+          "$ref": "#/$defs/__schema6"
+        }
+      ],
+      "id": "Duration"
+    },
+    "__schema4": {
+      "type": "string"
+    },
+    "__schema5": {
+      "type": "number",
+      "const": -1
+    },
+    "__schema6": {
+      "type": "number",
+      "const": 0
+    },
+    "__schema7": {
+      "$ref": "#/$defs/__schema8"
+    },
+    "__schema8": {
+      "description": "The chunking configuration object. Applies only to the `text_embedding` task type. Not applicable to the `chat_completion` and `completion` task types.",
+      "$ref": "#/$defs/InferenceInferenceChunkingSettings"
+    },
+    "__schema9": {
+      "description": "The maximum size of a chunk in words. This value cannot be lower than `20` (for `sentence` strategy) or `10` (for `word` strategy). This value should not exceed the window size for the associated model.",
+      "$ref": "#/$defs/integer"
+    },
+    "integer": {
+      "type": "number",
+      "id": "integer"
+    },
+    "__schema10": {
+      "description": "The number of overlapping words for chunks. It is applicable only to a `word` chunking strategy. This value cannot be higher than half the `max_chunk_size` value.",
+      "$ref": "#/$defs/integer"
+    },
+    "__schema11": {
+      "description": "The number of overlapping sentences for chunks. It is applicable only for a `sentence` chunking strategy. It can be either `1` or `0`.",
+      "$ref": "#/$defs/integer"
+    },
+    "__schema12": {
+      "type": "string",
+      "description": "Only applicable to the `recursive` strategy and required when using it. Sets a predefined list of separators in the saved chunking settings based on the selected text type. Values can be `markdown` or `plaintext`. Using this parameter is an alternative to manually specifying a custom `separators` list."
+    },
+    "__schema13": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/__schema14"
+      },
+      "description": "Only applicable to the `recursive` strategy and required when using it. A list of strings used as possible split points when chunking text. Each string can be a plain string or a regular expression (regex) pattern. The system tries each separator in order to split the text, starting from the first item in the list. After splitting, it attempts to recombine smaller pieces into larger chunks that stay within the `max_chunk_size` limit, to reduce the total number of chunks generated."
+    },
+    "__schema14": {
+      "type": "string"
+    },
+    "__schema15": {
+      "type": "string",
+      "description": "The chunking strategy: `sentence`, `word`, `none` or `recursive`.  * If `strategy` is set to `recursive`, you must also specify: - `max_chunk_size` - either `separators` or`separator_group` Learn more about different chunking strategies in the linked documentation."
+    },
+    "InferenceInferenceChunkingSettings": {
+      "type": "object",
+      "properties": {
+        "max_chunk_size": {
+          "$ref": "#/$defs/__schema9"
+        },
+        "overlap": {
+          "$ref": "#/$defs/__schema10"
+        },
+        "sentence_overlap": {
+          "$ref": "#/$defs/__schema11"
+        },
+        "separator_group": {
+          "$ref": "#/$defs/__schema12"
+        },
+        "separators": {
+          "$ref": "#/$defs/__schema13"
+        },
+        "strategy": {
+          "$ref": "#/$defs/__schema15"
+        }
+      },
+      "additionalProperties": false,
+      "id": "InferenceInferenceChunkingSettings"
+    },
+    "__schema16": {
+      "type": "string",
+      "enum": [
+        "amazonbedrock"
+      ],
+      "description": "The type of service supported for the specified task type. In this case, `amazonbedrock`.",
+      "$ref": "#/$defs/InferenceAmazonBedrockServiceType"
+    },
+    "InferenceAmazonBedrockServiceType": {
+      "type": "string",
+      "enum": [
+        "amazonbedrock"
+      ],
+      "id": "InferenceAmazonBedrockServiceType"
+    },
+    "__schema17": {
+      "type": "object",
+      "properties": {
+        "access_key": {
+          "$ref": "#/$defs/__schema18"
+        },
+        "model": {
+          "$ref": "#/$defs/__schema19"
+        },
+        "provider": {
+          "$ref": "#/$defs/__schema20"
+        },
+        "region": {
+          "$ref": "#/$defs/__schema21"
+        },
+        "rate_limit": {
+          "$ref": "#/$defs/__schema22"
+        },
+        "secret_key": {
+          "$ref": "#/$defs/__schema24"
+        }
+      },
+      "required": [
+        "access_key",
+        "model",
+        "region",
+        "secret_key"
+      ],
+      "additionalProperties": false,
+      "description": "Settings used to install the inference model. These settings are specific to the `amazonbedrock` service.",
+      "$ref": "#/$defs/InferenceAmazonBedrockServiceSettings"
+    },
+    "__schema18": {
+      "type": "string",
+      "description": "A valid AWS access key that has permissions to use Amazon Bedrock and access to models for inference requests."
+    },
+    "__schema19": {
+      "type": "string",
+      "description": "The base model ID or an ARN to a custom model based on a foundational model. The base model IDs can be found in the Amazon Bedrock documentation. Note that the model ID must be available for the provider chosen and your IAM user must have access to the model."
+    },
+    "__schema20": {
+      "type": "string",
+      "description": "The model provider for your deployment. Note that some providers may support only certain task types. Supported providers include: * `amazontitan` - available for `text_embedding` and `completion` task types * `anthropic` - available for `chat_completion` and `completion` task types * `ai21labs` - available for `chat_completion` and `completion` task types * `cohere` - available for `chat_completion`, `completion` and `text_embedding` task types * `meta` - available for `chat_completion` and `completion` task types * `mistral` - available for `chat_completion` and `completion` task types"
+    },
+    "__schema21": {
+      "type": "string",
+      "description": "The region that your model or ARN is deployed in. The list of available regions per model can be found in the Amazon Bedrock documentation."
+    },
+    "__schema22": {
+      "description": "This setting helps to minimize the number of rate limit errors returned from Amazon Bedrock. By default, the `amazonbedrock` service sets the number of requests allowed per minute to 240.",
+      "$ref": "#/$defs/InferenceRateLimitSetting"
+    },
+    "__schema23": {
+      "description": "The number of requests allowed per minute. By default, the number of requests allowed per minute is set by each service as follows: * `alibabacloud-ai-search` service: `1000` * `amazonbedrock` service: `240` * `anthropic` service: `50` * `azureaistudio` service: `240` * `azureopenai` service and task type `text_embedding`: `1440` * `azureopenai` service and task types `completion` or `chat_completion`: `120` * `cohere` service: `10000` * `contextualai` service: `1000` * `elastic` service and task type `chat_completion`: `240` * `fireworksai` service: `6000` * `googleaistudio` service: `360` * `googlevertexai` service: `30000` * `hugging_face` service: `3000` * `jinaai` service: `2000` * `llama` service: `3000` * `mistral` service: `240` * `openai` service and task type `text_embedding`: `3000` * `openai` service and task type `completion`: `500` * `openshift_ai` service: `3000` * `voyageai` service: `2000` * `watsonxai` service: `120`",
+      "$ref": "#/$defs/integer"
+    },
+    "InferenceRateLimitSetting": {
+      "type": "object",
+      "properties": {
+        "requests_per_minute": {
+          "$ref": "#/$defs/__schema23"
+        }
+      },
+      "additionalProperties": false,
+      "id": "InferenceRateLimitSetting"
+    },
+    "__schema24": {
+      "type": "string",
+      "description": "A valid AWS secret key that is paired with the `access_key`. For informationg about creating and managing access and secret keys, refer to the AWS documentation."
+    },
+    "InferenceAmazonBedrockServiceSettings": {
+      "type": "object",
+      "properties": {
+        "access_key": {
+          "$ref": "#/$defs/__schema18"
+        },
+        "model": {
+          "$ref": "#/$defs/__schema19"
+        },
+        "provider": {
+          "$ref": "#/$defs/__schema20"
+        },
+        "region": {
+          "$ref": "#/$defs/__schema21"
+        },
+        "rate_limit": {
+          "$ref": "#/$defs/__schema22"
+        },
+        "secret_key": {
+          "$ref": "#/$defs/__schema24"
+        }
+      },
+      "required": [
+        "access_key",
+        "model",
+        "region",
+        "secret_key"
+      ],
+      "additionalProperties": false,
+      "id": "InferenceAmazonBedrockServiceSettings"
+    },
+    "__schema25": {
+      "$ref": "#/$defs/__schema26"
+    },
+    "__schema26": {
+      "description": "Settings to configure the inference task. These settings are specific to the task type you specified.",
+      "$ref": "#/$defs/InferenceAmazonBedrockTaskSettings"
+    },
+    "__schema27": {
+      "description": "For `chat_completion` and `completion` tasks, it sets the maximum number for the output tokens to be generated.",
+      "$ref": "#/$defs/integer"
+    },
+    "__schema28": {
+      "description": "For `chat_completion` and `completion` tasks, it is a number between 0.0 and 1.0 that controls the apparent creativity of the results. At temperature 0.0 the model is most deterministic, at temperature 1.0 most random. It should not be used if `top_p` or `top_k` is specified.",
+      "$ref": "#/$defs/float"
+    },
+    "float": {
+      "type": "number",
+      "id": "float"
+    },
+    "__schema29": {
+      "description": "For `chat_completion` and `completion` tasks, it limits samples to the top-K most likely words, balancing coherence and variability. It is only available for anthropic, cohere, and mistral providers. It is an alternative to `temperature`; it should not be used if `temperature` is specified.",
+      "$ref": "#/$defs/float"
+    },
+    "__schema30": {
+      "description": "For `chat_completion` and `completion` tasks, it is a number in the range of 0.0 to 1.0, to eliminate low-probability tokens. Top-p uses nucleus sampling to select top tokens whose sum of likelihoods does not exceed a certain value, ensuring both variety and coherence. It is an alternative to `temperature`; it should not be used if `temperature` is specified.",
+      "$ref": "#/$defs/float"
+    },
+    "InferenceAmazonBedrockTaskSettings": {
+      "type": "object",
+      "properties": {
+        "max_new_tokens": {
+          "$ref": "#/$defs/__schema27"
+        },
+        "temperature": {
+          "$ref": "#/$defs/__schema28"
+        },
+        "top_k": {
+          "$ref": "#/$defs/__schema29"
+        },
+        "top_p": {
+          "$ref": "#/$defs/__schema30"
+        }
+      },
+      "additionalProperties": false,
+      "id": "InferenceAmazonBedrockTaskSettings"
+    }
+  }
+}

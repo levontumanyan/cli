@@ -1,0 +1,34 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "pkgName": {
+      "type": "string",
+      "description": "The pkgName parameter"
+    },
+    "pkgVersion": {
+      "type": "string",
+      "description": "The pkgVersion parameter"
+    },
+    "prerelease": {
+      "type": "boolean",
+      "description": ""
+    },
+    "transforms": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/__schema0"
+      },
+      "description": ""
+    }
+  },
+  "required": [
+    "pkgName",
+    "pkgVersion",
+    "transforms"
+  ],
+  "additionalProperties": {},
+  "$defs": {
+    "__schema0": {}
+  }
+}

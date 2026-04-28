@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "organization_id": {
+      "type": "string",
+      "description": "Identifier for the Organization"
+    },
+    "user_ids": {
+      "type": "string",
+      "description": "CSV list of User identifiers"
+    },
+    "force": {
+      "type": "boolean",
+      "description": "Whether or not to force the removal of Org memberships (effective only for Platform Admins)"
+    }
+  },
+  "required": [
+    "organization_id",
+    "user_ids"
+  ],
+  "additionalProperties": {}
+}

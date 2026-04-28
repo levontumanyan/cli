@@ -1,0 +1,224 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "task_type": {
+      "$ref": "#/$defs/__schema0"
+    },
+    "anthropic_inference_id": {
+      "$ref": "#/$defs/__schema1"
+    },
+    "timeout": {
+      "$ref": "#/$defs/__schema2"
+    },
+    "service": {
+      "$ref": "#/$defs/__schema7"
+    },
+    "service_settings": {
+      "$ref": "#/$defs/__schema8"
+    },
+    "task_settings": {
+      "$ref": "#/$defs/__schema13"
+    }
+  },
+  "required": [
+    "task_type",
+    "anthropic_inference_id",
+    "service",
+    "service_settings"
+  ],
+  "additionalProperties": false,
+  "id": "InferencePutAnthropicRequest",
+  "$defs": {
+    "__schema0": {
+      "type": "string",
+      "enum": [
+        "completion"
+      ],
+      "description": "The task type. The only valid task type for the model to perform is `completion`.",
+      "$ref": "#/$defs/InferenceAnthropicTaskType"
+    },
+    "InferenceAnthropicTaskType": {
+      "type": "string",
+      "enum": [
+        "completion"
+      ],
+      "id": "InferenceAnthropicTaskType"
+    },
+    "__schema1": {
+      "description": "The unique identifier of the inference endpoint.",
+      "$ref": "#/$defs/Id"
+    },
+    "Id": {
+      "type": "string",
+      "id": "Id"
+    },
+    "__schema2": {
+      "$ref": "#/$defs/__schema3"
+    },
+    "__schema3": {
+      "description": "Specifies the amount of time to wait for the inference endpoint to be created.",
+      "$ref": "#/$defs/Duration"
+    },
+    "Duration": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/__schema4"
+        },
+        {
+          "$ref": "#/$defs/__schema5"
+        },
+        {
+          "$ref": "#/$defs/__schema6"
+        }
+      ],
+      "id": "Duration"
+    },
+    "__schema4": {
+      "type": "string"
+    },
+    "__schema5": {
+      "type": "number",
+      "const": -1
+    },
+    "__schema6": {
+      "type": "number",
+      "const": 0
+    },
+    "__schema7": {
+      "type": "string",
+      "enum": [
+        "anthropic"
+      ],
+      "description": "The type of service supported for the specified task type. In this case, `anthropic`.",
+      "$ref": "#/$defs/InferenceAnthropicServiceType"
+    },
+    "InferenceAnthropicServiceType": {
+      "type": "string",
+      "enum": [
+        "anthropic"
+      ],
+      "id": "InferenceAnthropicServiceType"
+    },
+    "__schema8": {
+      "type": "object",
+      "properties": {
+        "api_key": {
+          "$ref": "#/$defs/__schema9"
+        },
+        "model_id": {
+          "$ref": "#/$defs/__schema10"
+        },
+        "rate_limit": {
+          "$ref": "#/$defs/__schema11"
+        }
+      },
+      "required": [
+        "api_key",
+        "model_id"
+      ],
+      "additionalProperties": false,
+      "description": "Settings used to install the inference model. These settings are specific to the `anthropic` service.",
+      "$ref": "#/$defs/InferenceAnthropicServiceSettings"
+    },
+    "__schema9": {
+      "type": "string",
+      "description": "A valid API key for the Anthropic API."
+    },
+    "__schema10": {
+      "type": "string",
+      "description": "The name of the model to use for the inference task. Refer to the Anthropic documentation for the list of supported models."
+    },
+    "__schema11": {
+      "description": "This setting helps to minimize the number of rate limit errors returned from Anthropic. By default, the `anthropic` service sets the number of requests allowed per minute to 50.",
+      "$ref": "#/$defs/InferenceRateLimitSetting"
+    },
+    "__schema12": {
+      "description": "The number of requests allowed per minute. By default, the number of requests allowed per minute is set by each service as follows: * `alibabacloud-ai-search` service: `1000` * `amazonbedrock` service: `240` * `anthropic` service: `50` * `azureaistudio` service: `240` * `azureopenai` service and task type `text_embedding`: `1440` * `azureopenai` service and task types `completion` or `chat_completion`: `120` * `cohere` service: `10000` * `contextualai` service: `1000` * `elastic` service and task type `chat_completion`: `240` * `fireworksai` service: `6000` * `googleaistudio` service: `360` * `googlevertexai` service: `30000` * `hugging_face` service: `3000` * `jinaai` service: `2000` * `llama` service: `3000` * `mistral` service: `240` * `openai` service and task type `text_embedding`: `3000` * `openai` service and task type `completion`: `500` * `openshift_ai` service: `3000` * `voyageai` service: `2000` * `watsonxai` service: `120`",
+      "$ref": "#/$defs/integer"
+    },
+    "integer": {
+      "type": "number",
+      "id": "integer"
+    },
+    "InferenceRateLimitSetting": {
+      "type": "object",
+      "properties": {
+        "requests_per_minute": {
+          "$ref": "#/$defs/__schema12"
+        }
+      },
+      "additionalProperties": false,
+      "id": "InferenceRateLimitSetting"
+    },
+    "InferenceAnthropicServiceSettings": {
+      "type": "object",
+      "properties": {
+        "api_key": {
+          "$ref": "#/$defs/__schema9"
+        },
+        "model_id": {
+          "$ref": "#/$defs/__schema10"
+        },
+        "rate_limit": {
+          "$ref": "#/$defs/__schema11"
+        }
+      },
+      "required": [
+        "api_key",
+        "model_id"
+      ],
+      "additionalProperties": false,
+      "id": "InferenceAnthropicServiceSettings"
+    },
+    "__schema13": {
+      "$ref": "#/$defs/__schema14"
+    },
+    "__schema14": {
+      "description": "Settings to configure the inference task. These settings are specific to the task type you specified.",
+      "$ref": "#/$defs/InferenceAnthropicTaskSettings"
+    },
+    "__schema15": {
+      "description": "For a `completion` task, it is the maximum number of tokens to generate before stopping.",
+      "$ref": "#/$defs/integer"
+    },
+    "__schema16": {
+      "description": "For a `completion` task, it is the amount of randomness injected into the response. For more details about the supported range, refer to Anthropic documentation.",
+      "$ref": "#/$defs/float"
+    },
+    "float": {
+      "type": "number",
+      "id": "float"
+    },
+    "__schema17": {
+      "description": "For a `completion` task, it specifies to only sample from the top K options for each subsequent token. It is recommended for advanced use cases only. You usually only need to use `temperature`.",
+      "$ref": "#/$defs/integer"
+    },
+    "__schema18": {
+      "description": "For a `completion` task, it specifies to use Anthropic's nucleus sampling. In nucleus sampling, Anthropic computes the cumulative distribution over all the options for each subsequent token in decreasing probability order and cuts it off once it reaches the specified probability. You should either alter `temperature` or `top_p`, but not both. It is recommended for advanced use cases only. You usually only need to use `temperature`.",
+      "$ref": "#/$defs/float"
+    },
+    "InferenceAnthropicTaskSettings": {
+      "type": "object",
+      "properties": {
+        "max_tokens": {
+          "$ref": "#/$defs/__schema15"
+        },
+        "temperature": {
+          "$ref": "#/$defs/__schema16"
+        },
+        "top_k": {
+          "$ref": "#/$defs/__schema17"
+        },
+        "top_p": {
+          "$ref": "#/$defs/__schema18"
+        }
+      },
+      "required": [
+        "max_tokens"
+      ],
+      "additionalProperties": false,
+      "id": "InferenceAnthropicTaskSettings"
+    }
+  }
+}

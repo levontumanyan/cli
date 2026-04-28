@@ -1,0 +1,49 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "enabled": {
+      "type": "boolean",
+      "description": "Whether the current maintenance window is enabled. Disabled maintenance windows do not suppress notifications."
+    },
+    "schedule": {
+      "type": "object",
+      "propertyNames": {
+        "$ref": "#/$defs/__schema0"
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/__schema1"
+      },
+      "description": ""
+    },
+    "scope": {
+      "type": "object",
+      "propertyNames": {
+        "$ref": "#/$defs/__schema2"
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/__schema3"
+      },
+      "description": ""
+    },
+    "title": {
+      "type": "string",
+      "description": "The name of the maintenance window. While this name does not have to be unique, a distinctive name can help you identify a specific maintenance window."
+    }
+  },
+  "required": [
+    "schedule",
+    "title"
+  ],
+  "additionalProperties": {},
+  "$defs": {
+    "__schema0": {
+      "type": "string"
+    },
+    "__schema1": {},
+    "__schema2": {
+      "type": "string"
+    },
+    "__schema3": {}
+  }
+}

@@ -1,0 +1,62 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "The id parameter"
+    },
+    "description": {
+      "type": "string",
+      "description": "The saved query description."
+    },
+    "ecs_mapping": {
+      "type": "object",
+      "propertyNames": {
+        "$ref": "#/$defs/__schema0"
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/__schema1"
+      },
+      "description": "Map osquery results columns or static values to Elastic Common Schema (ECS) fields"
+    },
+    "body-id": {
+      "type": "string",
+      "description": "The ID of a saved query."
+    },
+    "interval": {
+      "type": "string",
+      "description": "An interval, in seconds, on which to run the query."
+    },
+    "platform": {
+      "type": "string",
+      "description": "Restricts the query to a specified platform. The default is all platforms. To specify multiple platforms, use commas. For example, `linux,darwin`."
+    },
+    "query": {
+      "type": "string",
+      "description": "The SQL query you want to run."
+    },
+    "removed": {
+      "type": "boolean",
+      "description": "Indicates whether the query is removed."
+    },
+    "snapshot": {
+      "type": "boolean",
+      "description": "Indicates whether the query is a snapshot."
+    },
+    "kb-version": {
+      "type": "string",
+      "description": "Uses the Osquery versions greater than or equal to the specified version string."
+    }
+  },
+  "required": [
+    "id"
+  ],
+  "additionalProperties": {},
+  "$defs": {
+    "__schema0": {
+      "type": "string"
+    },
+    "__schema1": {}
+  }
+}

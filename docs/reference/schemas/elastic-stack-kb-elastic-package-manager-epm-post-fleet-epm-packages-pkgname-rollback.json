@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "pkgName": {
+      "type": "string",
+      "description": "Package name to roll back"
+    }
+  },
+  "required": [
+    "pkgName"
+  ],
+  "additionalProperties": {}
+}

@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "skillId": {
+      "type": "string",
+      "description": "The unique identifier of the skill."
+    },
+    "force": {
+      "type": "boolean",
+      "description": "If true, removes the skill from agents that use it and then deletes it. If false and any agent uses the skill, the request returns 409 Conflict with the list of agents."
+    }
+  },
+  "required": [
+    "skillId"
+  ],
+  "additionalProperties": {}
+}

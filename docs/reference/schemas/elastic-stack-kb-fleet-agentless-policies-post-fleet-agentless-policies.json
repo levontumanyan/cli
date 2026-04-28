@@ -1,0 +1,119 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "kb-format": {
+      "type": "string",
+      "description": "The format of the response package policy."
+    },
+    "additional_datastreams_permissions": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/__schema0"
+      },
+      "description": "Additional datastream permissions, that will be added to the agent policy."
+    },
+    "cloud_connector": {
+      "type": "object",
+      "propertyNames": {
+        "$ref": "#/$defs/__schema1"
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/__schema2"
+      },
+      "description": ""
+    },
+    "description": {
+      "type": "string",
+      "description": "Policy description."
+    },
+    "force": {
+      "type": "boolean",
+      "description": "Force package policy creation even if the package is not verified, or if the agent policy is managed."
+    },
+    "id": {
+      "type": "string",
+      "description": "Policy unique identifier."
+    },
+    "inputs": {
+      "type": "object",
+      "propertyNames": {
+        "$ref": "#/$defs/__schema3"
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/__schema4"
+      },
+      "description": "Package policy inputs. Refer to the integration documentation to know which inputs are available."
+    },
+    "name": {
+      "type": "string",
+      "description": "Unique name for the policy."
+    },
+    "namespace": {
+      "type": "string",
+      "description": "Policy namespace. When not specified, it inherits the agent policy namespace."
+    },
+    "package": {
+      "type": "object",
+      "propertyNames": {
+        "$ref": "#/$defs/__schema5"
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/__schema6"
+      },
+      "description": ""
+    },
+    "policy_template": {
+      "type": "string",
+      "description": "The policy template to use for the agentless package policy. If not provided, the default policy template will be used."
+    },
+    "var_group_selections": {
+      "type": "object",
+      "propertyNames": {
+        "$ref": "#/$defs/__schema7"
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/__schema8"
+      },
+      "description": "Variable group selections. Maps var_group name to the selected option name within that group."
+    },
+    "vars": {
+      "type": "object",
+      "propertyNames": {
+        "$ref": "#/$defs/__schema9"
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/__schema10"
+      },
+      "description": "Input/stream level variable. Refer to the integration documentation for more information."
+    }
+  },
+  "required": [
+    "name",
+    "package"
+  ],
+  "additionalProperties": {},
+  "$defs": {
+    "__schema0": {},
+    "__schema1": {
+      "type": "string"
+    },
+    "__schema2": {},
+    "__schema3": {
+      "type": "string"
+    },
+    "__schema4": {},
+    "__schema5": {
+      "type": "string"
+    },
+    "__schema6": {},
+    "__schema7": {
+      "type": "string"
+    },
+    "__schema8": {},
+    "__schema9": {
+      "type": "string"
+    },
+    "__schema10": {}
+  }
+}

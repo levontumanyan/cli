@@ -1,0 +1,48 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "description": {
+      "type": "string",
+      "description": "Describes the value list."
+    },
+    "id": {
+      "type": "string",
+      "description": "Value list's identifier."
+    },
+    "meta": {
+      "type": "object",
+      "propertyNames": {
+        "$ref": "#/$defs/__schema0"
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/__schema1"
+      },
+      "description": "Placeholder for metadata about the value list."
+    },
+    "name": {
+      "type": "string",
+      "description": "Value list's name."
+    },
+    "type": {
+      "type": "string",
+      "description": "Specifies the Elasticsearch data type of excludes the list container holds. Some common examples:"
+    },
+    "kb-version": {
+      "type": "number",
+      "description": ""
+    }
+  },
+  "required": [
+    "description",
+    "name",
+    "type"
+  ],
+  "additionalProperties": {},
+  "$defs": {
+    "__schema0": {
+      "type": "string"
+    },
+    "__schema1": {}
+  }
+}

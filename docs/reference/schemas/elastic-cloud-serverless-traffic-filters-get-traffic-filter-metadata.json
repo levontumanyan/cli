@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "region": {
+      "type": "string",
+      "description": "Filter metadata to a specific region (e.g. aws-eu-west-1, azure-australiaeast)."
+    },
+    "csp": {
+      "type": "string",
+      "description": "Filter metadata to a specific cloud service provider (aws, azure, gcp)."
+    }
+  },
+  "additionalProperties": {}
+}

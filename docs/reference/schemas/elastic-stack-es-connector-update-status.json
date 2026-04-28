@@ -1,0 +1,42 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "connector_id": {
+      "$ref": "#/$defs/__schema0"
+    },
+    "status": {
+      "$ref": "#/$defs/__schema1"
+    }
+  },
+  "required": [
+    "connector_id",
+    "status"
+  ],
+  "additionalProperties": false,
+  "id": "ConnectorUpdateStatusRequest",
+  "$defs": {
+    "__schema0": {
+      "description": "The unique identifier of the connector to be updated",
+      "$ref": "#/$defs/Id"
+    },
+    "Id": {
+      "type": "string",
+      "id": "Id"
+    },
+    "__schema1": {
+      "$ref": "#/$defs/ConnectorConnectorStatus"
+    },
+    "ConnectorConnectorStatus": {
+      "type": "string",
+      "enum": [
+        "created",
+        "needs_configuration",
+        "configured",
+        "connected",
+        "error"
+      ],
+      "id": "ConnectorConnectorStatus"
+    }
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "viewId": {
+      "type": "string",
+      "description": "The viewId parameter"
+    },
+    "data_view": {
+      "type": "object",
+      "propertyNames": {
+        "$ref": "#/$defs/__schema0"
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/__schema1"
+      },
+      "description": "The data view properties you want to update. Only the specified properties are updated in the data view. Unspecified fields stay as they are persisted."
+    },
+    "refresh_fields": {
+      "type": "boolean",
+      "description": "Reloads the data view fields after the data view is updated."
+    }
+  },
+  "required": [
+    "viewId",
+    "data_view"
+  ],
+  "additionalProperties": {},
+  "$defs": {
+    "__schema0": {
+      "type": "string"
+    },
+    "__schema1": {}
+  }
+}

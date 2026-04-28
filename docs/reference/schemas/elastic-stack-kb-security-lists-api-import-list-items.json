@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "list_id": {
+      "type": "string",
+      "description": "List's id."
+    },
+    "type": {
+      "type": "string",
+      "description": "Type of the importing list."
+    },
+    "refresh": {
+      "type": "string",
+      "description": "Determines when changes made by the request are made visible to search."
+    }
+  },
+  "additionalProperties": {}
+}

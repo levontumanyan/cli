@@ -1,0 +1,42 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "list_id": {
+      "type": "string",
+      "description": "The `list_id`s of the items to fetch."
+    },
+    "filter": {
+      "type": "string",
+      "description": "Filters the returned results according to the value of the specified field,"
+    },
+    "namespace_type": {
+      "type": "string",
+      "description": "Determines whether the returned containers are Kibana associated with a Kibana space"
+    },
+    "search": {
+      "type": "string",
+      "description": ""
+    },
+    "page": {
+      "type": "number",
+      "description": "The page number to return"
+    },
+    "per_page": {
+      "type": "number",
+      "description": "The number of exception list items to return per page"
+    },
+    "sort_field": {
+      "type": "string",
+      "description": "Determines which field is used to sort the results."
+    },
+    "sort_order": {
+      "type": "string",
+      "description": "Determines the sort order, which can be `desc` or `asc`."
+    }
+  },
+  "required": [
+    "list_id"
+  ],
+  "additionalProperties": {}
+}

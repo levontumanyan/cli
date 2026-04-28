@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "An identifier for the connector."
+    },
+    "connector_type_id": {
+      "type": "string",
+      "description": "The type of connector."
+    },
+    "name": {
+      "type": "string",
+      "description": "The display name for the connector."
+    },
+    "kb-config": {
+      "type": "string",
+      "description": "The connector configuration details."
+    },
+    "secrets": {
+      "type": "string",
+      "description": ""
+    }
+  },
+  "required": [
+    "id",
+    "connector_type_id",
+    "name"
+  ],
+  "additionalProperties": {}
+}

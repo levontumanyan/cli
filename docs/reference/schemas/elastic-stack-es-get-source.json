@@ -1,0 +1,204 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "id": {
+      "$ref": "#/$defs/__schema0"
+    },
+    "index": {
+      "$ref": "#/$defs/__schema1"
+    },
+    "preference": {
+      "$ref": "#/$defs/__schema2"
+    },
+    "realtime": {
+      "$ref": "#/$defs/__schema4"
+    },
+    "refresh": {
+      "$ref": "#/$defs/__schema6"
+    },
+    "routing": {
+      "$ref": "#/$defs/__schema8"
+    },
+    "_source": {
+      "$ref": "#/$defs/__schema12"
+    },
+    "_source_excludes": {
+      "$ref": "#/$defs/__schema18"
+    },
+    "_source_includes": {
+      "$ref": "#/$defs/__schema20"
+    },
+    "version": {
+      "$ref": "#/$defs/__schema22"
+    },
+    "version_type": {
+      "$ref": "#/$defs/__schema24"
+    }
+  },
+  "required": [
+    "id",
+    "index"
+  ],
+  "additionalProperties": false,
+  "id": "GetSourceRequest",
+  "$defs": {
+    "__schema0": {
+      "description": "A unique document identifier.",
+      "$ref": "#/$defs/Id"
+    },
+    "Id": {
+      "type": "string",
+      "id": "Id"
+    },
+    "__schema1": {
+      "description": "The name of the index that contains the document.",
+      "$ref": "#/$defs/IndexName"
+    },
+    "IndexName": {
+      "type": "string",
+      "id": "IndexName"
+    },
+    "__schema2": {
+      "$ref": "#/$defs/__schema3"
+    },
+    "__schema3": {
+      "type": "string",
+      "description": "The node or shard the operation should be performed on. By default, the operation is randomized between the shard replicas."
+    },
+    "__schema4": {
+      "$ref": "#/$defs/__schema5"
+    },
+    "__schema5": {
+      "type": "boolean",
+      "description": "If `true`, the request is real-time as opposed to near-real-time."
+    },
+    "__schema6": {
+      "$ref": "#/$defs/__schema7"
+    },
+    "__schema7": {
+      "type": "boolean",
+      "description": "If `true`, the request refreshes the relevant shards before retrieving the document. Setting it to `true` should be done after careful thought and verification that this does not cause a heavy load on the system (and slow down indexing)."
+    },
+    "__schema8": {
+      "$ref": "#/$defs/__schema9"
+    },
+    "__schema9": {
+      "description": "A custom value used to route operations to a specific shard.",
+      "$ref": "#/$defs/Routing"
+    },
+    "Routing": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/__schema10"
+        },
+        {
+          "$ref": "#/$defs/__schema11"
+        }
+      ],
+      "id": "Routing"
+    },
+    "__schema10": {
+      "type": "string"
+    },
+    "__schema11": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "__schema12": {
+      "$ref": "#/$defs/__schema13"
+    },
+    "__schema13": {
+      "description": "Indicates whether to return the `_source` field (`true` or `false`) or lists the fields to return.",
+      "$ref": "#/$defs/SearchSourceConfigParam"
+    },
+    "__schema14": {
+      "type": "boolean"
+    },
+    "__schema15": {
+      "$ref": "#/$defs/Fields"
+    },
+    "Fields": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/__schema16"
+        },
+        {
+          "$ref": "#/$defs/__schema17"
+        }
+      ],
+      "id": "Fields"
+    },
+    "__schema16": {
+      "$ref": "#/$defs/Field"
+    },
+    "Field": {
+      "type": "string",
+      "id": "Field"
+    },
+    "__schema17": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/Field"
+      }
+    },
+    "SearchSourceConfigParam": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/__schema14"
+        },
+        {
+          "$ref": "#/$defs/__schema15"
+        }
+      ],
+      "id": "SearchSourceConfigParam"
+    },
+    "__schema18": {
+      "$ref": "#/$defs/__schema19"
+    },
+    "__schema19": {
+      "description": "A comma-separated list of source fields to exclude in the response.",
+      "$ref": "#/$defs/Fields"
+    },
+    "__schema20": {
+      "$ref": "#/$defs/__schema21"
+    },
+    "__schema21": {
+      "description": "A comma-separated list of source fields to include in the response.",
+      "$ref": "#/$defs/Fields"
+    },
+    "__schema22": {
+      "$ref": "#/$defs/__schema23"
+    },
+    "__schema23": {
+      "description": "The version number for concurrency control. It must match the current version of the document for the request to succeed.",
+      "$ref": "#/$defs/VersionNumber"
+    },
+    "VersionNumber": {
+      "id": "VersionNumber",
+      "$ref": "#/$defs/long"
+    },
+    "long": {
+      "type": "number",
+      "id": "long"
+    },
+    "__schema24": {
+      "$ref": "#/$defs/__schema25"
+    },
+    "__schema25": {
+      "description": "The version type.",
+      "$ref": "#/$defs/VersionType"
+    },
+    "VersionType": {
+      "type": "string",
+      "enum": [
+        "internal",
+        "external",
+        "external_gte"
+      ],
+      "id": "VersionType"
+    }
+  }
+}

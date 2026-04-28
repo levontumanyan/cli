@@ -1,0 +1,27 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "sort_field": {
+      "type": "string",
+      "description": "The field to sort by."
+    },
+    "sort_direction": {
+      "type": "string",
+      "description": "The order to sort by."
+    },
+    "page": {
+      "type": "number",
+      "description": "The page number to return."
+    },
+    "per_page": {
+      "type": "number",
+      "description": "The number of records to return per page."
+    },
+    "kuery": {
+      "type": "string",
+      "description": "The kuery to filter by."
+    }
+  },
+  "additionalProperties": {}
+}

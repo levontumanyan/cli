@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "purpose": {
+      "type": "string",
+      "description": "Specifies which authorization checks are applied to the API call. The default value is `any`."
+    },
+    "include_authorized_purposes": {
+      "type": "string",
+      "description": "When enabled, the API returns any spaces that the user is authorized to access in any capacity and each space will contain the purposes for which the user is authorized. This can be useful to determine which spaces a user can read but not take a specific action in. If the security plugin is not enabled, this parameter has no effect, since no authorization checks take place. This parameter cannot be used in with the `purpose` parameter."
+    }
+  },
+  "required": [
+    "include_authorized_purposes"
+  ],
+  "additionalProperties": {}
+}

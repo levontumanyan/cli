@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "conversation_id": {
+      "type": "string",
+      "description": "The unique identifier of the conversation."
+    },
+    "attachment_id": {
+      "type": "string",
+      "description": "The unique identifier of the attachment to update."
+    },
+    "origin": {
+      "type": "string",
+      "description": "The origin string (e.g., saved object ID for visualizations and dashboards)."
+    }
+  },
+  "required": [
+    "conversation_id",
+    "attachment_id",
+    "origin"
+  ],
+  "additionalProperties": {}
+}

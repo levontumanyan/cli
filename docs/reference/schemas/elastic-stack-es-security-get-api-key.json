@@ -1,0 +1,102 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "id": {
+      "$ref": "#/$defs/__schema0"
+    },
+    "name": {
+      "$ref": "#/$defs/__schema2"
+    },
+    "owner": {
+      "$ref": "#/$defs/__schema4"
+    },
+    "realm_name": {
+      "$ref": "#/$defs/__schema6"
+    },
+    "username": {
+      "$ref": "#/$defs/__schema8"
+    },
+    "with_limited_by": {
+      "$ref": "#/$defs/__schema10"
+    },
+    "active_only": {
+      "$ref": "#/$defs/__schema12"
+    },
+    "with_profile_uid": {
+      "$ref": "#/$defs/__schema14"
+    }
+  },
+  "additionalProperties": false,
+  "id": "SecurityGetApiKeyRequest",
+  "$defs": {
+    "__schema0": {
+      "$ref": "#/$defs/__schema1"
+    },
+    "__schema1": {
+      "description": "An API key id. This parameter cannot be used with any of `name`, `realm_name` or `username`.",
+      "$ref": "#/$defs/Id"
+    },
+    "Id": {
+      "type": "string",
+      "id": "Id"
+    },
+    "__schema2": {
+      "$ref": "#/$defs/__schema3"
+    },
+    "__schema3": {
+      "description": "An API key name. This parameter cannot be used with any of `id`, `realm_name` or `username`. It supports prefix search with wildcard.",
+      "$ref": "#/$defs/Name"
+    },
+    "Name": {
+      "type": "string",
+      "id": "Name"
+    },
+    "__schema4": {
+      "$ref": "#/$defs/__schema5"
+    },
+    "__schema5": {
+      "type": "boolean",
+      "description": "A boolean flag that can be used to query API keys owned by the currently authenticated user. The `realm_name` or `username` parameters cannot be specified when this parameter is set to `true` as they are assumed to be the currently authenticated ones."
+    },
+    "__schema6": {
+      "$ref": "#/$defs/__schema7"
+    },
+    "__schema7": {
+      "description": "The name of an authentication realm. This parameter cannot be used with either `id` or `name` or when `owner` flag is set to `true`.",
+      "$ref": "#/$defs/Name"
+    },
+    "__schema8": {
+      "$ref": "#/$defs/__schema9"
+    },
+    "__schema9": {
+      "description": "The username of a user. This parameter cannot be used with either `id` or `name` or when `owner` flag is set to `true`.",
+      "$ref": "#/$defs/Username"
+    },
+    "Username": {
+      "type": "string",
+      "id": "Username"
+    },
+    "__schema10": {
+      "$ref": "#/$defs/__schema11"
+    },
+    "__schema11": {
+      "type": "boolean",
+      "description": "Return the snapshot of the owner user's role descriptors associated with the API key. An API key's actual permission is the intersection of its assigned role descriptors and the owner user's role descriptors."
+    },
+    "__schema12": {
+      "$ref": "#/$defs/__schema13"
+    },
+    "__schema13": {
+      "type": "boolean",
+      "description": "A boolean flag that can be used to query API keys that are currently active. An API key is considered active if it is neither invalidated, nor expired at query time. You can specify this together with other parameters such as `owner` or `name`. If `active_only` is false, the response will include both active and inactive (expired or invalidated) keys."
+    },
+    "__schema14": {
+      "$ref": "#/$defs/__schema15"
+    },
+    "__schema15": {
+      "type": "boolean",
+      "description": "Determines whether to also retrieve the profile uid, for the API key owner principal, if it exists."
+    }
+  }
+}

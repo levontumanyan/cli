@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "pkgName": {
+      "type": "string",
+      "description": "The pkgName parameter"
+    },
+    "pkgVersion": {
+      "type": "string",
+      "description": "The pkgVersion parameter"
+    },
+    "packagePolicyId": {
+      "type": "string",
+      "description": ""
+    }
+  },
+  "required": [
+    "pkgName",
+    "pkgVersion",
+    "packagePolicyId"
+  ],
+  "additionalProperties": {}
+}

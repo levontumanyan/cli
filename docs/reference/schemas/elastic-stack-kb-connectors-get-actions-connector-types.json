@@ -1,0 +1,11 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "feature_id": {
+      "type": "string",
+      "description": "A filter to limit the retrieved connector types to those that support a specific feature (such as alerting or cases)."
+    }
+  },
+  "additionalProperties": {}
+}

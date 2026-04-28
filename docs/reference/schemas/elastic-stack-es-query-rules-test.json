@@ -1,0 +1,42 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "ruleset_id": {
+      "$ref": "#/$defs/__schema0"
+    },
+    "match_criteria": {
+      "$ref": "#/$defs/__schema1"
+    }
+  },
+  "required": [
+    "ruleset_id",
+    "match_criteria"
+  ],
+  "additionalProperties": false,
+  "id": "QueryRulesTestRequest",
+  "$defs": {
+    "__schema0": {
+      "description": "The unique identifier of the query ruleset to be created or updated",
+      "$ref": "#/$defs/Id"
+    },
+    "Id": {
+      "type": "string",
+      "id": "Id"
+    },
+    "__schema1": {
+      "type": "object",
+      "propertyNames": {
+        "$ref": "#/$defs/__schema2"
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/__schema3"
+      },
+      "description": "The match criteria to apply to rules in the given query ruleset. Match criteria should match the keys defined in the `criteria.metadata` field of the rule."
+    },
+    "__schema2": {
+      "type": "string"
+    },
+    "__schema3": {}
+  }
+}

@@ -1,0 +1,48 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "serviceName": {
+      "type": "string",
+      "description": "The name of the service"
+    },
+    "@timestamp": {
+      "type": "string",
+      "description": "The date and time of the annotation. It must be in ISO 8601 format."
+    },
+    "message": {
+      "type": "string",
+      "description": "The message displayed in the annotation. It defaults to `service.version`."
+    },
+    "service": {
+      "type": "object",
+      "propertyNames": {
+        "$ref": "#/$defs/__schema0"
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/__schema1"
+      },
+      "description": "The service that identifies the configuration to create or update."
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/__schema2"
+      },
+      "description": "Tags are used by the Applications UI to distinguish APM annotations from other annotations. Tags may have additional functionality in future releases. It defaults to `[apm]`. While you can add additional tags, you cannot remove the `apm` tag."
+    }
+  },
+  "required": [
+    "serviceName",
+    "@timestamp",
+    "service"
+  ],
+  "additionalProperties": {},
+  "$defs": {
+    "__schema0": {
+      "type": "string"
+    },
+    "__schema1": {},
+    "__schema2": {}
+  }
+}

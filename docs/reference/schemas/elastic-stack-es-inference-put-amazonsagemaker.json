@@ -1,0 +1,367 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "task_type": {
+      "$ref": "#/$defs/__schema0"
+    },
+    "amazonsagemaker_inference_id": {
+      "$ref": "#/$defs/__schema1"
+    },
+    "timeout": {
+      "$ref": "#/$defs/__schema2"
+    },
+    "chunking_settings": {
+      "$ref": "#/$defs/__schema7"
+    },
+    "service": {
+      "$ref": "#/$defs/__schema16"
+    },
+    "service_settings": {
+      "$ref": "#/$defs/__schema17"
+    },
+    "task_settings": {
+      "$ref": "#/$defs/__schema28"
+    }
+  },
+  "required": [
+    "task_type",
+    "amazonsagemaker_inference_id",
+    "service",
+    "service_settings"
+  ],
+  "additionalProperties": false,
+  "id": "InferencePutAmazonsagemakerRequest",
+  "$defs": {
+    "__schema0": {
+      "type": "string",
+      "enum": [
+        "text_embedding",
+        "completion",
+        "chat_completion",
+        "sparse_embedding",
+        "rerank"
+      ],
+      "description": "The type of the inference task that the model will perform.",
+      "$ref": "#/$defs/InferenceTaskTypeAmazonSageMaker"
+    },
+    "InferenceTaskTypeAmazonSageMaker": {
+      "type": "string",
+      "enum": [
+        "text_embedding",
+        "completion",
+        "chat_completion",
+        "sparse_embedding",
+        "rerank"
+      ],
+      "id": "InferenceTaskTypeAmazonSageMaker"
+    },
+    "__schema1": {
+      "description": "The unique identifier of the inference endpoint.",
+      "$ref": "#/$defs/Id"
+    },
+    "Id": {
+      "type": "string",
+      "id": "Id"
+    },
+    "__schema2": {
+      "$ref": "#/$defs/__schema3"
+    },
+    "__schema3": {
+      "description": "Specifies the amount of time to wait for the inference endpoint to be created.",
+      "$ref": "#/$defs/Duration"
+    },
+    "Duration": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/__schema4"
+        },
+        {
+          "$ref": "#/$defs/__schema5"
+        },
+        {
+          "$ref": "#/$defs/__schema6"
+        }
+      ],
+      "id": "Duration"
+    },
+    "__schema4": {
+      "type": "string"
+    },
+    "__schema5": {
+      "type": "number",
+      "const": -1
+    },
+    "__schema6": {
+      "type": "number",
+      "const": 0
+    },
+    "__schema7": {
+      "$ref": "#/$defs/__schema8"
+    },
+    "__schema8": {
+      "description": "The chunking configuration object. Applies only to the `sparse_embedding` or `text_embedding` task types. Not applicable to the `rerank`, `completion`, or `chat_completion` task types.",
+      "$ref": "#/$defs/InferenceInferenceChunkingSettings"
+    },
+    "__schema9": {
+      "description": "The maximum size of a chunk in words. This value cannot be lower than `20` (for `sentence` strategy) or `10` (for `word` strategy). This value should not exceed the window size for the associated model.",
+      "$ref": "#/$defs/integer"
+    },
+    "integer": {
+      "type": "number",
+      "id": "integer"
+    },
+    "__schema10": {
+      "description": "The number of overlapping words for chunks. It is applicable only to a `word` chunking strategy. This value cannot be higher than half the `max_chunk_size` value.",
+      "$ref": "#/$defs/integer"
+    },
+    "__schema11": {
+      "description": "The number of overlapping sentences for chunks. It is applicable only for a `sentence` chunking strategy. It can be either `1` or `0`.",
+      "$ref": "#/$defs/integer"
+    },
+    "__schema12": {
+      "type": "string",
+      "description": "Only applicable to the `recursive` strategy and required when using it. Sets a predefined list of separators in the saved chunking settings based on the selected text type. Values can be `markdown` or `plaintext`. Using this parameter is an alternative to manually specifying a custom `separators` list."
+    },
+    "__schema13": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/__schema14"
+      },
+      "description": "Only applicable to the `recursive` strategy and required when using it. A list of strings used as possible split points when chunking text. Each string can be a plain string or a regular expression (regex) pattern. The system tries each separator in order to split the text, starting from the first item in the list. After splitting, it attempts to recombine smaller pieces into larger chunks that stay within the `max_chunk_size` limit, to reduce the total number of chunks generated."
+    },
+    "__schema14": {
+      "type": "string"
+    },
+    "__schema15": {
+      "type": "string",
+      "description": "The chunking strategy: `sentence`, `word`, `none` or `recursive`.  * If `strategy` is set to `recursive`, you must also specify: - `max_chunk_size` - either `separators` or`separator_group` Learn more about different chunking strategies in the linked documentation."
+    },
+    "InferenceInferenceChunkingSettings": {
+      "type": "object",
+      "properties": {
+        "max_chunk_size": {
+          "$ref": "#/$defs/__schema9"
+        },
+        "overlap": {
+          "$ref": "#/$defs/__schema10"
+        },
+        "sentence_overlap": {
+          "$ref": "#/$defs/__schema11"
+        },
+        "separator_group": {
+          "$ref": "#/$defs/__schema12"
+        },
+        "separators": {
+          "$ref": "#/$defs/__schema13"
+        },
+        "strategy": {
+          "$ref": "#/$defs/__schema15"
+        }
+      },
+      "additionalProperties": false,
+      "id": "InferenceInferenceChunkingSettings"
+    },
+    "__schema16": {
+      "type": "string",
+      "enum": [
+        "amazon_sagemaker"
+      ],
+      "description": "The type of service supported for the specified task type. In this case, `amazon_sagemaker`.",
+      "$ref": "#/$defs/InferenceAmazonSageMakerServiceType"
+    },
+    "InferenceAmazonSageMakerServiceType": {
+      "type": "string",
+      "enum": [
+        "amazon_sagemaker"
+      ],
+      "id": "InferenceAmazonSageMakerServiceType"
+    },
+    "__schema17": {
+      "type": "object",
+      "properties": {
+        "access_key": {
+          "$ref": "#/$defs/__schema18"
+        },
+        "endpoint_name": {
+          "$ref": "#/$defs/__schema19"
+        },
+        "api": {
+          "$ref": "#/$defs/__schema20"
+        },
+        "region": {
+          "$ref": "#/$defs/__schema21"
+        },
+        "secret_key": {
+          "$ref": "#/$defs/__schema22"
+        },
+        "target_model": {
+          "$ref": "#/$defs/__schema23"
+        },
+        "target_container_hostname": {
+          "$ref": "#/$defs/__schema24"
+        },
+        "inference_component_name": {
+          "$ref": "#/$defs/__schema25"
+        },
+        "batch_size": {
+          "$ref": "#/$defs/__schema26"
+        },
+        "dimensions": {
+          "$ref": "#/$defs/__schema27"
+        }
+      },
+      "required": [
+        "access_key",
+        "endpoint_name",
+        "api",
+        "region",
+        "secret_key"
+      ],
+      "additionalProperties": false,
+      "description": "Settings used to install the inference model. These settings are specific to the `amazon_sagemaker` service and `service_settings.api` you specified.",
+      "$ref": "#/$defs/InferenceAmazonSageMakerServiceSettings"
+    },
+    "__schema18": {
+      "type": "string",
+      "description": "A valid AWS access key that has permissions to use Amazon SageMaker and access to models for invoking requests."
+    },
+    "__schema19": {
+      "type": "string",
+      "description": "The name of the SageMaker endpoint."
+    },
+    "__schema20": {
+      "description": "The API format to use when calling SageMaker. Elasticsearch will convert the POST _inference request to this data format when invoking the SageMaker endpoint.",
+      "$ref": "#/$defs/InferenceAmazonSageMakerApi"
+    },
+    "InferenceAmazonSageMakerApi": {
+      "type": "string",
+      "enum": [
+        "openai",
+        "elastic"
+      ],
+      "id": "InferenceAmazonSageMakerApi"
+    },
+    "__schema21": {
+      "type": "string",
+      "description": "The region that your endpoint or Amazon Resource Name (ARN) is deployed in. The list of available regions per model can be found in the Amazon SageMaker documentation."
+    },
+    "__schema22": {
+      "type": "string",
+      "description": "A valid AWS secret key that is paired with the `access_key`. For information about creating and managing access and secret keys, refer to the AWS documentation."
+    },
+    "__schema23": {
+      "type": "string",
+      "description": "The model ID when calling a multi-model endpoint."
+    },
+    "__schema24": {
+      "type": "string",
+      "description": "The container to directly invoke when calling a multi-container endpoint."
+    },
+    "__schema25": {
+      "type": "string",
+      "description": "The inference component to directly invoke when calling a multi-component endpoint."
+    },
+    "__schema26": {
+      "description": "The maximum number of inputs in each batch. This value is used by inference ingestion pipelines when processing semantic values. It correlates to the number of times the SageMaker endpoint is invoked (one per batch of input).",
+      "$ref": "#/$defs/integer"
+    },
+    "__schema27": {
+      "description": "The number of dimensions returned by the text embedding models. If this value is not provided, then it is guessed by making invoking the endpoint for the `text_embedding` task.",
+      "$ref": "#/$defs/integer"
+    },
+    "InferenceAmazonSageMakerServiceSettings": {
+      "type": "object",
+      "properties": {
+        "access_key": {
+          "$ref": "#/$defs/__schema18"
+        },
+        "endpoint_name": {
+          "$ref": "#/$defs/__schema19"
+        },
+        "api": {
+          "$ref": "#/$defs/__schema20"
+        },
+        "region": {
+          "$ref": "#/$defs/__schema21"
+        },
+        "secret_key": {
+          "$ref": "#/$defs/__schema22"
+        },
+        "target_model": {
+          "$ref": "#/$defs/__schema23"
+        },
+        "target_container_hostname": {
+          "$ref": "#/$defs/__schema24"
+        },
+        "inference_component_name": {
+          "$ref": "#/$defs/__schema25"
+        },
+        "batch_size": {
+          "$ref": "#/$defs/__schema26"
+        },
+        "dimensions": {
+          "$ref": "#/$defs/__schema27"
+        }
+      },
+      "required": [
+        "access_key",
+        "endpoint_name",
+        "api",
+        "region",
+        "secret_key"
+      ],
+      "additionalProperties": false,
+      "id": "InferenceAmazonSageMakerServiceSettings"
+    },
+    "__schema28": {
+      "$ref": "#/$defs/__schema29"
+    },
+    "__schema29": {
+      "description": "Settings to configure the inference task. These settings are specific to the task type and `service_settings.api` you specified.",
+      "$ref": "#/$defs/InferenceAmazonSageMakerTaskSettings"
+    },
+    "__schema30": {
+      "type": "string",
+      "description": "The AWS custom attributes passed verbatim through to the model running in the SageMaker Endpoint. Values will be returned in the `X-elastic-sagemaker-custom-attributes` header."
+    },
+    "__schema31": {
+      "type": "string",
+      "description": "The optional JMESPath expression used to override the EnableExplanations provided during endpoint creation."
+    },
+    "__schema32": {
+      "type": "string",
+      "description": "The capture data ID when enabled in the endpoint."
+    },
+    "__schema33": {
+      "type": "string",
+      "description": "The stateful session identifier for a new or existing session. New sessions will be returned in the `X-elastic-sagemaker-new-session-id` header. Closed sessions will be returned in the `X-elastic-sagemaker-closed-session-id` header."
+    },
+    "__schema34": {
+      "type": "string",
+      "description": "Specifies the variant when running with multi-variant Endpoints."
+    },
+    "InferenceAmazonSageMakerTaskSettings": {
+      "type": "object",
+      "properties": {
+        "custom_attributes": {
+          "$ref": "#/$defs/__schema30"
+        },
+        "enable_explanations": {
+          "$ref": "#/$defs/__schema31"
+        },
+        "inference_id": {
+          "$ref": "#/$defs/__schema32"
+        },
+        "session_id": {
+          "$ref": "#/$defs/__schema33"
+        },
+        "target_variant": {
+          "$ref": "#/$defs/__schema34"
+        }
+      },
+      "additionalProperties": false,
+      "id": "InferenceAmazonSageMakerTaskSettings"
+    }
+  }
+}

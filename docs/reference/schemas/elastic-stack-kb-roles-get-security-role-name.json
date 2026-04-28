@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "The role name."
+    },
+    "replaceDeprecatedPrivileges": {
+      "type": "boolean",
+      "description": "If `true` and the response contains any privileges that are associated with deprecated features, they are omitted in favor of details about the appropriate replacement feature privileges."
+    }
+  },
+  "required": [
+    "name"
+  ],
+  "additionalProperties": {}
+}

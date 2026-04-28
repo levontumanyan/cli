@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "entityType": {
+      "type": "string",
+      "description": "The entity type of the engine (either 'user' or 'host')."
+    },
+    "delete_data": {
+      "type": "boolean",
+      "description": "Control flag to also delete the entity data."
+    },
+    "data": {
+      "type": "boolean",
+      "description": "Control flag to also delete the entity data."
+    }
+  },
+  "required": [
+    "entityType"
+  ],
+  "additionalProperties": {}
+}

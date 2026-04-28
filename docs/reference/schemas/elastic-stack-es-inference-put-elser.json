@@ -1,0 +1,251 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "task_type": {
+      "$ref": "#/$defs/__schema0"
+    },
+    "elser_inference_id": {
+      "$ref": "#/$defs/__schema1"
+    },
+    "timeout": {
+      "$ref": "#/$defs/__schema2"
+    },
+    "chunking_settings": {
+      "$ref": "#/$defs/__schema7"
+    },
+    "service": {
+      "$ref": "#/$defs/__schema16"
+    },
+    "service_settings": {
+      "$ref": "#/$defs/__schema17"
+    }
+  },
+  "required": [
+    "task_type",
+    "elser_inference_id",
+    "service",
+    "service_settings"
+  ],
+  "additionalProperties": false,
+  "id": "InferencePutElserRequest",
+  "$defs": {
+    "__schema0": {
+      "type": "string",
+      "enum": [
+        "sparse_embedding"
+      ],
+      "description": "The type of the inference task that the model will perform.",
+      "$ref": "#/$defs/InferenceElserTaskType"
+    },
+    "InferenceElserTaskType": {
+      "type": "string",
+      "enum": [
+        "sparse_embedding"
+      ],
+      "id": "InferenceElserTaskType"
+    },
+    "__schema1": {
+      "description": "The unique identifier of the inference endpoint.",
+      "$ref": "#/$defs/Id"
+    },
+    "Id": {
+      "type": "string",
+      "id": "Id"
+    },
+    "__schema2": {
+      "$ref": "#/$defs/__schema3"
+    },
+    "__schema3": {
+      "description": "Specifies the amount of time to wait for the inference endpoint to be created.",
+      "$ref": "#/$defs/Duration"
+    },
+    "Duration": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/__schema4"
+        },
+        {
+          "$ref": "#/$defs/__schema5"
+        },
+        {
+          "$ref": "#/$defs/__schema6"
+        }
+      ],
+      "id": "Duration"
+    },
+    "__schema4": {
+      "type": "string"
+    },
+    "__schema5": {
+      "type": "number",
+      "const": -1
+    },
+    "__schema6": {
+      "type": "number",
+      "const": 0
+    },
+    "__schema7": {
+      "$ref": "#/$defs/__schema8"
+    },
+    "__schema8": {
+      "description": "The chunking configuration object. Note that for ELSER endpoints, the max_chunk_size may not exceed `300`.",
+      "$ref": "#/$defs/InferenceInferenceChunkingSettings"
+    },
+    "__schema9": {
+      "description": "The maximum size of a chunk in words. This value cannot be lower than `20` (for `sentence` strategy) or `10` (for `word` strategy). This value should not exceed the window size for the associated model.",
+      "$ref": "#/$defs/integer"
+    },
+    "integer": {
+      "type": "number",
+      "id": "integer"
+    },
+    "__schema10": {
+      "description": "The number of overlapping words for chunks. It is applicable only to a `word` chunking strategy. This value cannot be higher than half the `max_chunk_size` value.",
+      "$ref": "#/$defs/integer"
+    },
+    "__schema11": {
+      "description": "The number of overlapping sentences for chunks. It is applicable only for a `sentence` chunking strategy. It can be either `1` or `0`.",
+      "$ref": "#/$defs/integer"
+    },
+    "__schema12": {
+      "type": "string",
+      "description": "Only applicable to the `recursive` strategy and required when using it. Sets a predefined list of separators in the saved chunking settings based on the selected text type. Values can be `markdown` or `plaintext`. Using this parameter is an alternative to manually specifying a custom `separators` list."
+    },
+    "__schema13": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/__schema14"
+      },
+      "description": "Only applicable to the `recursive` strategy and required when using it. A list of strings used as possible split points when chunking text. Each string can be a plain string or a regular expression (regex) pattern. The system tries each separator in order to split the text, starting from the first item in the list. After splitting, it attempts to recombine smaller pieces into larger chunks that stay within the `max_chunk_size` limit, to reduce the total number of chunks generated."
+    },
+    "__schema14": {
+      "type": "string"
+    },
+    "__schema15": {
+      "type": "string",
+      "description": "The chunking strategy: `sentence`, `word`, `none` or `recursive`.  * If `strategy` is set to `recursive`, you must also specify: - `max_chunk_size` - either `separators` or`separator_group` Learn more about different chunking strategies in the linked documentation."
+    },
+    "InferenceInferenceChunkingSettings": {
+      "type": "object",
+      "properties": {
+        "max_chunk_size": {
+          "$ref": "#/$defs/__schema9"
+        },
+        "overlap": {
+          "$ref": "#/$defs/__schema10"
+        },
+        "sentence_overlap": {
+          "$ref": "#/$defs/__schema11"
+        },
+        "separator_group": {
+          "$ref": "#/$defs/__schema12"
+        },
+        "separators": {
+          "$ref": "#/$defs/__schema13"
+        },
+        "strategy": {
+          "$ref": "#/$defs/__schema15"
+        }
+      },
+      "additionalProperties": false,
+      "id": "InferenceInferenceChunkingSettings"
+    },
+    "__schema16": {
+      "type": "string",
+      "enum": [
+        "elser"
+      ],
+      "description": "The type of service supported for the specified task type. In this case, `elser`.",
+      "$ref": "#/$defs/InferenceElserServiceType"
+    },
+    "InferenceElserServiceType": {
+      "type": "string",
+      "enum": [
+        "elser"
+      ],
+      "id": "InferenceElserServiceType"
+    },
+    "__schema17": {
+      "type": "object",
+      "properties": {
+        "adaptive_allocations": {
+          "$ref": "#/$defs/__schema18"
+        },
+        "num_allocations": {
+          "$ref": "#/$defs/__schema22"
+        },
+        "num_threads": {
+          "$ref": "#/$defs/__schema23"
+        }
+      },
+      "required": [
+        "num_allocations",
+        "num_threads"
+      ],
+      "additionalProperties": false,
+      "description": "Settings used to install the inference model. These settings are specific to the `elser` service.",
+      "$ref": "#/$defs/InferenceElserServiceSettings"
+    },
+    "__schema18": {
+      "description": "Adaptive allocations configuration details. If `enabled` is true, the number of allocations of the model is set based on the current load the process gets. When the load is high, a new model allocation is automatically created, respecting the value of `max_number_of_allocations` if it's set. When the load is low, a model allocation is automatically removed, respecting the value of `min_number_of_allocations` if it's set. If `enabled` is true, do not set the number of allocations manually.",
+      "$ref": "#/$defs/InferenceAdaptiveAllocations"
+    },
+    "__schema19": {
+      "type": "boolean",
+      "description": "Turn on `adaptive_allocations`."
+    },
+    "__schema20": {
+      "description": "The maximum number of allocations to scale to. If set, it must be greater than or equal to `min_number_of_allocations`.",
+      "$ref": "#/$defs/integer"
+    },
+    "__schema21": {
+      "description": "The minimum number of allocations to scale to. If set, it must be greater than or equal to 0. If not defined, the deployment scales to 0.",
+      "$ref": "#/$defs/integer"
+    },
+    "InferenceAdaptiveAllocations": {
+      "type": "object",
+      "properties": {
+        "enabled": {
+          "$ref": "#/$defs/__schema19"
+        },
+        "max_number_of_allocations": {
+          "$ref": "#/$defs/__schema20"
+        },
+        "min_number_of_allocations": {
+          "$ref": "#/$defs/__schema21"
+        }
+      },
+      "additionalProperties": false,
+      "id": "InferenceAdaptiveAllocations"
+    },
+    "__schema22": {
+      "description": "The total number of allocations this model is assigned across machine learning nodes. Increasing this value generally increases the throughput. If adaptive allocations is enabled, do not set this value because it's automatically set.",
+      "$ref": "#/$defs/integer"
+    },
+    "__schema23": {
+      "description": "The number of threads used by each model allocation during inference. Increasing this value generally increases the speed per inference request. The inference process is a compute-bound process; `threads_per_allocations` must not exceed the number of available allocated processors per node. The value must be a power of 2. The maximum value is 32. > info > If you want to optimize your ELSER endpoint for ingest, set the number of threads to 1. If you want to optimize your ELSER endpoint for search, set the number of threads to greater than 1.",
+      "$ref": "#/$defs/integer"
+    },
+    "InferenceElserServiceSettings": {
+      "type": "object",
+      "properties": {
+        "adaptive_allocations": {
+          "$ref": "#/$defs/__schema18"
+        },
+        "num_allocations": {
+          "$ref": "#/$defs/__schema22"
+        },
+        "num_threads": {
+          "$ref": "#/$defs/__schema23"
+        }
+      },
+      "required": [
+        "num_allocations",
+        "num_threads"
+      ],
+      "additionalProperties": false,
+      "id": "InferenceElserServiceSettings"
+    }
+  }
+}

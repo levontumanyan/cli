@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "create": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/__schema0"
+      },
+      "description": "List of Knowledge Base Entries to create."
+    },
+    "delete": {
+      "type": "object",
+      "propertyNames": {
+        "$ref": "#/$defs/__schema1"
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/__schema2"
+      },
+      "description": ""
+    },
+    "update": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/__schema3"
+      },
+      "description": "List of Knowledge Base Entries to update."
+    }
+  },
+  "additionalProperties": {},
+  "$defs": {
+    "__schema0": {},
+    "__schema1": {
+      "type": "string"
+    },
+    "__schema2": {},
+    "__schema3": {}
+  }
+}

@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "workflowId": {
+      "type": "string",
+      "description": "Workflow ID"
+    },
+    "statuses": {
+      "type": "string",
+      "description": "Filter by execution status."
+    },
+    "executionTypes": {
+      "type": "string",
+      "description": "Filter by execution type."
+    },
+    "executedBy": {
+      "type": "string",
+      "description": "Filter by the user who triggered the execution."
+    },
+    "omitStepRuns": {
+      "type": "boolean",
+      "description": "Whether to exclude step-level execution data."
+    },
+    "page": {
+      "type": "number",
+      "description": "Page number."
+    },
+    "size": {
+      "type": "number",
+      "description": "Number of results per page."
+    }
+  },
+  "required": [
+    "workflowId"
+  ],
+  "additionalProperties": {}
+}

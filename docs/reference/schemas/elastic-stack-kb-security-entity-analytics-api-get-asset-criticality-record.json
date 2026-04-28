@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "id_value": {
+      "type": "string",
+      "description": "The ID value of the asset."
+    },
+    "id_field": {
+      "type": "string",
+      "description": "The field representing the ID."
+    }
+  },
+  "required": [
+    "id_value",
+    "id_field"
+  ],
+  "additionalProperties": {}
+}

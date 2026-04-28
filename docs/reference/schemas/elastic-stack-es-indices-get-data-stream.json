@@ -1,0 +1,137 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "name": {
+      "$ref": "#/$defs/__schema0"
+    },
+    "expand_wildcards": {
+      "$ref": "#/$defs/__schema4"
+    },
+    "include_defaults": {
+      "$ref": "#/$defs/__schema7"
+    },
+    "master_timeout": {
+      "$ref": "#/$defs/__schema9"
+    },
+    "verbose": {
+      "$ref": "#/$defs/__schema14"
+    }
+  },
+  "additionalProperties": false,
+  "id": "IndicesGetDataStreamRequest",
+  "$defs": {
+    "__schema0": {
+      "$ref": "#/$defs/__schema1"
+    },
+    "__schema1": {
+      "description": "Comma-separated list of data stream names used to limit the request. Wildcard (`*`) expressions are supported. If omitted, all data streams are returned.",
+      "$ref": "#/$defs/DataStreamNames"
+    },
+    "DataStreamNames": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/__schema2"
+        },
+        {
+          "$ref": "#/$defs/__schema3"
+        }
+      ],
+      "id": "DataStreamNames"
+    },
+    "__schema2": {
+      "$ref": "#/$defs/DataStreamName"
+    },
+    "DataStreamName": {
+      "type": "string",
+      "id": "DataStreamName"
+    },
+    "__schema3": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/DataStreamName"
+      }
+    },
+    "__schema4": {
+      "$ref": "#/$defs/__schema5"
+    },
+    "__schema5": {
+      "description": "Type of data stream that wildcard patterns can match. Supports comma-separated values, such as `open,hidden`.",
+      "$ref": "#/$defs/ExpandWildcards"
+    },
+    "ExpandWildcards": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/ExpandWildcard"
+        },
+        {
+          "$ref": "#/$defs/__schema6"
+        }
+      ],
+      "id": "ExpandWildcards"
+    },
+    "ExpandWildcard": {
+      "type": "string",
+      "enum": [
+        "all",
+        "open",
+        "closed",
+        "hidden",
+        "none"
+      ],
+      "id": "ExpandWildcard"
+    },
+    "__schema6": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/ExpandWildcard"
+      }
+    },
+    "__schema7": {
+      "$ref": "#/$defs/__schema8"
+    },
+    "__schema8": {
+      "type": "boolean",
+      "description": "If true, returns all relevant default configurations for the index template."
+    },
+    "__schema9": {
+      "$ref": "#/$defs/__schema10"
+    },
+    "__schema10": {
+      "description": "Period to wait for a connection to the master node. If no response is received before the timeout expires, the request fails and returns an error.",
+      "$ref": "#/$defs/Duration"
+    },
+    "Duration": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/__schema11"
+        },
+        {
+          "$ref": "#/$defs/__schema12"
+        },
+        {
+          "$ref": "#/$defs/__schema13"
+        }
+      ],
+      "id": "Duration"
+    },
+    "__schema11": {
+      "type": "string"
+    },
+    "__schema12": {
+      "type": "number",
+      "const": -1
+    },
+    "__schema13": {
+      "type": "number",
+      "const": 0
+    },
+    "__schema14": {
+      "$ref": "#/$defs/__schema15"
+    },
+    "__schema15": {
+      "type": "boolean",
+      "description": "Whether the maximum timestamp for each data stream should be calculated and returned."
+    }
+  }
+}

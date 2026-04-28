@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "only_user_favorite": {
+      "type": "string",
+      "description": "If true, only timelines that are marked as favorites by the user are returned."
+    },
+    "timeline_type": {
+      "type": "string",
+      "description": ""
+    },
+    "sort_field": {
+      "type": "string",
+      "description": ""
+    },
+    "sort_order": {
+      "type": "string",
+      "description": "Whether to sort the results `ascending` or `descending`"
+    },
+    "page_size": {
+      "type": "string",
+      "description": "How many results should returned at once"
+    },
+    "page_index": {
+      "type": "string",
+      "description": "How many pages should be skipped"
+    },
+    "search": {
+      "type": "string",
+      "description": "Allows to search for timelines by their title"
+    },
+    "status": {
+      "type": "string",
+      "description": ""
+    }
+  },
+  "additionalProperties": {}
+}

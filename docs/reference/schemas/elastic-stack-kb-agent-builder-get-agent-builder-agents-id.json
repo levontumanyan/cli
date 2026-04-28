@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "The unique identifier of the agent to retrieve."
+    }
+  },
+  "required": [
+    "id"
+  ],
+  "additionalProperties": {}
+}

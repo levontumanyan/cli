@@ -1,0 +1,132 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "from": {
+      "$ref": "#/$defs/__schema0"
+    },
+    "size": {
+      "$ref": "#/$defs/__schema2"
+    },
+    "index_name": {
+      "$ref": "#/$defs/__schema4"
+    },
+    "connector_name": {
+      "$ref": "#/$defs/__schema8"
+    },
+    "service_type": {
+      "$ref": "#/$defs/__schema12"
+    },
+    "include_deleted": {
+      "$ref": "#/$defs/__schema14"
+    },
+    "query": {
+      "$ref": "#/$defs/__schema16"
+    }
+  },
+  "additionalProperties": false,
+  "id": "ConnectorListRequest",
+  "$defs": {
+    "__schema0": {
+      "$ref": "#/$defs/__schema1"
+    },
+    "__schema1": {
+      "description": "Starting offset",
+      "$ref": "#/$defs/integer"
+    },
+    "integer": {
+      "type": "number",
+      "id": "integer"
+    },
+    "__schema2": {
+      "$ref": "#/$defs/__schema3"
+    },
+    "__schema3": {
+      "description": "Specifies a max number of results to get",
+      "$ref": "#/$defs/integer"
+    },
+    "__schema4": {
+      "$ref": "#/$defs/__schema5"
+    },
+    "__schema5": {
+      "description": "A comma-separated list of connector index names to fetch connector documents for",
+      "$ref": "#/$defs/Indices"
+    },
+    "Indices": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/__schema6"
+        },
+        {
+          "$ref": "#/$defs/__schema7"
+        }
+      ],
+      "id": "Indices"
+    },
+    "__schema6": {
+      "$ref": "#/$defs/IndexName"
+    },
+    "IndexName": {
+      "type": "string",
+      "id": "IndexName"
+    },
+    "__schema7": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/IndexName"
+      }
+    },
+    "__schema8": {
+      "$ref": "#/$defs/__schema9"
+    },
+    "__schema9": {
+      "description": "A comma-separated list of connector names to fetch connector documents for",
+      "$ref": "#/$defs/Names"
+    },
+    "Names": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/__schema10"
+        },
+        {
+          "$ref": "#/$defs/__schema11"
+        }
+      ],
+      "id": "Names"
+    },
+    "__schema10": {
+      "$ref": "#/$defs/Name"
+    },
+    "Name": {
+      "type": "string",
+      "id": "Name"
+    },
+    "__schema11": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/Name"
+      }
+    },
+    "__schema12": {
+      "$ref": "#/$defs/__schema13"
+    },
+    "__schema13": {
+      "description": "A comma-separated list of connector service types to fetch connector documents for",
+      "$ref": "#/$defs/Names"
+    },
+    "__schema14": {
+      "$ref": "#/$defs/__schema15"
+    },
+    "__schema15": {
+      "type": "boolean",
+      "description": "A flag to indicate if the desired connector should be fetched, even if it was soft-deleted."
+    },
+    "__schema16": {
+      "$ref": "#/$defs/__schema17"
+    },
+    "__schema17": {
+      "type": "string",
+      "description": "A wildcard query string that filters connectors with matching name, description or index name"
+    }
+  }
+}

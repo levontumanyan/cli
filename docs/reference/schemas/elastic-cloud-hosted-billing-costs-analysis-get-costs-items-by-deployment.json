@@ -1,0 +1,27 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "organization_id": {
+      "type": "string",
+      "description": "Identifier for the organization"
+    },
+    "deployment_id": {
+      "type": "string",
+      "description": "Id of a Deployment"
+    },
+    "from": {
+      "type": "string",
+      "description": "A datetime for the beginning of the desired range for which to fetch costs. Defaults to start of current month."
+    },
+    "to": {
+      "type": "string",
+      "description": "A datetime for the end of the desired range for which to fetch costs. Defaults to the current date."
+    }
+  },
+  "required": [
+    "organization_id",
+    "deployment_id"
+  ],
+  "additionalProperties": {}
+}

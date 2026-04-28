@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "templateTimelineId": {
+      "type": "string",
+      "description": ""
+    },
+    "templateTimelineVersion": {
+      "type": "number",
+      "description": ""
+    },
+    "timelineId": {
+      "type": "string",
+      "description": ""
+    },
+    "timelineType": {
+      "type": "string",
+      "description": "The type of Timeline."
+    }
+  },
+  "required": [
+    "templateTimelineId",
+    "templateTimelineVersion",
+    "timelineId",
+    "timelineType"
+  ],
+  "additionalProperties": {}
+}

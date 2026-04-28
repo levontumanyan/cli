@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "agentsIds": {
+      "type": "string",
+      "description": ""
+    },
+    "pkgName": {
+      "type": "string",
+      "description": ""
+    },
+    "pkgVersion": {
+      "type": "string",
+      "description": ""
+    },
+    "previewData": {
+      "type": "boolean",
+      "description": ""
+    }
+  },
+  "required": [
+    "agentsIds"
+  ],
+  "additionalProperties": {}
+}

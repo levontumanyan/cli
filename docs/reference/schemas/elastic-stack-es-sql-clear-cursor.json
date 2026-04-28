@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "cursor": {
+      "$ref": "#/$defs/__schema0"
+    }
+  },
+  "required": [
+    "cursor"
+  ],
+  "additionalProperties": false,
+  "id": "SqlClearCursorRequest",
+  "$defs": {
+    "__schema0": {
+      "type": "string",
+      "description": "Cursor to clear."
+    }
+  }
+}

@@ -1,0 +1,47 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "documentIds": {
+      "type": "string",
+      "description": ""
+    },
+    "savedObjectIds": {
+      "type": "string",
+      "description": ""
+    },
+    "page": {
+      "type": "string",
+      "description": ""
+    },
+    "perPage": {
+      "type": "string",
+      "description": ""
+    },
+    "search": {
+      "type": "string",
+      "description": ""
+    },
+    "sortField": {
+      "type": "string",
+      "description": ""
+    },
+    "sortOrder": {
+      "type": "string",
+      "description": ""
+    },
+    "filter": {
+      "type": "string",
+      "description": ""
+    },
+    "createdByFilter": {
+      "type": "string",
+      "description": ""
+    },
+    "associatedFilter": {
+      "type": "string",
+      "description": ""
+    }
+  },
+  "additionalProperties": {}
+}

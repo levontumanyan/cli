@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "viewId": {
+      "type": "string",
+      "description": "The ID of the data view fields you want to update."
+    },
+    "name": {
+      "type": "string",
+      "description": "The name for a runtime field."
+    },
+    "runtimeField": {
+      "type": "object",
+      "propertyNames": {
+        "$ref": "#/$defs/__schema0"
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/__schema1"
+      },
+      "description": "The runtime field definition object."
+    }
+  },
+  "required": [
+    "viewId",
+    "name",
+    "runtimeField"
+  ],
+  "additionalProperties": {},
+  "$defs": {
+    "__schema0": {
+      "type": "string"
+    },
+    "__schema1": {}
+  }
+}

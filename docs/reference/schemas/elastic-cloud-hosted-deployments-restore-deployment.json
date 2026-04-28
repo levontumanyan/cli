@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "deployment_id": {
+      "type": "string",
+      "description": "Identifier for the Deployment"
+    },
+    "restore_snapshot": {
+      "type": "boolean",
+      "description": "Whether or not to restore a snapshot for those resources that allow it."
+    }
+  },
+  "required": [
+    "deployment_id"
+  ],
+  "additionalProperties": {}
+}

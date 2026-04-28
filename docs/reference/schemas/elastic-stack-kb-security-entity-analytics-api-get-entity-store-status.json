@@ -1,0 +1,11 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "include_components": {
+      "type": "boolean",
+      "description": "If true returns a detailed status of the engine including all it's components"
+    }
+  },
+  "additionalProperties": {}
+}

@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "kb-format": {
+      "type": "string",
+      "description": ""
+    },
+    "full": {
+      "type": "boolean",
+      "description": "get full policies with package policies populated"
+    },
+    "ids": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/__schema0"
+      },
+      "description": "list of package policy ids"
+    },
+    "ignoreMissing": {
+      "type": "boolean",
+      "description": ""
+    }
+  },
+  "required": [
+    "ids"
+  ],
+  "additionalProperties": {},
+  "$defs": {
+    "__schema0": {}
+  }
+}

@@ -1,0 +1,110 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "spaceId": {
+      "type": "string",
+      "description": "The spaceId parameter"
+    },
+    "artifacts": {
+      "type": "object",
+      "propertyNames": {
+        "$ref": "#/$defs/__schema0"
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/__schema1"
+      },
+      "description": "Links to related assets for the SLO"
+    },
+    "budgetingMethod": {
+      "type": "string",
+      "description": "The budgeting method to use when computing the rollup data."
+    },
+    "description": {
+      "type": "string",
+      "description": "A description for the SLO."
+    },
+    "groupBy": {
+      "type": "string",
+      "description": "optional group by field or fields to use to generate an SLO per distinct value"
+    },
+    "id": {
+      "type": "string",
+      "description": "A optional and unique identifier for the SLO. Must be between 8 and 36 chars"
+    },
+    "indicator": {
+      "type": "string",
+      "description": ""
+    },
+    "name": {
+      "type": "string",
+      "description": "A name for the SLO."
+    },
+    "objective": {
+      "type": "object",
+      "propertyNames": {
+        "$ref": "#/$defs/__schema2"
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/__schema3"
+      },
+      "description": "Defines properties for the SLO objective"
+    },
+    "settings": {
+      "type": "object",
+      "propertyNames": {
+        "$ref": "#/$defs/__schema4"
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/__schema5"
+      },
+      "description": "Defines properties for SLO settings."
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/__schema6"
+      },
+      "description": "List of tags"
+    },
+    "timeWindow": {
+      "type": "object",
+      "propertyNames": {
+        "$ref": "#/$defs/__schema7"
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/__schema8"
+      },
+      "description": "Defines properties for the SLO time window"
+    }
+  },
+  "required": [
+    "spaceId",
+    "budgetingMethod",
+    "description",
+    "indicator",
+    "name",
+    "objective",
+    "timeWindow"
+  ],
+  "additionalProperties": {},
+  "$defs": {
+    "__schema0": {
+      "type": "string"
+    },
+    "__schema1": {},
+    "__schema2": {
+      "type": "string"
+    },
+    "__schema3": {},
+    "__schema4": {
+      "type": "string"
+    },
+    "__schema5": {},
+    "__schema6": {},
+    "__schema7": {
+      "type": "string"
+    },
+    "__schema8": {}
+  }
+}

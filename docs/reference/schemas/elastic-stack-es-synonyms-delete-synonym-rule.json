@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "set_id": {
+      "$ref": "#/$defs/__schema0"
+    },
+    "rule_id": {
+      "$ref": "#/$defs/__schema1"
+    }
+  },
+  "required": [
+    "set_id",
+    "rule_id"
+  ],
+  "additionalProperties": false,
+  "id": "SynonymsDeleteSynonymRuleRequest",
+  "$defs": {
+    "__schema0": {
+      "description": "The ID of the synonym set to update.",
+      "$ref": "#/$defs/Id"
+    },
+    "Id": {
+      "type": "string",
+      "id": "Id"
+    },
+    "__schema1": {
+      "description": "The ID of the synonym rule to delete.",
+      "$ref": "#/$defs/Id"
+    }
+  }
+}

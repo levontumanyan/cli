@@ -1,0 +1,79 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "model_id": {
+      "$ref": "#/$defs/__schema0"
+    },
+    "number_of_allocations": {
+      "$ref": "#/$defs/__schema1"
+    },
+    "adaptive_allocations": {
+      "$ref": "#/$defs/__schema3"
+    }
+  },
+  "required": [
+    "model_id"
+  ],
+  "additionalProperties": false,
+  "id": "MlUpdateTrainedModelDeploymentRequest",
+  "$defs": {
+    "__schema0": {
+      "description": "The unique identifier of the trained model. Currently, only PyTorch models are supported.",
+      "$ref": "#/$defs/Id"
+    },
+    "Id": {
+      "type": "string",
+      "id": "Id"
+    },
+    "__schema1": {
+      "$ref": "#/$defs/__schema2"
+    },
+    "__schema2": {
+      "description": "The number of model allocations on each node where the model is deployed. All allocations on a node share the same copy of the model in memory but use a separate set of threads to evaluate the model. Increasing this value generally increases the throughput. If this setting is greater than the number of hardware threads it will automatically be changed to a value less than the number of hardware threads. If adaptive_allocations is enabled, do not set this value, because it’s automatically set.",
+      "$ref": "#/$defs/integer"
+    },
+    "integer": {
+      "type": "number",
+      "id": "integer"
+    },
+    "__schema3": {
+      "$ref": "#/$defs/__schema4"
+    },
+    "__schema4": {
+      "description": "Adaptive allocations configuration. When enabled, the number of allocations is set based on the current load. If adaptive_allocations is enabled, do not set the number of allocations manually.",
+      "$ref": "#/$defs/MlAdaptiveAllocationsSettings"
+    },
+    "__schema5": {
+      "type": "boolean",
+      "description": "If true, adaptive_allocations is enabled"
+    },
+    "__schema6": {
+      "description": "Specifies the minimum number of allocations to scale to. If set, it must be greater than or equal to 0. If not defined, the deployment scales to 0.",
+      "$ref": "#/$defs/integer"
+    },
+    "__schema7": {
+      "description": "Specifies the maximum number of allocations to scale to. If set, it must be greater than or equal to min_number_of_allocations.",
+      "$ref": "#/$defs/integer"
+    },
+    "MlAdaptiveAllocationsSettings": {
+      "type": "object",
+      "properties": {
+        "enabled": {
+          "$ref": "#/$defs/__schema5"
+        },
+        "min_number_of_allocations": {
+          "$ref": "#/$defs/__schema6"
+        },
+        "max_number_of_allocations": {
+          "$ref": "#/$defs/__schema7"
+        }
+      },
+      "required": [
+        "enabled"
+      ],
+      "additionalProperties": false,
+      "id": "MlAdaptiveAllocationsSettings"
+    }
+  }
+}

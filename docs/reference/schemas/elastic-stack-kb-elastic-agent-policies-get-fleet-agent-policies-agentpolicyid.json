@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "agentPolicyId": {
+      "type": "string",
+      "description": "The agentPolicyId parameter"
+    },
+    "kb-format": {
+      "type": "string",
+      "description": ""
+    }
+  },
+  "required": [
+    "agentPolicyId"
+  ],
+  "additionalProperties": {}
+}

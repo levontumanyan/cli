@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "name": {
+      "$ref": "#/$defs/__schema0"
+    }
+  },
+  "required": [
+    "name"
+  ],
+  "additionalProperties": false,
+  "id": "ProjectGetRoutingRequest",
+  "$defs": {
+    "__schema0": {
+      "type": "string",
+      "description": "The name of project routing expression"
+    }
+  }
+}

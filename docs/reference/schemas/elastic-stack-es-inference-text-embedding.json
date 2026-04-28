@@ -1,0 +1,106 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "inference_id": {
+      "$ref": "#/$defs/__schema0"
+    },
+    "timeout": {
+      "$ref": "#/$defs/__schema1"
+    },
+    "input": {
+      "$ref": "#/$defs/__schema6"
+    },
+    "input_type": {
+      "$ref": "#/$defs/__schema9"
+    },
+    "task_settings": {
+      "$ref": "#/$defs/__schema11"
+    }
+  },
+  "required": [
+    "inference_id",
+    "input"
+  ],
+  "additionalProperties": false,
+  "id": "InferenceTextEmbeddingRequest",
+  "$defs": {
+    "__schema0": {
+      "description": "The inference Id",
+      "$ref": "#/$defs/Id"
+    },
+    "Id": {
+      "type": "string",
+      "id": "Id"
+    },
+    "__schema1": {
+      "$ref": "#/$defs/__schema2"
+    },
+    "__schema2": {
+      "description": "Specifies the amount of time to wait for the inference request to complete.",
+      "$ref": "#/$defs/Duration"
+    },
+    "Duration": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/__schema3"
+        },
+        {
+          "$ref": "#/$defs/__schema4"
+        },
+        {
+          "$ref": "#/$defs/__schema5"
+        }
+      ],
+      "id": "Duration"
+    },
+    "__schema3": {
+      "type": "string"
+    },
+    "__schema4": {
+      "type": "number",
+      "const": -1
+    },
+    "__schema5": {
+      "type": "number",
+      "const": 0
+    },
+    "__schema6": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/__schema7"
+        },
+        {
+          "$ref": "#/$defs/__schema8"
+        }
+      ],
+      "description": "Inference input. Either a string or an array of strings."
+    },
+    "__schema7": {
+      "type": "string"
+    },
+    "__schema8": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "__schema9": {
+      "$ref": "#/$defs/__schema10"
+    },
+    "__schema10": {
+      "type": "string",
+      "description": "The input data type for the text embedding model. Possible values include: * `SEARCH` * `INGEST` * `CLASSIFICATION` * `CLUSTERING` Not all services support all values. Unsupported values will trigger a validation exception. Accepted values depend on the configured inference service, refer to the relevant service-specific documentation for more info. > info > The `input_type` parameter specified on the root level of the request body will take precedence over the `input_type` parameter specified in `task_settings`."
+    },
+    "__schema11": {
+      "$ref": "#/$defs/__schema12"
+    },
+    "__schema12": {
+      "description": "Task settings for the individual inference request. These settings are specific to the <task_type> you specified and override the task settings specified when initializing the service.",
+      "$ref": "#/$defs/InferenceTaskSettings"
+    },
+    "InferenceTaskSettings": {
+      "id": "InferenceTaskSettings"
+    }
+  }
+}

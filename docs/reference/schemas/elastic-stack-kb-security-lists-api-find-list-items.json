@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "list_id": {
+      "type": "string",
+      "description": ""
+    },
+    "page": {
+      "type": "number",
+      "description": "The page number to return."
+    },
+    "per_page": {
+      "type": "number",
+      "description": "The number of list items to return per page."
+    },
+    "sort_field": {
+      "type": "string",
+      "description": "Determines which field is used to sort the results."
+    },
+    "sort_order": {
+      "type": "string",
+      "description": "Determines the sort order, which can be `desc` or `asc`"
+    },
+    "cursor": {
+      "type": "string",
+      "description": ""
+    },
+    "filter": {
+      "type": "string",
+      "description": "Filters the returned results according to the value of the specified field,"
+    }
+  },
+  "required": [
+    "list_id"
+  ],
+  "additionalProperties": {}
+}

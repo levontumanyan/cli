@@ -1,0 +1,47 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "content": {
+      "type": "string",
+      "description": "Skill instructions content (markdown)."
+    },
+    "description": {
+      "type": "string",
+      "description": "Description of what the skill does."
+    },
+    "id": {
+      "type": "string",
+      "description": "Unique identifier for the skill."
+    },
+    "name": {
+      "type": "string",
+      "description": "Human-readable name for the skill."
+    },
+    "referenced_content": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/__schema0"
+      },
+      "description": ""
+    },
+    "tool_ids": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/__schema1"
+      },
+      "description": "Tool IDs from the tool registry that this skill references."
+    }
+  },
+  "required": [
+    "content",
+    "description",
+    "id",
+    "name"
+  ],
+  "additionalProperties": {},
+  "$defs": {
+    "__schema0": {},
+    "__schema1": {}
+  }
+}

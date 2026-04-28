@@ -1,0 +1,239 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "task_type": {
+      "$ref": "#/$defs/__schema0"
+    },
+    "googleaistudio_inference_id": {
+      "$ref": "#/$defs/__schema1"
+    },
+    "timeout": {
+      "$ref": "#/$defs/__schema2"
+    },
+    "chunking_settings": {
+      "$ref": "#/$defs/__schema7"
+    },
+    "service": {
+      "$ref": "#/$defs/__schema16"
+    },
+    "service_settings": {
+      "$ref": "#/$defs/__schema17"
+    }
+  },
+  "required": [
+    "task_type",
+    "googleaistudio_inference_id",
+    "service",
+    "service_settings"
+  ],
+  "additionalProperties": false,
+  "id": "InferencePutGoogleaistudioRequest",
+  "$defs": {
+    "__schema0": {
+      "type": "string",
+      "enum": [
+        "completion",
+        "text_embedding"
+      ],
+      "description": "The type of the inference task that the model will perform.",
+      "$ref": "#/$defs/InferenceGoogleAiStudioTaskType"
+    },
+    "InferenceGoogleAiStudioTaskType": {
+      "type": "string",
+      "enum": [
+        "completion",
+        "text_embedding"
+      ],
+      "id": "InferenceGoogleAiStudioTaskType"
+    },
+    "__schema1": {
+      "description": "The unique identifier of the inference endpoint.",
+      "$ref": "#/$defs/Id"
+    },
+    "Id": {
+      "type": "string",
+      "id": "Id"
+    },
+    "__schema2": {
+      "$ref": "#/$defs/__schema3"
+    },
+    "__schema3": {
+      "description": "Specifies the amount of time to wait for the inference endpoint to be created.",
+      "$ref": "#/$defs/Duration"
+    },
+    "Duration": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/__schema4"
+        },
+        {
+          "$ref": "#/$defs/__schema5"
+        },
+        {
+          "$ref": "#/$defs/__schema6"
+        }
+      ],
+      "id": "Duration"
+    },
+    "__schema4": {
+      "type": "string"
+    },
+    "__schema5": {
+      "type": "number",
+      "const": -1
+    },
+    "__schema6": {
+      "type": "number",
+      "const": 0
+    },
+    "__schema7": {
+      "$ref": "#/$defs/__schema8"
+    },
+    "__schema8": {
+      "description": "The chunking configuration object. Applies only to the `text_embedding` task type. Not applicable to the `completion` task type.",
+      "$ref": "#/$defs/InferenceInferenceChunkingSettings"
+    },
+    "__schema9": {
+      "description": "The maximum size of a chunk in words. This value cannot be lower than `20` (for `sentence` strategy) or `10` (for `word` strategy). This value should not exceed the window size for the associated model.",
+      "$ref": "#/$defs/integer"
+    },
+    "integer": {
+      "type": "number",
+      "id": "integer"
+    },
+    "__schema10": {
+      "description": "The number of overlapping words for chunks. It is applicable only to a `word` chunking strategy. This value cannot be higher than half the `max_chunk_size` value.",
+      "$ref": "#/$defs/integer"
+    },
+    "__schema11": {
+      "description": "The number of overlapping sentences for chunks. It is applicable only for a `sentence` chunking strategy. It can be either `1` or `0`.",
+      "$ref": "#/$defs/integer"
+    },
+    "__schema12": {
+      "type": "string",
+      "description": "Only applicable to the `recursive` strategy and required when using it. Sets a predefined list of separators in the saved chunking settings based on the selected text type. Values can be `markdown` or `plaintext`. Using this parameter is an alternative to manually specifying a custom `separators` list."
+    },
+    "__schema13": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/__schema14"
+      },
+      "description": "Only applicable to the `recursive` strategy and required when using it. A list of strings used as possible split points when chunking text. Each string can be a plain string or a regular expression (regex) pattern. The system tries each separator in order to split the text, starting from the first item in the list. After splitting, it attempts to recombine smaller pieces into larger chunks that stay within the `max_chunk_size` limit, to reduce the total number of chunks generated."
+    },
+    "__schema14": {
+      "type": "string"
+    },
+    "__schema15": {
+      "type": "string",
+      "description": "The chunking strategy: `sentence`, `word`, `none` or `recursive`.  * If `strategy` is set to `recursive`, you must also specify: - `max_chunk_size` - either `separators` or`separator_group` Learn more about different chunking strategies in the linked documentation."
+    },
+    "InferenceInferenceChunkingSettings": {
+      "type": "object",
+      "properties": {
+        "max_chunk_size": {
+          "$ref": "#/$defs/__schema9"
+        },
+        "overlap": {
+          "$ref": "#/$defs/__schema10"
+        },
+        "sentence_overlap": {
+          "$ref": "#/$defs/__schema11"
+        },
+        "separator_group": {
+          "$ref": "#/$defs/__schema12"
+        },
+        "separators": {
+          "$ref": "#/$defs/__schema13"
+        },
+        "strategy": {
+          "$ref": "#/$defs/__schema15"
+        }
+      },
+      "additionalProperties": false,
+      "id": "InferenceInferenceChunkingSettings"
+    },
+    "__schema16": {
+      "type": "string",
+      "enum": [
+        "googleaistudio"
+      ],
+      "description": "The type of service supported for the specified task type. In this case, `googleaistudio`.",
+      "$ref": "#/$defs/InferenceGoogleAiServiceType"
+    },
+    "InferenceGoogleAiServiceType": {
+      "type": "string",
+      "enum": [
+        "googleaistudio"
+      ],
+      "id": "InferenceGoogleAiServiceType"
+    },
+    "__schema17": {
+      "type": "object",
+      "properties": {
+        "api_key": {
+          "$ref": "#/$defs/__schema18"
+        },
+        "model_id": {
+          "$ref": "#/$defs/__schema19"
+        },
+        "rate_limit": {
+          "$ref": "#/$defs/__schema20"
+        }
+      },
+      "required": [
+        "api_key",
+        "model_id"
+      ],
+      "additionalProperties": false,
+      "description": "Settings used to install the inference model. These settings are specific to the `googleaistudio` service.",
+      "$ref": "#/$defs/InferenceGoogleAiStudioServiceSettings"
+    },
+    "__schema18": {
+      "type": "string",
+      "description": "A valid API key of your Google Gemini account."
+    },
+    "__schema19": {
+      "type": "string",
+      "description": "The name of the model to use for the inference task. Refer to the Google documentation for the list of supported models."
+    },
+    "__schema20": {
+      "description": "This setting helps to minimize the number of rate limit errors returned from Google AI Studio. By default, the `googleaistudio` service sets the number of requests allowed per minute to 360.",
+      "$ref": "#/$defs/InferenceRateLimitSetting"
+    },
+    "__schema21": {
+      "description": "The number of requests allowed per minute. By default, the number of requests allowed per minute is set by each service as follows: * `alibabacloud-ai-search` service: `1000` * `amazonbedrock` service: `240` * `anthropic` service: `50` * `azureaistudio` service: `240` * `azureopenai` service and task type `text_embedding`: `1440` * `azureopenai` service and task types `completion` or `chat_completion`: `120` * `cohere` service: `10000` * `contextualai` service: `1000` * `elastic` service and task type `chat_completion`: `240` * `fireworksai` service: `6000` * `googleaistudio` service: `360` * `googlevertexai` service: `30000` * `hugging_face` service: `3000` * `jinaai` service: `2000` * `llama` service: `3000` * `mistral` service: `240` * `openai` service and task type `text_embedding`: `3000` * `openai` service and task type `completion`: `500` * `openshift_ai` service: `3000` * `voyageai` service: `2000` * `watsonxai` service: `120`",
+      "$ref": "#/$defs/integer"
+    },
+    "InferenceRateLimitSetting": {
+      "type": "object",
+      "properties": {
+        "requests_per_minute": {
+          "$ref": "#/$defs/__schema21"
+        }
+      },
+      "additionalProperties": false,
+      "id": "InferenceRateLimitSetting"
+    },
+    "InferenceGoogleAiStudioServiceSettings": {
+      "type": "object",
+      "properties": {
+        "api_key": {
+          "$ref": "#/$defs/__schema18"
+        },
+        "model_id": {
+          "$ref": "#/$defs/__schema19"
+        },
+        "rate_limit": {
+          "$ref": "#/$defs/__schema20"
+        }
+      },
+      "required": [
+        "api_key",
+        "model_id"
+      ],
+      "additionalProperties": false,
+      "id": "InferenceGoogleAiStudioServiceSettings"
+    }
+  }
+}

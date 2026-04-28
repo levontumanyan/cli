@@ -1,0 +1,66 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "task_type": {
+      "$ref": "#/$defs/__schema0"
+    },
+    "inference_id": {
+      "$ref": "#/$defs/__schema2"
+    },
+    "dry_run": {
+      "$ref": "#/$defs/__schema3"
+    },
+    "force": {
+      "$ref": "#/$defs/__schema5"
+    }
+  },
+  "required": [
+    "inference_id"
+  ],
+  "additionalProperties": false,
+  "id": "InferenceDeleteRequest",
+  "$defs": {
+    "__schema0": {
+      "$ref": "#/$defs/__schema1"
+    },
+    "__schema1": {
+      "description": "The task type",
+      "$ref": "#/$defs/InferenceTaskType"
+    },
+    "InferenceTaskType": {
+      "type": "string",
+      "enum": [
+        "sparse_embedding",
+        "text_embedding",
+        "rerank",
+        "completion",
+        "chat_completion",
+        "embedding"
+      ],
+      "id": "InferenceTaskType"
+    },
+    "__schema2": {
+      "description": "The inference identifier.",
+      "$ref": "#/$defs/Id"
+    },
+    "Id": {
+      "type": "string",
+      "id": "Id"
+    },
+    "__schema3": {
+      "$ref": "#/$defs/__schema4"
+    },
+    "__schema4": {
+      "type": "boolean",
+      "description": "When true, checks the semantic_text fields and inference processors that reference the endpoint and returns them in a list, but does not delete the endpoint."
+    },
+    "__schema5": {
+      "$ref": "#/$defs/__schema6"
+    },
+    "__schema6": {
+      "type": "boolean",
+      "description": "When true, the inference endpoint is forcefully deleted even if it is still being used by ingest processors or semantic text fields."
+    }
+  }
+}

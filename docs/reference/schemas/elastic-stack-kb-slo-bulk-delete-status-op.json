@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "taskId": {
+      "type": "string",
+      "description": "The task id of the bulk delete operation"
+    },
+    "spaceId": {
+      "type": "string",
+      "description": "The spaceId parameter"
+    }
+  },
+  "required": [
+    "taskId",
+    "spaceId"
+  ],
+  "additionalProperties": {}
+}

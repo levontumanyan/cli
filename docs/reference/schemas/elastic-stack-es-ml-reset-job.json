@@ -1,0 +1,44 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "job_id": {
+      "$ref": "#/$defs/__schema0"
+    },
+    "wait_for_completion": {
+      "$ref": "#/$defs/__schema1"
+    },
+    "delete_user_annotations": {
+      "$ref": "#/$defs/__schema3"
+    }
+  },
+  "required": [
+    "job_id"
+  ],
+  "additionalProperties": false,
+  "id": "MlResetJobRequest",
+  "$defs": {
+    "__schema0": {
+      "description": "The ID of the job to reset.",
+      "$ref": "#/$defs/Id"
+    },
+    "Id": {
+      "type": "string",
+      "id": "Id"
+    },
+    "__schema1": {
+      "$ref": "#/$defs/__schema2"
+    },
+    "__schema2": {
+      "type": "boolean",
+      "description": "Should this request wait until the operation has completed before returning."
+    },
+    "__schema3": {
+      "$ref": "#/$defs/__schema4"
+    },
+    "__schema4": {
+      "type": "boolean",
+      "description": "Specifies whether annotations that have been added by the user should be deleted along with any auto-generated annotations when the job is reset."
+    }
+  }
+}

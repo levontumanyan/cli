@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "action_id": {
+      "type": "string",
+      "description": "The action_id parameter"
+    },
+    "file_id": {
+      "type": "string",
+      "description": "The file identifier is constructed in one of two ways:"
+    }
+  },
+  "required": [
+    "action_id",
+    "file_id"
+  ],
+  "additionalProperties": {}
+}

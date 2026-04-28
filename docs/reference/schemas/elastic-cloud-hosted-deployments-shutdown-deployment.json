@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "deployment_id": {
+      "type": "string",
+      "description": "Identifier for the Deployment"
+    },
+    "hide": {
+      "type": "boolean",
+      "description": "Whether or not to hide the deployment and its resources.Only applicable for Platform administrators."
+    },
+    "skip_snapshot": {
+      "type": "boolean",
+      "description": "Whether or not to skip snapshots before shutting down the resources"
+    }
+  },
+  "required": [
+    "deployment_id"
+  ],
+  "additionalProperties": {}
+}

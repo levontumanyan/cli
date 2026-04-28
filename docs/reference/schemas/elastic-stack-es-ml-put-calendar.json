@@ -1,0 +1,50 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "calendar_id": {
+      "$ref": "#/$defs/__schema0"
+    },
+    "job_ids": {
+      "$ref": "#/$defs/__schema1"
+    },
+    "description": {
+      "$ref": "#/$defs/__schema4"
+    }
+  },
+  "required": [
+    "calendar_id"
+  ],
+  "additionalProperties": false,
+  "id": "MlPutCalendarRequest",
+  "$defs": {
+    "__schema0": {
+      "description": "A string that uniquely identifies a calendar.",
+      "$ref": "#/$defs/Id"
+    },
+    "Id": {
+      "type": "string",
+      "id": "Id"
+    },
+    "__schema1": {
+      "$ref": "#/$defs/__schema2"
+    },
+    "__schema2": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/__schema3"
+      },
+      "description": "An array of anomaly detection job identifiers."
+    },
+    "__schema3": {
+      "$ref": "#/$defs/Id"
+    },
+    "__schema4": {
+      "$ref": "#/$defs/__schema5"
+    },
+    "__schema5": {
+      "type": "string",
+      "description": "A description of the calendar."
+    }
+  }
+}

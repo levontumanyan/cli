@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "modelId": {
+      "type": "string",
+      "description": "ELSER modelId to use when setting up the Knowledge Base. If not provided, a default model will be used."
+    },
+    "ignoreSecurityLabs": {
+      "type": "boolean",
+      "description": "Indicates whether we should or should not install Security Labs docs when setting up the Knowledge Base. Defaults to `false`."
+    }
+  },
+  "additionalProperties": {}
+}

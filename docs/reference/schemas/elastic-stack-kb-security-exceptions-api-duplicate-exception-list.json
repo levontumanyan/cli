@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "list_id": {
+      "type": "string",
+      "description": ""
+    },
+    "namespace_type": {
+      "type": "string",
+      "description": ""
+    },
+    "include_expired_exceptions": {
+      "type": "string",
+      "description": "Determines whether to include expired exceptions in the duplicated list. Expiration date defined by `expire_time`."
+    }
+  },
+  "required": [
+    "list_id",
+    "namespace_type",
+    "include_expired_exceptions"
+  ],
+  "additionalProperties": {}
+}

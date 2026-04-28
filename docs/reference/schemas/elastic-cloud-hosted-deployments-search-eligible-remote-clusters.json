@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "cloud-version": {
+      "type": "string",
+      "description": "The version of the Elasticsearch cluster cluster that will potentially be configured to have remote clusters."
+    }
+  },
+  "required": [
+    "cloud-version"
+  ],
+  "additionalProperties": {}
+}

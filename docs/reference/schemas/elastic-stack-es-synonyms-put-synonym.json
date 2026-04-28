@@ -1,0 +1,73 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "id": {
+      "$ref": "#/$defs/__schema0"
+    },
+    "synonyms_set": {
+      "$ref": "#/$defs/__schema1"
+    }
+  },
+  "required": [
+    "id",
+    "synonyms_set"
+  ],
+  "additionalProperties": false,
+  "id": "SynonymsPutSynonymRequest",
+  "$defs": {
+    "__schema0": {
+      "description": "The ID of the synonyms set to be created or updated.",
+      "$ref": "#/$defs/Id"
+    },
+    "Id": {
+      "type": "string",
+      "id": "Id"
+    },
+    "__schema1": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/SynonymsSynonymRule"
+        },
+        {
+          "$ref": "#/$defs/__schema4"
+        }
+      ],
+      "description": "The synonym rules definitions for the synonyms set."
+    },
+    "SynonymsSynonymRule": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/__schema2"
+        },
+        "synonyms": {
+          "$ref": "#/$defs/__schema3"
+        }
+      },
+      "required": [
+        "synonyms"
+      ],
+      "additionalProperties": false,
+      "id": "SynonymsSynonymRule"
+    },
+    "__schema2": {
+      "description": "The identifier for the synonym rule. If you do not specify a synonym rule ID when you create a rule, an identifier is created automatically by Elasticsearch.",
+      "$ref": "#/$defs/Id"
+    },
+    "__schema3": {
+      "description": "The synonyms that conform the synonym rule in Solr format.",
+      "$ref": "#/$defs/SynonymsSynonymString"
+    },
+    "SynonymsSynonymString": {
+      "type": "string",
+      "id": "SynonymsSynonymString"
+    },
+    "__schema4": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/SynonymsSynonymRule"
+      }
+    }
+  }
+}

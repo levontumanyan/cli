@@ -1,0 +1,53 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "id": {
+      "$ref": "#/$defs/__schema0"
+    },
+    "job_type": {
+      "$ref": "#/$defs/__schema1"
+    },
+    "trigger_method": {
+      "$ref": "#/$defs/__schema2"
+    }
+  },
+  "required": [
+    "id"
+  ],
+  "additionalProperties": false,
+  "id": "ConnectorSyncJobPostRequest",
+  "$defs": {
+    "__schema0": {
+      "description": "The id of the associated connector",
+      "$ref": "#/$defs/Id"
+    },
+    "Id": {
+      "type": "string",
+      "id": "Id"
+    },
+    "__schema1": {
+      "$ref": "#/$defs/ConnectorSyncJobType"
+    },
+    "ConnectorSyncJobType": {
+      "type": "string",
+      "enum": [
+        "full",
+        "incremental",
+        "access_control"
+      ],
+      "id": "ConnectorSyncJobType"
+    },
+    "__schema2": {
+      "$ref": "#/$defs/ConnectorSyncJobTriggerMethod"
+    },
+    "ConnectorSyncJobTriggerMethod": {
+      "type": "string",
+      "enum": [
+        "on_demand",
+        "scheduled"
+      ],
+      "id": "ConnectorSyncJobTriggerMethod"
+    }
+  }
+}

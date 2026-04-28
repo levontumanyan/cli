@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "extension_id": {
+      "type": "string",
+      "description": "Id of an extension"
+    }
+  },
+  "required": [
+    "extension_id"
+  ],
+  "additionalProperties": {}
+}

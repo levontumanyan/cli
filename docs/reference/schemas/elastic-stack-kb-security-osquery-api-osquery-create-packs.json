@@ -1,0 +1,57 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "description": {
+      "type": "string",
+      "description": "The pack description."
+    },
+    "enabled": {
+      "type": "boolean",
+      "description": "Enables the pack."
+    },
+    "name": {
+      "type": "string",
+      "description": "The pack name."
+    },
+    "policy_ids": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/__schema0"
+      },
+      "description": "A list of agents policy IDs."
+    },
+    "queries": {
+      "type": "object",
+      "propertyNames": {
+        "$ref": "#/$defs/__schema1"
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/__schema2"
+      },
+      "description": "An object of queries."
+    },
+    "shards": {
+      "type": "object",
+      "propertyNames": {
+        "$ref": "#/$defs/__schema3"
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/__schema4"
+      },
+      "description": "An object with shard configuration for policies included in the pack. For each policy, set the shard configuration to a percentage (1–100) of target hosts."
+    }
+  },
+  "additionalProperties": {},
+  "$defs": {
+    "__schema0": {},
+    "__schema1": {
+      "type": "string"
+    },
+    "__schema2": {},
+    "__schema3": {
+      "type": "string"
+    },
+    "__schema4": {}
+  }
+}

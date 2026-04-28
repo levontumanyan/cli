@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "datasets": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/__schema0"
+      },
+      "description": ""
+    },
+    "force": {
+      "type": "boolean",
+      "description": ""
+    },
+    "integrationName": {
+      "type": "string",
+      "description": ""
+    }
+  },
+  "required": [
+    "datasets",
+    "integrationName"
+  ],
+  "additionalProperties": {},
+  "$defs": {
+    "__schema0": {}
+  }
+}

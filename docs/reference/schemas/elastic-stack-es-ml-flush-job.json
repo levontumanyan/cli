@@ -1,0 +1,94 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "job_id": {
+      "$ref": "#/$defs/__schema0"
+    },
+    "advance_time": {
+      "$ref": "#/$defs/__schema1"
+    },
+    "calc_interim": {
+      "$ref": "#/$defs/__schema5"
+    },
+    "end": {
+      "$ref": "#/$defs/__schema7"
+    },
+    "skip_time": {
+      "$ref": "#/$defs/__schema9"
+    },
+    "start": {
+      "$ref": "#/$defs/__schema11"
+    }
+  },
+  "required": [
+    "job_id"
+  ],
+  "additionalProperties": false,
+  "id": "MlFlushJobRequest",
+  "$defs": {
+    "__schema0": {
+      "description": "Identifier for the anomaly detection job.",
+      "$ref": "#/$defs/Id"
+    },
+    "Id": {
+      "type": "string",
+      "id": "Id"
+    },
+    "__schema1": {
+      "$ref": "#/$defs/__schema2"
+    },
+    "__schema2": {
+      "description": "Refer to the description for the `advance_time` query parameter.",
+      "$ref": "#/$defs/DateTime"
+    },
+    "DateTime": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/__schema3"
+        },
+        {
+          "$ref": "#/$defs/__schema4"
+        }
+      ],
+      "id": "DateTime"
+    },
+    "__schema3": {
+      "type": "string"
+    },
+    "__schema4": {
+      "$ref": "#/$defs/EpochTime"
+    },
+    "EpochTime": {
+      "id": "EpochTime"
+    },
+    "__schema5": {
+      "$ref": "#/$defs/__schema6"
+    },
+    "__schema6": {
+      "type": "boolean",
+      "description": "Refer to the description for the `calc_interim` query parameter."
+    },
+    "__schema7": {
+      "$ref": "#/$defs/__schema8"
+    },
+    "__schema8": {
+      "description": "Refer to the description for the `end` query parameter.",
+      "$ref": "#/$defs/DateTime"
+    },
+    "__schema9": {
+      "$ref": "#/$defs/__schema10"
+    },
+    "__schema10": {
+      "description": "Refer to the description for the `skip_time` query parameter.",
+      "$ref": "#/$defs/DateTime"
+    },
+    "__schema11": {
+      "$ref": "#/$defs/__schema12"
+    },
+    "__schema12": {
+      "description": "Refer to the description for the `start` query parameter.",
+      "$ref": "#/$defs/DateTime"
+    }
+  }
+}

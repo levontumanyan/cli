@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "id": {
+      "$ref": "#/$defs/__schema0"
+    }
+  },
+  "required": [
+    "id"
+  ],
+  "additionalProperties": false,
+  "id": "LogstashDeletePipelineRequest",
+  "$defs": {
+    "__schema0": {
+      "description": "An identifier for the pipeline.",
+      "$ref": "#/$defs/Id"
+    },
+    "Id": {
+      "type": "string",
+      "id": "Id"
+    }
+  }
+}

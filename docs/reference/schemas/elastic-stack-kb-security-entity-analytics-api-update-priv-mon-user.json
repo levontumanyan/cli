@@ -1,0 +1,62 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "The id parameter"
+    },
+    "entity_analytics_monitoring": {
+      "type": "object",
+      "propertyNames": {
+        "$ref": "#/$defs/__schema0"
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/__schema1"
+      },
+      "description": ""
+    },
+    "body-id": {
+      "type": "string",
+      "description": ""
+    },
+    "labels": {
+      "type": "object",
+      "propertyNames": {
+        "$ref": "#/$defs/__schema2"
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/__schema3"
+      },
+      "description": ""
+    },
+    "user": {
+      "type": "object",
+      "propertyNames": {
+        "$ref": "#/$defs/__schema4"
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/__schema5"
+      },
+      "description": ""
+    }
+  },
+  "required": [
+    "id"
+  ],
+  "additionalProperties": {},
+  "$defs": {
+    "__schema0": {
+      "type": "string"
+    },
+    "__schema1": {},
+    "__schema2": {
+      "type": "string"
+    },
+    "__schema3": {},
+    "__schema4": {
+      "type": "string"
+    },
+    "__schema5": {}
+  }
+}

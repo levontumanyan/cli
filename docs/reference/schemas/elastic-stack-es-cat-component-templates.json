@@ -1,0 +1,159 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "name": {
+      "$ref": "#/$defs/__schema0"
+    },
+    "h": {
+      "$ref": "#/$defs/__schema2"
+    },
+    "s": {
+      "$ref": "#/$defs/__schema7"
+    },
+    "local": {
+      "$ref": "#/$defs/__schema11"
+    },
+    "master_timeout": {
+      "$ref": "#/$defs/__schema13"
+    }
+  },
+  "additionalProperties": false,
+  "id": "CatComponentTemplatesRequest",
+  "$defs": {
+    "__schema0": {
+      "$ref": "#/$defs/__schema1"
+    },
+    "__schema1": {
+      "type": "string",
+      "description": "The name of the component template. It accepts wildcard expressions. If it is omitted, all component templates are returned."
+    },
+    "__schema2": {
+      "$ref": "#/$defs/__schema3"
+    },
+    "__schema3": {
+      "description": "A comma-separated list of columns names to display. It supports simple wildcards.",
+      "$ref": "#/$defs/CatCatComponentColumns"
+    },
+    "CatCatComponentColumn": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/__schema4"
+        },
+        {
+          "$ref": "#/$defs/__schema5"
+        }
+      ],
+      "id": "CatCatComponentColumn"
+    },
+    "__schema4": {
+      "type": "string",
+      "enum": [
+        "name",
+        "n",
+        "version",
+        "v",
+        "alias_count",
+        "a",
+        "mapping_count",
+        "m",
+        "settings_count",
+        "s",
+        "metadata_count",
+        "me",
+        "included_in",
+        "i"
+      ]
+    },
+    "__schema5": {
+      "type": "string"
+    },
+    "__schema6": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/CatCatComponentColumn"
+      }
+    },
+    "CatCatComponentColumns": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/CatCatComponentColumn"
+        },
+        {
+          "$ref": "#/$defs/__schema6"
+        }
+      ],
+      "id": "CatCatComponentColumns"
+    },
+    "__schema7": {
+      "$ref": "#/$defs/__schema8"
+    },
+    "__schema8": {
+      "description": "List of columns that determine how the table should be sorted. Sorting defaults to ascending and can be changed by setting `:asc` or `:desc` as a suffix to the column name.",
+      "$ref": "#/$defs/Names"
+    },
+    "Names": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/__schema9"
+        },
+        {
+          "$ref": "#/$defs/__schema10"
+        }
+      ],
+      "id": "Names"
+    },
+    "__schema9": {
+      "$ref": "#/$defs/Name"
+    },
+    "Name": {
+      "type": "string",
+      "id": "Name"
+    },
+    "__schema10": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/Name"
+      }
+    },
+    "__schema11": {
+      "$ref": "#/$defs/__schema12"
+    },
+    "__schema12": {
+      "type": "boolean",
+      "description": "If `true`, the request computes the list of selected nodes from the local cluster state. If `false` the list of selected nodes are computed from the cluster state of the master node. In both cases the coordinating node will send requests for further information to each selected node."
+    },
+    "__schema13": {
+      "$ref": "#/$defs/__schema14"
+    },
+    "__schema14": {
+      "description": "The period to wait for a connection to the master node.",
+      "$ref": "#/$defs/Duration"
+    },
+    "Duration": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/__schema15"
+        },
+        {
+          "$ref": "#/$defs/__schema16"
+        },
+        {
+          "$ref": "#/$defs/__schema17"
+        }
+      ],
+      "id": "Duration"
+    },
+    "__schema15": {
+      "type": "string"
+    },
+    "__schema16": {
+      "type": "number",
+      "const": -1
+    },
+    "__schema17": {
+      "type": "number",
+      "const": 0
+    }
+  }
+}

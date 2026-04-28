@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "deployment_id": {
+      "type": "string",
+      "description": "Identifier for the Deployment"
+    },
+    "ref_id": {
+      "type": "string",
+      "description": "User-specified RefId for the Resource (or '_main' if there is only one)"
+    },
+    "repository_name": {
+      "type": "string",
+      "description": "The name of the snapshot repository to remove (e.g. _clone_abcd1234)"
+    }
+  },
+  "required": [
+    "deployment_id",
+    "ref_id",
+    "repository_name"
+  ],
+  "additionalProperties": {}
+}

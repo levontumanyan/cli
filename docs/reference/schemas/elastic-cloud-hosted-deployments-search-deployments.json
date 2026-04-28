@@ -1,0 +1,11 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "minimal_metadata": {
+      "type": "string",
+      "description": "Comma separated list of attributes to include in response for deployments found. Useful for reducing response size when retrieving many deployments. Use of this parameter moves the result to the minimal_metadata section of the response."
+    }
+  },
+  "additionalProperties": {}
+}

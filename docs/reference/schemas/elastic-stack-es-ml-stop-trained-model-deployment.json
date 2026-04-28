@@ -1,0 +1,54 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "model_id": {
+      "$ref": "#/$defs/__schema0"
+    },
+    "id": {
+      "$ref": "#/$defs/__schema1"
+    },
+    "allow_no_match": {
+      "$ref": "#/$defs/__schema3"
+    },
+    "force": {
+      "$ref": "#/$defs/__schema5"
+    }
+  },
+  "required": [
+    "model_id"
+  ],
+  "additionalProperties": false,
+  "id": "MlStopTrainedModelDeploymentRequest",
+  "$defs": {
+    "__schema0": {
+      "description": "The unique identifier of the trained model.",
+      "$ref": "#/$defs/Id"
+    },
+    "Id": {
+      "type": "string",
+      "id": "Id"
+    },
+    "__schema1": {
+      "$ref": "#/$defs/__schema2"
+    },
+    "__schema2": {
+      "description": "If provided, must be the same identifier as in the path.",
+      "$ref": "#/$defs/Id"
+    },
+    "__schema3": {
+      "$ref": "#/$defs/__schema4"
+    },
+    "__schema4": {
+      "type": "boolean",
+      "description": "Specifies what to do when the request: contains wildcard expressions and there are no deployments that match; contains the  `_all` string or no identifiers and there are no matches; or contains wildcard expressions and there are only partial matches. By default, it returns an empty array when there are no matches and the subset of results when there are partial matches. If `false`, the request returns a 404 status code when there are no matches or only partial matches."
+    },
+    "__schema5": {
+      "$ref": "#/$defs/__schema6"
+    },
+    "__schema6": {
+      "type": "boolean",
+      "description": "Forcefully stops the deployment, even if it is used by ingest pipelines. You can't use these pipelines until you restart the model deployment."
+    }
+  }
+}

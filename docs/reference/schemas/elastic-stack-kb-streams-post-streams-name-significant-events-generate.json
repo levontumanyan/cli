@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "The name parameter"
+    },
+    "connectorId": {
+      "type": "string",
+      "description": "Optional connector ID. If not provided, the default AI connector from settings will be used."
+    },
+    "from": {
+      "type": "string",
+      "description": ""
+    },
+    "to": {
+      "type": "string",
+      "description": ""
+    },
+    "sampleDocsSize": {
+      "type": "number",
+      "description": "Number of sample documents to use for generation from the current data of stream"
+    }
+  },
+  "required": [
+    "name",
+    "from",
+    "to"
+  ],
+  "additionalProperties": {}
+}

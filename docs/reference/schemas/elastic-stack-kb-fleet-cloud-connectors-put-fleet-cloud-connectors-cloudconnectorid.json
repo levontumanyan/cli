@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "cloudConnectorId": {
+      "type": "string",
+      "description": "The unique identifier of the cloud connector to update."
+    },
+    "accountType": {
+      "type": "string",
+      "description": "The account type: single-account (single account/subscription) or organization-account (organization-wide)."
+    },
+    "name": {
+      "type": "string",
+      "description": "The name of the cloud connector."
+    },
+    "vars": {
+      "type": "object",
+      "propertyNames": {
+        "$ref": "#/$defs/__schema0"
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/__schema1"
+      },
+      "description": ""
+    }
+  },
+  "required": [
+    "cloudConnectorId"
+  ],
+  "additionalProperties": {},
+  "$defs": {
+    "__schema0": {
+      "type": "string"
+    },
+    "__schema1": {}
+  }
+}

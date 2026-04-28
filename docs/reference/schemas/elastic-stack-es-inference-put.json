@@ -1,0 +1,191 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "task_type": {
+      "$ref": "#/$defs/__schema0"
+    },
+    "inference_id": {
+      "$ref": "#/$defs/__schema2"
+    },
+    "timeout": {
+      "$ref": "#/$defs/__schema3"
+    },
+    "inference_config": {
+      "$ref": "#/$defs/__schema8"
+    }
+  },
+  "required": [
+    "inference_id"
+  ],
+  "additionalProperties": false,
+  "id": "InferencePutRequest",
+  "$defs": {
+    "__schema0": {
+      "$ref": "#/$defs/__schema1"
+    },
+    "__schema1": {
+      "description": "The task type. Refer to the integration list in the API description for the available task types.",
+      "$ref": "#/$defs/InferenceTaskType"
+    },
+    "InferenceTaskType": {
+      "type": "string",
+      "enum": [
+        "sparse_embedding",
+        "text_embedding",
+        "rerank",
+        "completion",
+        "chat_completion",
+        "embedding"
+      ],
+      "id": "InferenceTaskType"
+    },
+    "__schema2": {
+      "description": "The inference Id",
+      "$ref": "#/$defs/Id"
+    },
+    "Id": {
+      "type": "string",
+      "id": "Id"
+    },
+    "__schema3": {
+      "$ref": "#/$defs/__schema4"
+    },
+    "__schema4": {
+      "description": "Specifies the amount of time to wait for the inference endpoint to be created.",
+      "$ref": "#/$defs/Duration"
+    },
+    "Duration": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/__schema5"
+        },
+        {
+          "$ref": "#/$defs/__schema6"
+        },
+        {
+          "$ref": "#/$defs/__schema7"
+        }
+      ],
+      "id": "Duration"
+    },
+    "__schema5": {
+      "type": "string"
+    },
+    "__schema6": {
+      "type": "number",
+      "const": -1
+    },
+    "__schema7": {
+      "type": "number",
+      "const": 0
+    },
+    "__schema8": {
+      "$ref": "#/$defs/InferenceInferenceEndpoint"
+    },
+    "InferenceInferenceEndpoint": {
+      "type": "object",
+      "properties": {
+        "chunking_settings": {
+          "$ref": "#/$defs/__schema9"
+        },
+        "service": {
+          "$ref": "#/$defs/__schema17"
+        },
+        "service_settings": {
+          "$ref": "#/$defs/__schema18"
+        },
+        "task_settings": {
+          "$ref": "#/$defs/__schema19"
+        }
+      },
+      "required": [
+        "service",
+        "service_settings"
+      ],
+      "additionalProperties": false,
+      "id": "InferenceInferenceEndpoint"
+    },
+    "__schema9": {
+      "description": "The chunking configuration object. Applies only to the `embedding`, `sparse_embedding` and `text_embedding` task types. Not applicable to the `rerank`, `completion`, or `chat_completion` task types.",
+      "$ref": "#/$defs/InferenceInferenceChunkingSettings"
+    },
+    "__schema10": {
+      "description": "The maximum size of a chunk in words. This value cannot be lower than `20` (for `sentence` strategy) or `10` (for `word` strategy). This value should not exceed the window size for the associated model.",
+      "$ref": "#/$defs/integer"
+    },
+    "integer": {
+      "type": "number",
+      "id": "integer"
+    },
+    "__schema11": {
+      "description": "The number of overlapping words for chunks. It is applicable only to a `word` chunking strategy. This value cannot be higher than half the `max_chunk_size` value.",
+      "$ref": "#/$defs/integer"
+    },
+    "__schema12": {
+      "description": "The number of overlapping sentences for chunks. It is applicable only for a `sentence` chunking strategy. It can be either `1` or `0`.",
+      "$ref": "#/$defs/integer"
+    },
+    "__schema13": {
+      "type": "string",
+      "description": "Only applicable to the `recursive` strategy and required when using it. Sets a predefined list of separators in the saved chunking settings based on the selected text type. Values can be `markdown` or `plaintext`. Using this parameter is an alternative to manually specifying a custom `separators` list."
+    },
+    "__schema14": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/__schema15"
+      },
+      "description": "Only applicable to the `recursive` strategy and required when using it. A list of strings used as possible split points when chunking text. Each string can be a plain string or a regular expression (regex) pattern. The system tries each separator in order to split the text, starting from the first item in the list. After splitting, it attempts to recombine smaller pieces into larger chunks that stay within the `max_chunk_size` limit, to reduce the total number of chunks generated."
+    },
+    "__schema15": {
+      "type": "string"
+    },
+    "__schema16": {
+      "type": "string",
+      "description": "The chunking strategy: `sentence`, `word`, `none` or `recursive`.  * If `strategy` is set to `recursive`, you must also specify: - `max_chunk_size` - either `separators` or`separator_group` Learn more about different chunking strategies in the linked documentation."
+    },
+    "InferenceInferenceChunkingSettings": {
+      "type": "object",
+      "properties": {
+        "max_chunk_size": {
+          "$ref": "#/$defs/__schema10"
+        },
+        "overlap": {
+          "$ref": "#/$defs/__schema11"
+        },
+        "sentence_overlap": {
+          "$ref": "#/$defs/__schema12"
+        },
+        "separator_group": {
+          "$ref": "#/$defs/__schema13"
+        },
+        "separators": {
+          "$ref": "#/$defs/__schema14"
+        },
+        "strategy": {
+          "$ref": "#/$defs/__schema16"
+        }
+      },
+      "additionalProperties": false,
+      "id": "InferenceInferenceChunkingSettings"
+    },
+    "__schema17": {
+      "type": "string",
+      "description": "The service type"
+    },
+    "__schema18": {
+      "description": "Settings specific to the service",
+      "$ref": "#/$defs/InferenceServiceSettings"
+    },
+    "InferenceServiceSettings": {
+      "id": "InferenceServiceSettings"
+    },
+    "__schema19": {
+      "description": "Task settings specific to the service and task type",
+      "$ref": "#/$defs/InferenceTaskSettings"
+    },
+    "InferenceTaskSettings": {
+      "id": "InferenceTaskSettings"
+    }
+  }
+}

@@ -1,0 +1,54 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "contextOverride": {
+      "type": "object",
+      "propertyNames": {
+        "$ref": "#/$defs/__schema0"
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/__schema1"
+      },
+      "description": "Context overrides for the step execution."
+    },
+    "executionContext": {
+      "type": "object",
+      "propertyNames": {
+        "$ref": "#/$defs/__schema2"
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/__schema3"
+      },
+      "description": "Execution context for the step execution."
+    },
+    "stepId": {
+      "type": "string",
+      "description": "ID of the step to test."
+    },
+    "workflowId": {
+      "type": "string",
+      "description": "ID of the workflow containing the step."
+    },
+    "workflowYaml": {
+      "type": "string",
+      "description": "YAML definition of the workflow containing the step."
+    }
+  },
+  "required": [
+    "contextOverride",
+    "stepId",
+    "workflowYaml"
+  ],
+  "additionalProperties": {},
+  "$defs": {
+    "__schema0": {
+      "type": "string"
+    },
+    "__schema1": {},
+    "__schema2": {
+      "type": "string"
+    },
+    "__schema3": {}
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "template_timeline_id": {
+      "type": "string",
+      "description": "The `savedObjectId` of the template timeline to retrieve"
+    },
+    "id": {
+      "type": "string",
+      "description": "The `savedObjectId` of the Timeline to retrieve."
+    }
+  },
+  "additionalProperties": {}
+}

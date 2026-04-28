@@ -1,0 +1,103 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "from": {
+      "$ref": "#/$defs/__schema0"
+    },
+    "size": {
+      "$ref": "#/$defs/__schema2"
+    },
+    "status": {
+      "$ref": "#/$defs/__schema4"
+    },
+    "connector_id": {
+      "$ref": "#/$defs/__schema6"
+    },
+    "job_type": {
+      "$ref": "#/$defs/__schema8"
+    }
+  },
+  "additionalProperties": false,
+  "id": "ConnectorSyncJobListRequest",
+  "$defs": {
+    "__schema0": {
+      "$ref": "#/$defs/__schema1"
+    },
+    "__schema1": {
+      "description": "Starting offset",
+      "$ref": "#/$defs/integer"
+    },
+    "integer": {
+      "type": "number",
+      "id": "integer"
+    },
+    "__schema2": {
+      "$ref": "#/$defs/__schema3"
+    },
+    "__schema3": {
+      "description": "Specifies a max number of results to get",
+      "$ref": "#/$defs/integer"
+    },
+    "__schema4": {
+      "$ref": "#/$defs/__schema5"
+    },
+    "__schema5": {
+      "description": "A sync job status to fetch connector sync jobs for",
+      "$ref": "#/$defs/ConnectorSyncStatus"
+    },
+    "ConnectorSyncStatus": {
+      "type": "string",
+      "enum": [
+        "canceling",
+        "canceled",
+        "completed",
+        "error",
+        "in_progress",
+        "pending",
+        "suspended"
+      ],
+      "id": "ConnectorSyncStatus"
+    },
+    "__schema6": {
+      "$ref": "#/$defs/__schema7"
+    },
+    "__schema7": {
+      "description": "A connector id to fetch connector sync jobs for",
+      "$ref": "#/$defs/Id"
+    },
+    "Id": {
+      "type": "string",
+      "id": "Id"
+    },
+    "__schema8": {
+      "$ref": "#/$defs/__schema9"
+    },
+    "__schema9": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/ConnectorSyncJobType"
+        },
+        {
+          "$ref": "#/$defs/__schema10"
+        }
+      ],
+      "description": "A comma-separated list of job types to fetch the sync jobs for"
+    },
+    "ConnectorSyncJobType": {
+      "type": "string",
+      "enum": [
+        "full",
+        "incremental",
+        "access_control"
+      ],
+      "id": "ConnectorSyncJobType"
+    },
+    "__schema10": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/ConnectorSyncJobType"
+      }
+    }
+  }
+}

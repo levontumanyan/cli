@@ -1,0 +1,44 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "q": {
+      "$ref": "#/$defs/__schema0"
+    },
+    "from": {
+      "$ref": "#/$defs/__schema2"
+    },
+    "size": {
+      "$ref": "#/$defs/__schema4"
+    }
+  },
+  "additionalProperties": false,
+  "id": "SearchApplicationListRequest",
+  "$defs": {
+    "__schema0": {
+      "$ref": "#/$defs/__schema1"
+    },
+    "__schema1": {
+      "type": "string",
+      "description": "Query in the Lucene query string syntax."
+    },
+    "__schema2": {
+      "$ref": "#/$defs/__schema3"
+    },
+    "__schema3": {
+      "description": "Starting offset.",
+      "$ref": "#/$defs/integer"
+    },
+    "integer": {
+      "type": "number",
+      "id": "integer"
+    },
+    "__schema4": {
+      "$ref": "#/$defs/__schema5"
+    },
+    "__schema5": {
+      "description": "Specifies a max number of results to get.",
+      "$ref": "#/$defs/integer"
+    }
+  }
+}

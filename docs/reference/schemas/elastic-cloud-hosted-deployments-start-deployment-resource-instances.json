@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "deployment_id": {
+      "type": "string",
+      "description": "Identifier for the Deployment."
+    },
+    "resource_kind": {
+      "type": "string",
+      "description": "The kind of resource (one of elasticsearch, kibana, apm, or integrations_server)."
+    },
+    "ref_id": {
+      "type": "string",
+      "description": "User-specified RefId for the Resource (or '_main' if there is only one)."
+    },
+    "instance_ids": {
+      "type": "string",
+      "description": "A comma-separated list of instance identifiers."
+    },
+    "ignore_missing": {
+      "type": "boolean",
+      "description": "If true and the instance does not exist then quietly proceed to the next instance, otherwise treated as an error"
+    }
+  },
+  "required": [
+    "deployment_id",
+    "resource_kind",
+    "ref_id",
+    "instance_ids"
+  ],
+  "additionalProperties": {}
+}

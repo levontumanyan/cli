@@ -1,0 +1,77 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "comments": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/__schema0"
+      },
+      "description": "Array of comment fields:"
+    },
+    "description": {
+      "type": "string",
+      "description": "Describes the exception list."
+    },
+    "entries": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/__schema1"
+      },
+      "description": ""
+    },
+    "item_id": {
+      "type": "string",
+      "description": "Human readable string identifier, e.g. `trusted-linux-processes`"
+    },
+    "meta": {
+      "type": "object",
+      "propertyNames": {
+        "$ref": "#/$defs/__schema2"
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/__schema3"
+      },
+      "description": ""
+    },
+    "name": {
+      "type": "string",
+      "description": "Exception list name."
+    },
+    "os_types": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/__schema4"
+      },
+      "description": ""
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/__schema5"
+      },
+      "description": ""
+    },
+    "type": {
+      "type": "string",
+      "description": ""
+    }
+  },
+  "required": [
+    "description",
+    "entries",
+    "name",
+    "type"
+  ],
+  "additionalProperties": {},
+  "$defs": {
+    "__schema0": {},
+    "__schema1": {},
+    "__schema2": {
+      "type": "string"
+    },
+    "__schema3": {},
+    "__schema4": {},
+    "__schema5": {}
+  }
+}

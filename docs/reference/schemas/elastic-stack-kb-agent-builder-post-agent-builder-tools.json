@@ -1,0 +1,48 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "configuration": {
+      "type": "object",
+      "propertyNames": {
+        "$ref": "#/$defs/__schema0"
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/__schema1"
+      },
+      "description": "Tool-specific configuration parameters. See examples for details."
+    },
+    "description": {
+      "type": "string",
+      "description": "Description of what the tool does."
+    },
+    "id": {
+      "type": "string",
+      "description": "Unique identifier for the tool."
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/__schema2"
+      },
+      "description": "Optional tags for categorizing and organizing tools."
+    },
+    "type": {
+      "type": "string",
+      "description": "The type of tool to create (e.g., esql, index_search)."
+    }
+  },
+  "required": [
+    "configuration",
+    "id",
+    "type"
+  ],
+  "additionalProperties": {},
+  "$defs": {
+    "__schema0": {
+      "type": "string"
+    },
+    "__schema1": {},
+    "__schema2": {}
+  }
+}

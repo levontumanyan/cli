@@ -1,0 +1,58 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "entityType": {
+      "type": "string",
+      "description": "The entity type of the engine."
+    },
+    "delay": {
+      "type": "string",
+      "description": "The delay before the transform will run."
+    },
+    "docsPerSecond": {
+      "type": "number",
+      "description": "The number of documents per second to process."
+    },
+    "enrichPolicyExecutionInterval": {
+      "type": "string",
+      "description": "Interval in which enrich policy runs. For example, `\"1h\"` means the rule runs every hour. Must be less than or equal to half the duration of the lookback period,"
+    },
+    "fieldHistoryLength": {
+      "type": "number",
+      "description": "The number of historical values to keep for each field."
+    },
+    "filter": {
+      "type": "string",
+      "description": ""
+    },
+    "frequency": {
+      "type": "string",
+      "description": "The frequency at which the transform will run."
+    },
+    "indexPattern": {
+      "type": "string",
+      "description": ""
+    },
+    "lookbackPeriod": {
+      "type": "string",
+      "description": "The amount of time the transform looks back to calculate the aggregations."
+    },
+    "maxPageSearchSize": {
+      "type": "number",
+      "description": "The initial page size to use for the composite aggregation of each checkpoint."
+    },
+    "timeout": {
+      "type": "string",
+      "description": "The timeout for initializing the aggregating transform."
+    },
+    "timestampField": {
+      "type": "string",
+      "description": "The field to use as the timestamp for the entity type."
+    }
+  },
+  "required": [
+    "entityType"
+  ],
+  "additionalProperties": {}
+}

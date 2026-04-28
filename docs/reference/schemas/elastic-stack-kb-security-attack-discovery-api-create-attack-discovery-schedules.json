@@ -1,0 +1,58 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "actions": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/__schema0"
+      },
+      "description": "The attack discovery schedule actions"
+    },
+    "enabled": {
+      "type": "boolean",
+      "description": "Indicates whether the schedule is enabled"
+    },
+    "name": {
+      "type": "string",
+      "description": "The name of the schedule"
+    },
+    "params": {
+      "type": "object",
+      "propertyNames": {
+        "$ref": "#/$defs/__schema1"
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/__schema2"
+      },
+      "description": "An attack discovery schedule params"
+    },
+    "schedule": {
+      "type": "object",
+      "propertyNames": {
+        "$ref": "#/$defs/__schema3"
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/__schema4"
+      },
+      "description": ""
+    }
+  },
+  "required": [
+    "name",
+    "params",
+    "schedule"
+  ],
+  "additionalProperties": {},
+  "$defs": {
+    "__schema0": {},
+    "__schema1": {
+      "type": "string"
+    },
+    "__schema2": {},
+    "__schema3": {
+      "type": "string"
+    },
+    "__schema4": {}
+  }
+}

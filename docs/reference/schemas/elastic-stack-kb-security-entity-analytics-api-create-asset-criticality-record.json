@@ -1,0 +1,11 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "refresh": {
+      "type": "string",
+      "description": "If 'wait_for' the request will wait for the index refresh."
+    }
+  },
+  "additionalProperties": {}
+}

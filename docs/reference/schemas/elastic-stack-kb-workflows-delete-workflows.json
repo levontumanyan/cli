@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "force": {
+      "type": "boolean",
+      "description": "When true, permanently deletes the workflows (hard delete) instead of soft-deleting them. The workflow IDs become available for reuse."
+    },
+    "ids": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/__schema0"
+      },
+      "description": "Array of workflow IDs to delete."
+    }
+  },
+  "required": [
+    "ids"
+  ],
+  "additionalProperties": {},
+  "$defs": {
+    "__schema0": {}
+  }
+}

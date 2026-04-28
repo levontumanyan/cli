@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "executionId": {
+      "type": "string",
+      "description": "Workflow execution ID"
+    }
+  },
+  "required": [
+    "executionId"
+  ],
+  "additionalProperties": {}
+}

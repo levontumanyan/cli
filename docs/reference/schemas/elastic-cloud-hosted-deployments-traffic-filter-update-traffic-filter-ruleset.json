@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "ruleset_id": {
+      "type": "string",
+      "description": "The mandatory ruleset ID."
+    }
+  },
+  "required": [
+    "ruleset_id"
+  ],
+  "additionalProperties": {}
+}

@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "description": {
+      "type": "string",
+      "description": "Describes the exception list."
+    },
+    "name": {
+      "type": "string",
+      "description": "The name of the exception list."
+    }
+  },
+  "required": [
+    "description",
+    "name"
+  ],
+  "additionalProperties": {}
+}

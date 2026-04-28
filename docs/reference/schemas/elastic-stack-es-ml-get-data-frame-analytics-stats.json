@@ -1,0 +1,68 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "id": {
+      "$ref": "#/$defs/__schema0"
+    },
+    "allow_no_match": {
+      "$ref": "#/$defs/__schema2"
+    },
+    "from": {
+      "$ref": "#/$defs/__schema4"
+    },
+    "size": {
+      "$ref": "#/$defs/__schema6"
+    },
+    "verbose": {
+      "$ref": "#/$defs/__schema8"
+    }
+  },
+  "additionalProperties": false,
+  "id": "MlGetDataFrameAnalyticsStatsRequest",
+  "$defs": {
+    "__schema0": {
+      "$ref": "#/$defs/__schema1"
+    },
+    "__schema1": {
+      "description": "Identifier for the data frame analytics job. If you do not specify this option, the API returns information for the first hundred data frame analytics jobs.",
+      "$ref": "#/$defs/Id"
+    },
+    "Id": {
+      "type": "string",
+      "id": "Id"
+    },
+    "__schema2": {
+      "$ref": "#/$defs/__schema3"
+    },
+    "__schema3": {
+      "type": "boolean",
+      "description": "Specifies what to do when the request: 1. Contains wildcard expressions and there are no data frame analytics jobs that match. 2. Contains the `_all` string or no identifiers and there are no matches. 3. Contains wildcard expressions and there are only partial matches. The default value returns an empty data_frame_analytics array when there are no matches and the subset of results when there are partial matches. If this parameter is `false`, the request returns a 404 status code when there are no matches or only partial matches."
+    },
+    "__schema4": {
+      "$ref": "#/$defs/__schema5"
+    },
+    "__schema5": {
+      "description": "Skips the specified number of data frame analytics jobs.",
+      "$ref": "#/$defs/integer"
+    },
+    "integer": {
+      "type": "number",
+      "id": "integer"
+    },
+    "__schema6": {
+      "$ref": "#/$defs/__schema7"
+    },
+    "__schema7": {
+      "description": "Specifies the maximum number of data frame analytics jobs to obtain.",
+      "$ref": "#/$defs/integer"
+    },
+    "__schema8": {
+      "$ref": "#/$defs/__schema9"
+    },
+    "__schema9": {
+      "type": "boolean",
+      "description": "Defines whether the stats response should be verbose."
+    }
+  }
+}

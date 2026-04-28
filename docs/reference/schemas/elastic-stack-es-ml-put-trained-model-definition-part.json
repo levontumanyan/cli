@@ -1,0 +1,64 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "model_id": {
+      "$ref": "#/$defs/__schema0"
+    },
+    "part": {
+      "$ref": "#/$defs/__schema1"
+    },
+    "definition": {
+      "$ref": "#/$defs/__schema2"
+    },
+    "total_definition_length": {
+      "$ref": "#/$defs/__schema3"
+    },
+    "total_parts": {
+      "$ref": "#/$defs/__schema4"
+    }
+  },
+  "required": [
+    "model_id",
+    "part",
+    "definition",
+    "total_definition_length",
+    "total_parts"
+  ],
+  "additionalProperties": false,
+  "id": "MlPutTrainedModelDefinitionPartRequest",
+  "$defs": {
+    "__schema0": {
+      "description": "The unique identifier of the trained model.",
+      "$ref": "#/$defs/Id"
+    },
+    "Id": {
+      "type": "string",
+      "id": "Id"
+    },
+    "__schema1": {
+      "description": "The definition part number. When the definition is loaded for inference the definition parts are streamed in the order of their part number. The first part must be `0` and the final part must be `total_parts - 1`.",
+      "$ref": "#/$defs/integer"
+    },
+    "integer": {
+      "type": "number",
+      "id": "integer"
+    },
+    "__schema2": {
+      "type": "string",
+      "description": "The definition part for the model. Must be a base64 encoded string."
+    },
+    "__schema3": {
+      "description": "The total uncompressed definition length in bytes. Not base64 encoded.",
+      "$ref": "#/$defs/long"
+    },
+    "long": {
+      "type": "number",
+      "id": "long"
+    },
+    "__schema4": {
+      "description": "The total number of parts that will be uploaded. Must be greater than 0.",
+      "$ref": "#/$defs/integer"
+    }
+  }
+}

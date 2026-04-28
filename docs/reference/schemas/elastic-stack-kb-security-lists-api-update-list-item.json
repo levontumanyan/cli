@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "_version": {
+      "type": "string",
+      "description": "The version id, normally returned by the API when the document is retrieved. Use it ensure updates are done against the latest version."
+    },
+    "id": {
+      "type": "string",
+      "description": "Value list item's identifier."
+    },
+    "meta": {
+      "type": "object",
+      "propertyNames": {
+        "$ref": "#/$defs/__schema0"
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/__schema1"
+      },
+      "description": "Placeholder for metadata about the value list item."
+    },
+    "value": {
+      "type": "string",
+      "description": "The value used to evaluate exceptions."
+    }
+  },
+  "required": [
+    "id",
+    "value"
+  ],
+  "additionalProperties": {},
+  "$defs": {
+    "__schema0": {
+      "type": "string"
+    },
+    "__schema1": {}
+  }
+}

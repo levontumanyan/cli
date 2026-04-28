@@ -1,0 +1,49 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "overwrite": {
+      "type": "boolean",
+      "description": "If the config exists ?overwrite=true is required"
+    },
+    "agent_name": {
+      "type": "string",
+      "description": "The agent name is used by the UI to determine which settings to display."
+    },
+    "service": {
+      "type": "object",
+      "propertyNames": {
+        "$ref": "#/$defs/__schema0"
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/__schema1"
+      },
+      "description": "Service"
+    },
+    "settings": {
+      "type": "object",
+      "propertyNames": {
+        "$ref": "#/$defs/__schema2"
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/__schema3"
+      },
+      "description": "Agent configuration settings"
+    }
+  },
+  "required": [
+    "service",
+    "settings"
+  ],
+  "additionalProperties": {},
+  "$defs": {
+    "__schema0": {
+      "type": "string"
+    },
+    "__schema1": {},
+    "__schema2": {
+      "type": "string"
+    },
+    "__schema3": {}
+  }
+}

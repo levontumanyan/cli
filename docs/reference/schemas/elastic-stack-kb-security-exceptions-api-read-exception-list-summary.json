@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Exception list's identifier generated upon creation."
+    },
+    "list_id": {
+      "type": "string",
+      "description": "Exception list's human readable identifier."
+    },
+    "namespace_type": {
+      "type": "string",
+      "description": ""
+    },
+    "filter": {
+      "type": "string",
+      "description": "Search filter clause"
+    }
+  },
+  "additionalProperties": {}
+}

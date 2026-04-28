@@ -1,0 +1,94 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "index": {
+      "$ref": "#/$defs/__schema0"
+    },
+    "ccs_minimize_roundtrips": {
+      "$ref": "#/$defs/__schema3"
+    },
+    "max_concurrent_searches": {
+      "$ref": "#/$defs/__schema4"
+    },
+    "search_type": {
+      "$ref": "#/$defs/__schema5"
+    },
+    "rest_total_hits_as_int": {
+      "$ref": "#/$defs/__schema6"
+    },
+    "typed_keys": {
+      "$ref": "#/$defs/__schema7"
+    },
+    "search_templates": {
+      "$ref": "#/$defs/__schema8"
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "__schema0": {
+      "description": "A comma-separated list of data streams, indices, and aliases to search. It supports wildcards (`*`). To search all data streams and indices, omit this parameter or use `*`.",
+      "$ref": "#/$defs/Indices"
+    },
+    "Indices": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/__schema1"
+        },
+        {
+          "$ref": "#/$defs/__schema2"
+        }
+      ],
+      "id": "Indices"
+    },
+    "__schema1": {
+      "$ref": "#/$defs/IndexName"
+    },
+    "IndexName": {
+      "type": "string",
+      "id": "IndexName"
+    },
+    "__schema2": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/IndexName"
+      }
+    },
+    "__schema3": {
+      "type": "boolean",
+      "description": "If `true`, network round-trips are minimized for cross-cluster search requests."
+    },
+    "__schema4": {
+      "description": "The maximum number of concurrent searches the API can run.",
+      "$ref": "#/$defs/long"
+    },
+    "long": {
+      "type": "number",
+      "id": "long"
+    },
+    "__schema5": {
+      "description": "The type of the search operation.",
+      "$ref": "#/$defs/SearchType"
+    },
+    "SearchType": {
+      "type": "string",
+      "enum": [
+        "query_then_fetch",
+        "dfs_query_then_fetch"
+      ],
+      "id": "SearchType"
+    },
+    "__schema6": {
+      "type": "boolean",
+      "description": "If `true`, the response returns `hits.total` as an integer. If `false`, it returns `hits.total` as an object."
+    },
+    "__schema7": {
+      "type": "boolean",
+      "description": "If `true`, the response prefixes aggregation and suggester names with their respective types."
+    },
+    "__schema8": {
+      "type": "array",
+      "items": {}
+    }
+  }
+}

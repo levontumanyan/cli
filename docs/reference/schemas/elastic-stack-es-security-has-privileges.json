@@ -1,0 +1,292 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "user": {
+      "$ref": "#/$defs/__schema0"
+    },
+    "application": {
+      "$ref": "#/$defs/__schema2"
+    },
+    "cluster": {
+      "$ref": "#/$defs/__schema9"
+    },
+    "index": {
+      "$ref": "#/$defs/__schema13"
+    }
+  },
+  "additionalProperties": false,
+  "id": "SecurityHasPrivilegesRequest",
+  "$defs": {
+    "__schema0": {
+      "$ref": "#/$defs/__schema1"
+    },
+    "__schema1": {
+      "description": "Username",
+      "$ref": "#/$defs/Name"
+    },
+    "Name": {
+      "type": "string",
+      "id": "Name"
+    },
+    "__schema2": {
+      "$ref": "#/$defs/__schema3"
+    },
+    "__schema3": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/SecurityHasPrivilegesApplicationPrivilegesCheck"
+      }
+    },
+    "SecurityHasPrivilegesApplicationPrivilegesCheck": {
+      "type": "object",
+      "properties": {
+        "application": {
+          "$ref": "#/$defs/__schema4"
+        },
+        "privileges": {
+          "$ref": "#/$defs/__schema5"
+        },
+        "resources": {
+          "$ref": "#/$defs/__schema7"
+        }
+      },
+      "required": [
+        "application",
+        "privileges",
+        "resources"
+      ],
+      "additionalProperties": false,
+      "id": "SecurityHasPrivilegesApplicationPrivilegesCheck"
+    },
+    "__schema4": {
+      "type": "string",
+      "description": "The name of the application."
+    },
+    "__schema5": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/__schema6"
+      },
+      "description": "A list of the privileges that you want to check for the specified resources. It may be either application privilege names or the names of actions that are granted by those privileges"
+    },
+    "__schema6": {
+      "type": "string"
+    },
+    "__schema7": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/__schema8"
+      },
+      "description": "A list of resource names against which the privileges should be checked."
+    },
+    "__schema8": {
+      "type": "string"
+    },
+    "__schema9": {
+      "$ref": "#/$defs/__schema10"
+    },
+    "__schema10": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/SecurityClusterPrivilege"
+      },
+      "description": "A list of the cluster privileges that you want to check."
+    },
+    "SecurityClusterPrivilege": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/__schema11"
+        },
+        {
+          "$ref": "#/$defs/__schema12"
+        }
+      ],
+      "id": "SecurityClusterPrivilege"
+    },
+    "__schema11": {
+      "type": "string",
+      "enum": [
+        "all",
+        "cancel_task",
+        "create_snapshot",
+        "cross_cluster_replication",
+        "cross_cluster_search",
+        "delegate_pki",
+        "grant_api_key",
+        "manage",
+        "manage_api_key",
+        "manage_autoscaling",
+        "manage_behavioral_analytics",
+        "manage_ccr",
+        "manage_data_frame_transforms",
+        "manage_data_stream_global_retention",
+        "manage_enrich",
+        "manage_esql",
+        "manage_ilm",
+        "manage_index_templates",
+        "manage_inference",
+        "manage_ingest_pipelines",
+        "manage_logstash_pipelines",
+        "manage_ml",
+        "manage_oidc",
+        "manage_own_api_key",
+        "manage_pipeline",
+        "manage_rollup",
+        "manage_saml",
+        "manage_search_application",
+        "manage_search_query_rules",
+        "manage_search_synonyms",
+        "manage_security",
+        "manage_service_account",
+        "manage_slm",
+        "manage_token",
+        "manage_transform",
+        "manage_user_profile",
+        "manage_watcher",
+        "monitor",
+        "monitor_data_frame_transforms",
+        "monitor_data_stream_global_retention",
+        "monitor_enrich",
+        "monitor_esql",
+        "monitor_inference",
+        "monitor_ml",
+        "monitor_rollup",
+        "monitor_snapshot",
+        "monitor_stats",
+        "monitor_text_structure",
+        "monitor_transform",
+        "monitor_watcher",
+        "none",
+        "post_behavioral_analytics_event",
+        "read_ccr",
+        "read_fleet_secrets",
+        "read_ilm",
+        "read_pipeline",
+        "read_security",
+        "read_slm",
+        "transport_client",
+        "write_connector_secrets",
+        "write_fleet_secrets",
+        "read_project_routing",
+        "manage_project_routing"
+      ]
+    },
+    "__schema12": {
+      "type": "string"
+    },
+    "__schema13": {
+      "$ref": "#/$defs/__schema14"
+    },
+    "__schema14": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/SecurityHasPrivilegesIndexPrivilegesCheck"
+      }
+    },
+    "SecurityHasPrivilegesIndexPrivilegesCheck": {
+      "type": "object",
+      "properties": {
+        "names": {
+          "$ref": "#/$defs/__schema15"
+        },
+        "privileges": {
+          "$ref": "#/$defs/__schema18"
+        },
+        "allow_restricted_indices": {
+          "$ref": "#/$defs/__schema21"
+        }
+      },
+      "required": [
+        "names",
+        "privileges"
+      ],
+      "additionalProperties": false,
+      "id": "SecurityHasPrivilegesIndexPrivilegesCheck"
+    },
+    "__schema15": {
+      "description": "A list of indices.",
+      "$ref": "#/$defs/Indices"
+    },
+    "Indices": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/__schema16"
+        },
+        {
+          "$ref": "#/$defs/__schema17"
+        }
+      ],
+      "id": "Indices"
+    },
+    "__schema16": {
+      "$ref": "#/$defs/IndexName"
+    },
+    "IndexName": {
+      "type": "string",
+      "id": "IndexName"
+    },
+    "__schema17": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/IndexName"
+      }
+    },
+    "__schema18": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/SecurityIndexPrivilege"
+      },
+      "description": "A list of the privileges that you want to check for the specified indices."
+    },
+    "SecurityIndexPrivilege": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/__schema19"
+        },
+        {
+          "$ref": "#/$defs/__schema20"
+        }
+      ],
+      "id": "SecurityIndexPrivilege"
+    },
+    "__schema19": {
+      "type": "string",
+      "enum": [
+        "all",
+        "auto_configure",
+        "create",
+        "create_doc",
+        "create_index",
+        "create_view",
+        "cross_cluster_replication",
+        "cross_cluster_replication_internal",
+        "delete",
+        "delete_index",
+        "delete_view",
+        "index",
+        "maintenance",
+        "manage",
+        "manage_data_stream_lifecycle",
+        "manage_follow_index",
+        "manage_ilm",
+        "manage_leader_index",
+        "manage_view",
+        "monitor",
+        "none",
+        "read",
+        "read_cross_cluster",
+        "read_view_metadata",
+        "view_index_metadata",
+        "write"
+      ]
+    },
+    "__schema20": {
+      "type": "string"
+    },
+    "__schema21": {
+      "type": "boolean",
+      "description": "This needs to be set to `true` (default is `false`) if using wildcards or regexps for patterns that cover restricted indices. Implicitly, restricted indices do not match index patterns because restricted indices usually have limited privileges and including them in pattern tests would render most such tests false. If restricted indices are explicitly included in the names list, privileges will be checked against them regardless of the value of `allow_restricted_indices`."
+    }
+  }
+}

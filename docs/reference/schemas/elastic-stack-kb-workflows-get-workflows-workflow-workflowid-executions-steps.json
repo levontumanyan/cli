@@ -1,0 +1,34 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "workflowId": {
+      "type": "string",
+      "description": "Workflow ID"
+    },
+    "stepId": {
+      "type": "string",
+      "description": "Filter by step ID."
+    },
+    "includeInput": {
+      "type": "boolean",
+      "description": "Include step input data."
+    },
+    "includeOutput": {
+      "type": "boolean",
+      "description": "Include step output data."
+    },
+    "page": {
+      "type": "number",
+      "description": "Page number for pagination."
+    },
+    "size": {
+      "type": "number",
+      "description": "Number of results per page."
+    }
+  },
+  "required": [
+    "workflowId"
+  ],
+  "additionalProperties": {}
+}

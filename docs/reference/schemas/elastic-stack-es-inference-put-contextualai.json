@@ -1,0 +1,210 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "task_type": {
+      "$ref": "#/$defs/__schema0"
+    },
+    "contextualai_inference_id": {
+      "$ref": "#/$defs/__schema1"
+    },
+    "timeout": {
+      "$ref": "#/$defs/__schema2"
+    },
+    "service": {
+      "$ref": "#/$defs/__schema7"
+    },
+    "service_settings": {
+      "$ref": "#/$defs/__schema8"
+    },
+    "task_settings": {
+      "$ref": "#/$defs/__schema13"
+    }
+  },
+  "required": [
+    "task_type",
+    "contextualai_inference_id",
+    "service",
+    "service_settings"
+  ],
+  "additionalProperties": false,
+  "id": "InferencePutContextualaiRequest",
+  "$defs": {
+    "__schema0": {
+      "type": "string",
+      "enum": [
+        "rerank"
+      ],
+      "description": "The type of the inference task that the model will perform.",
+      "$ref": "#/$defs/InferenceTaskTypeContextualAI"
+    },
+    "InferenceTaskTypeContextualAI": {
+      "type": "string",
+      "enum": [
+        "rerank"
+      ],
+      "id": "InferenceTaskTypeContextualAI"
+    },
+    "__schema1": {
+      "description": "The unique identifier of the inference endpoint.",
+      "$ref": "#/$defs/Id"
+    },
+    "Id": {
+      "type": "string",
+      "id": "Id"
+    },
+    "__schema2": {
+      "$ref": "#/$defs/__schema3"
+    },
+    "__schema3": {
+      "description": "Specifies the amount of time to wait for the inference endpoint to be created.",
+      "$ref": "#/$defs/Duration"
+    },
+    "Duration": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/__schema4"
+        },
+        {
+          "$ref": "#/$defs/__schema5"
+        },
+        {
+          "$ref": "#/$defs/__schema6"
+        }
+      ],
+      "id": "Duration"
+    },
+    "__schema4": {
+      "type": "string"
+    },
+    "__schema5": {
+      "type": "number",
+      "const": -1
+    },
+    "__schema6": {
+      "type": "number",
+      "const": 0
+    },
+    "__schema7": {
+      "type": "string",
+      "enum": [
+        "contextualai"
+      ],
+      "description": "The type of service supported for the specified task type. In this case, `contextualai`.",
+      "$ref": "#/$defs/InferenceContextualAIServiceType"
+    },
+    "InferenceContextualAIServiceType": {
+      "type": "string",
+      "enum": [
+        "contextualai"
+      ],
+      "id": "InferenceContextualAIServiceType"
+    },
+    "__schema8": {
+      "type": "object",
+      "properties": {
+        "api_key": {
+          "$ref": "#/$defs/__schema9"
+        },
+        "model_id": {
+          "$ref": "#/$defs/__schema10"
+        },
+        "rate_limit": {
+          "$ref": "#/$defs/__schema11"
+        }
+      },
+      "required": [
+        "api_key",
+        "model_id"
+      ],
+      "additionalProperties": false,
+      "description": "Settings used to install the inference model. These settings are specific to the `contextualai` service.",
+      "$ref": "#/$defs/InferenceContextualAIServiceSettings"
+    },
+    "__schema9": {
+      "type": "string",
+      "description": "A valid API key for your Contexutual AI account. IMPORTANT: You need to provide the API key only once, during the inference model creation. The get inference endpoint API does not retrieve your API key."
+    },
+    "__schema10": {
+      "type": "string",
+      "description": "The name of the model to use for the inference task. Refer to the Contextual AI documentation for the list of available rerank models."
+    },
+    "__schema11": {
+      "description": "This setting helps to minimize the number of rate limit errors returned from Contextual AI. The `contextualai` service sets a default number of requests allowed per minute depending on the task type. For `rerank`, it is set to `1000`.",
+      "$ref": "#/$defs/InferenceRateLimitSetting"
+    },
+    "__schema12": {
+      "description": "The number of requests allowed per minute. By default, the number of requests allowed per minute is set by each service as follows: * `alibabacloud-ai-search` service: `1000` * `amazonbedrock` service: `240` * `anthropic` service: `50` * `azureaistudio` service: `240` * `azureopenai` service and task type `text_embedding`: `1440` * `azureopenai` service and task types `completion` or `chat_completion`: `120` * `cohere` service: `10000` * `contextualai` service: `1000` * `elastic` service and task type `chat_completion`: `240` * `fireworksai` service: `6000` * `googleaistudio` service: `360` * `googlevertexai` service: `30000` * `hugging_face` service: `3000` * `jinaai` service: `2000` * `llama` service: `3000` * `mistral` service: `240` * `openai` service and task type `text_embedding`: `3000` * `openai` service and task type `completion`: `500` * `openshift_ai` service: `3000` * `voyageai` service: `2000` * `watsonxai` service: `120`",
+      "$ref": "#/$defs/integer"
+    },
+    "integer": {
+      "type": "number",
+      "id": "integer"
+    },
+    "InferenceRateLimitSetting": {
+      "type": "object",
+      "properties": {
+        "requests_per_minute": {
+          "$ref": "#/$defs/__schema12"
+        }
+      },
+      "additionalProperties": false,
+      "id": "InferenceRateLimitSetting"
+    },
+    "InferenceContextualAIServiceSettings": {
+      "type": "object",
+      "properties": {
+        "api_key": {
+          "$ref": "#/$defs/__schema9"
+        },
+        "model_id": {
+          "$ref": "#/$defs/__schema10"
+        },
+        "rate_limit": {
+          "$ref": "#/$defs/__schema11"
+        }
+      },
+      "required": [
+        "api_key",
+        "model_id"
+      ],
+      "additionalProperties": false,
+      "id": "InferenceContextualAIServiceSettings"
+    },
+    "__schema13": {
+      "$ref": "#/$defs/__schema14"
+    },
+    "__schema14": {
+      "description": "Settings to configure the inference task. These settings are specific to the task type you specified.",
+      "$ref": "#/$defs/InferenceContextualAITaskSettings"
+    },
+    "__schema15": {
+      "type": "string",
+      "description": "Instructions for the reranking model. Refer to <https://docs.contextual.ai/api-reference/rerank/rerank#body-instruction> Only for the `rerank` task type."
+    },
+    "__schema16": {
+      "type": "boolean",
+      "description": "Whether to return the source documents in the response. Only for the `rerank` task type."
+    },
+    "__schema17": {
+      "description": "The number of most relevant documents to return. If not specified, the reranking results of all documents will be returned. Only for the `rerank` task type.",
+      "$ref": "#/$defs/integer"
+    },
+    "InferenceContextualAITaskSettings": {
+      "type": "object",
+      "properties": {
+        "instruction": {
+          "$ref": "#/$defs/__schema15"
+        },
+        "return_documents": {
+          "$ref": "#/$defs/__schema16"
+        },
+        "top_k": {
+          "$ref": "#/$defs/__schema17"
+        }
+      },
+      "additionalProperties": false,
+      "id": "InferenceContextualAITaskSettings"
+    }
+  }
+}

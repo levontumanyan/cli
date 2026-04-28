@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "timeline": {
+      "type": "object",
+      "propertyNames": {
+        "$ref": "#/$defs/__schema0"
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/__schema1"
+      },
+      "description": ""
+    },
+    "timelineId": {
+      "type": "string",
+      "description": "The `savedObjectId` of the Timeline or Timeline template that you’re updating."
+    },
+    "kb-version": {
+      "type": "string",
+      "description": "The version of the Timeline or Timeline template that you’re updating."
+    }
+  },
+  "required": [
+    "timeline",
+    "timelineId",
+    "kb-version"
+  ],
+  "additionalProperties": {},
+  "$defs": {
+    "__schema0": {
+      "type": "string"
+    },
+    "__schema1": {}
+  }
+}

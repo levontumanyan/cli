@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "entityType": {
+      "type": "string",
+      "description": "The entityType parameter"
+    },
+    "id": {
+      "type": "string",
+      "description": "Identifier of the entity to be deleted, commonly entity.id value."
+    }
+  },
+  "required": [
+    "entityType",
+    "id"
+  ],
+  "additionalProperties": {}
+}

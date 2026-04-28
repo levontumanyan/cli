@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "fields": {
+      "type": "string",
+      "description": "A list of fields to include in the response. If not provided, all fields will be included."
+    },
+    "filter": {
+      "type": "string",
+      "description": "Search query to filter Knowledge Base Entries by specific criteria."
+    },
+    "sort_field": {
+      "type": "string",
+      "description": "Field to sort the Knowledge Base Entries by."
+    },
+    "sort_order": {
+      "type": "string",
+      "description": "Sort order for the results, either asc or desc."
+    },
+    "page": {
+      "type": "number",
+      "description": "Page number for paginated results. Defaults to 1."
+    },
+    "per_page": {
+      "type": "number",
+      "description": "Number of Knowledge Base Entries to return per page. Defaults to 20."
+    }
+  },
+  "additionalProperties": {}
+}

@@ -1,0 +1,47 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "page": {
+      "type": "number",
+      "description": ""
+    },
+    "perPage": {
+      "type": "number",
+      "description": ""
+    },
+    "sortField": {
+      "type": "string",
+      "description": ""
+    },
+    "sortOrder": {
+      "type": "string",
+      "description": ""
+    },
+    "showUpgradeable": {
+      "type": "boolean",
+      "description": ""
+    },
+    "kuery": {
+      "type": "string",
+      "description": ""
+    },
+    "noAgentCount": {
+      "type": "boolean",
+      "description": "use withAgentCount instead"
+    },
+    "withAgentCount": {
+      "type": "boolean",
+      "description": "get policies with agent count"
+    },
+    "full": {
+      "type": "boolean",
+      "description": "get full policies with package policies populated"
+    },
+    "kb-format": {
+      "type": "string",
+      "description": ""
+    }
+  },
+  "additionalProperties": {}
+}

@@ -1,0 +1,42 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "connector_id": {
+      "$ref": "#/$defs/__schema0"
+    },
+    "api_key_id": {
+      "$ref": "#/$defs/__schema1"
+    },
+    "api_key_secret_id": {
+      "$ref": "#/$defs/__schema3"
+    }
+  },
+  "required": [
+    "connector_id"
+  ],
+  "additionalProperties": false,
+  "id": "ConnectorUpdateApiKeyIdRequest",
+  "$defs": {
+    "__schema0": {
+      "description": "The unique identifier of the connector to be updated",
+      "$ref": "#/$defs/Id"
+    },
+    "Id": {
+      "type": "string",
+      "id": "Id"
+    },
+    "__schema1": {
+      "$ref": "#/$defs/__schema2"
+    },
+    "__schema2": {
+      "type": "string"
+    },
+    "__schema3": {
+      "$ref": "#/$defs/__schema4"
+    },
+    "__schema4": {
+      "type": "string"
+    }
+  }
+}

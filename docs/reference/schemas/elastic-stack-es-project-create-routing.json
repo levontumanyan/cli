@@ -1,0 +1,43 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "name": {
+      "$ref": "#/$defs/__schema0"
+    },
+    "expressions": {
+      "$ref": "#/$defs/__schema1"
+    }
+  },
+  "required": [
+    "name"
+  ],
+  "additionalProperties": false,
+  "id": "ProjectCreateRoutingRequest",
+  "$defs": {
+    "__schema0": {
+      "type": "string",
+      "description": "The name of project routing expression"
+    },
+    "__schema1": {
+      "$ref": "#/$defs/ProjectProjectRoutingExpression"
+    },
+    "ProjectProjectRoutingExpression": {
+      "type": "object",
+      "properties": {
+        "expression": {
+          "$ref": "#/$defs/ProjectRoutingExpression"
+        }
+      },
+      "required": [
+        "expression"
+      ],
+      "additionalProperties": false,
+      "id": "ProjectProjectRoutingExpression"
+    },
+    "ProjectRoutingExpression": {
+      "type": "string",
+      "id": "ProjectRoutingExpression"
+    }
+  }
+}

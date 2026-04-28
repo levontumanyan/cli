@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "excludedIds": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/__schema0"
+      },
+      "description": "Optional list of conversation IDs to delete."
+    }
+  },
+  "additionalProperties": {},
+  "$defs": {
+    "__schema0": {}
+  }
+}

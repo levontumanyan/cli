@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Value list item identifier. Required if `list_id` and `value` are not specified."
+    },
+    "list_id": {
+      "type": "string",
+      "description": "Value list item list's `id` identfier. Required if `id` is not specified."
+    },
+    "value": {
+      "type": "string",
+      "description": "The value used to evaluate exceptions. Required if `id` is not specified."
+    }
+  },
+  "additionalProperties": {}
+}

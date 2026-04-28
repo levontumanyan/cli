@@ -1,0 +1,11 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "kb-dry-run": {
+      "type": "boolean",
+      "description": "Enables dry run mode for the request call."
+    }
+  },
+  "additionalProperties": {}
+}

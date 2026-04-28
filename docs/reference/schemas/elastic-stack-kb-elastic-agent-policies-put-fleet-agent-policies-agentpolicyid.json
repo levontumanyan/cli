@@ -1,0 +1,220 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "agentPolicyId": {
+      "type": "string",
+      "description": "The agentPolicyId parameter"
+    },
+    "kb-format": {
+      "type": "string",
+      "description": ""
+    },
+    "advanced_settings": {
+      "type": "object",
+      "propertyNames": {
+        "$ref": "#/$defs/__schema0"
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/__schema1"
+      },
+      "description": ""
+    },
+    "agent_features": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/__schema2"
+      },
+      "description": ""
+    },
+    "agentless": {
+      "type": "object",
+      "propertyNames": {
+        "$ref": "#/$defs/__schema3"
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/__schema4"
+      },
+      "description": ""
+    },
+    "bumpRevision": {
+      "type": "boolean",
+      "description": ""
+    },
+    "data_output_id": {
+      "type": "string",
+      "description": ""
+    },
+    "description": {
+      "type": "string",
+      "description": ""
+    },
+    "download_source_id": {
+      "type": "string",
+      "description": ""
+    },
+    "fleet_server_host_id": {
+      "type": "string",
+      "description": ""
+    },
+    "force": {
+      "type": "boolean",
+      "description": ""
+    },
+    "global_data_tags": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/__schema5"
+      },
+      "description": "User defined data tags that are added to all of the inputs. The values can be strings or numbers."
+    },
+    "has_agent_version_conditions": {
+      "type": "boolean",
+      "description": ""
+    },
+    "has_fleet_server": {
+      "type": "boolean",
+      "description": ""
+    },
+    "id": {
+      "type": "string",
+      "description": ""
+    },
+    "inactivity_timeout": {
+      "type": "number",
+      "description": ""
+    },
+    "is_default": {
+      "type": "boolean",
+      "description": ""
+    },
+    "is_default_fleet_server": {
+      "type": "boolean",
+      "description": ""
+    },
+    "is_managed": {
+      "type": "boolean",
+      "description": ""
+    },
+    "is_protected": {
+      "type": "boolean",
+      "description": ""
+    },
+    "is_verifier": {
+      "type": "boolean",
+      "description": "Indicates this is a short-lived verifier policy used for OTel permission verification."
+    },
+    "keep_monitoring_alive": {
+      "type": "boolean",
+      "description": "When set to true, monitoring will be enabled but logs/metrics collection will be disabled"
+    },
+    "monitoring_diagnostics": {
+      "type": "object",
+      "propertyNames": {
+        "$ref": "#/$defs/__schema6"
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/__schema7"
+      },
+      "description": ""
+    },
+    "monitoring_enabled": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/__schema8"
+      },
+      "description": ""
+    },
+    "monitoring_http": {
+      "type": "object",
+      "propertyNames": {
+        "$ref": "#/$defs/__schema9"
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/__schema10"
+      },
+      "description": ""
+    },
+    "monitoring_output_id": {
+      "type": "string",
+      "description": ""
+    },
+    "monitoring_pprof_enabled": {
+      "type": "boolean",
+      "description": ""
+    },
+    "name": {
+      "type": "string",
+      "description": ""
+    },
+    "namespace": {
+      "type": "string",
+      "description": ""
+    },
+    "overrides": {
+      "type": "object",
+      "propertyNames": {
+        "$ref": "#/$defs/__schema11"
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/__schema12"
+      },
+      "description": "Override settings that are defined in the agent policy. Input settings cannot be overridden. The override option should be used only in unusual circumstances and not as a routine procedure."
+    },
+    "required_versions": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/__schema13"
+      },
+      "description": ""
+    },
+    "space_ids": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/__schema14"
+      },
+      "description": ""
+    },
+    "supports_agentless": {
+      "type": "boolean",
+      "description": "Indicates whether the agent policy supports agentless integrations. Deprecated in favor of the Fleet agentless policies API."
+    },
+    "unenroll_timeout": {
+      "type": "number",
+      "description": ""
+    }
+  },
+  "required": [
+    "agentPolicyId",
+    "name",
+    "namespace"
+  ],
+  "additionalProperties": {},
+  "$defs": {
+    "__schema0": {
+      "type": "string"
+    },
+    "__schema1": {},
+    "__schema2": {},
+    "__schema3": {
+      "type": "string"
+    },
+    "__schema4": {},
+    "__schema5": {},
+    "__schema6": {
+      "type": "string"
+    },
+    "__schema7": {},
+    "__schema8": {},
+    "__schema9": {
+      "type": "string"
+    },
+    "__schema10": {},
+    "__schema11": {
+      "type": "string"
+    },
+    "__schema12": {},
+    "__schema13": {},
+    "__schema14": {}
+  }
+}

@@ -1,0 +1,82 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "connector_id": {
+      "$ref": "#/$defs/__schema0"
+    },
+    "description": {
+      "$ref": "#/$defs/__schema2"
+    },
+    "index_name": {
+      "$ref": "#/$defs/__schema4"
+    },
+    "is_native": {
+      "$ref": "#/$defs/__schema6"
+    },
+    "language": {
+      "$ref": "#/$defs/__schema8"
+    },
+    "name": {
+      "$ref": "#/$defs/__schema10"
+    },
+    "service_type": {
+      "$ref": "#/$defs/__schema12"
+    }
+  },
+  "additionalProperties": false,
+  "id": "ConnectorPutRequest",
+  "$defs": {
+    "__schema0": {
+      "$ref": "#/$defs/__schema1"
+    },
+    "__schema1": {
+      "description": "The unique identifier of the connector to be created or updated. ID is auto-generated if not provided.",
+      "$ref": "#/$defs/Id"
+    },
+    "Id": {
+      "type": "string",
+      "id": "Id"
+    },
+    "__schema2": {
+      "$ref": "#/$defs/__schema3"
+    },
+    "__schema3": {
+      "type": "string"
+    },
+    "__schema4": {
+      "$ref": "#/$defs/__schema5"
+    },
+    "__schema5": {
+      "$ref": "#/$defs/IndexName"
+    },
+    "IndexName": {
+      "type": "string",
+      "id": "IndexName"
+    },
+    "__schema6": {
+      "$ref": "#/$defs/__schema7"
+    },
+    "__schema7": {
+      "type": "boolean"
+    },
+    "__schema8": {
+      "$ref": "#/$defs/__schema9"
+    },
+    "__schema9": {
+      "type": "string"
+    },
+    "__schema10": {
+      "$ref": "#/$defs/__schema11"
+    },
+    "__schema11": {
+      "type": "string"
+    },
+    "__schema12": {
+      "$ref": "#/$defs/__schema13"
+    },
+    "__schema13": {
+      "type": "string"
+    }
+  }
+}

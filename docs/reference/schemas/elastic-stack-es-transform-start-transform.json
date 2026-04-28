@@ -1,0 +1,69 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "transform_id": {
+      "$ref": "#/$defs/__schema0"
+    },
+    "timeout": {
+      "$ref": "#/$defs/__schema1"
+    },
+    "from": {
+      "$ref": "#/$defs/__schema6"
+    }
+  },
+  "required": [
+    "transform_id"
+  ],
+  "additionalProperties": false,
+  "id": "TransformStartTransformRequest",
+  "$defs": {
+    "__schema0": {
+      "description": "Identifier for the transform.",
+      "$ref": "#/$defs/Id"
+    },
+    "Id": {
+      "type": "string",
+      "id": "Id"
+    },
+    "__schema1": {
+      "$ref": "#/$defs/__schema2"
+    },
+    "__schema2": {
+      "description": "Period to wait for a response. If no response is received before the timeout expires, the request fails and returns an error.",
+      "$ref": "#/$defs/Duration"
+    },
+    "Duration": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/__schema3"
+        },
+        {
+          "$ref": "#/$defs/__schema4"
+        },
+        {
+          "$ref": "#/$defs/__schema5"
+        }
+      ],
+      "id": "Duration"
+    },
+    "__schema3": {
+      "type": "string"
+    },
+    "__schema4": {
+      "type": "number",
+      "const": -1
+    },
+    "__schema5": {
+      "type": "number",
+      "const": 0
+    },
+    "__schema6": {
+      "$ref": "#/$defs/__schema7"
+    },
+    "__schema7": {
+      "type": "string",
+      "description": "Restricts the set of transformed entities to those changed after this time. Relative times like now-30d are supported. Only applicable for continuous transforms."
+    }
+  }
+}

@@ -1,0 +1,156 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "task_type": {
+      "$ref": "#/$defs/__schema0"
+    },
+    "deepseek_inference_id": {
+      "$ref": "#/$defs/__schema1"
+    },
+    "timeout": {
+      "$ref": "#/$defs/__schema2"
+    },
+    "service": {
+      "$ref": "#/$defs/__schema7"
+    },
+    "service_settings": {
+      "$ref": "#/$defs/__schema8"
+    }
+  },
+  "required": [
+    "task_type",
+    "deepseek_inference_id",
+    "service",
+    "service_settings"
+  ],
+  "additionalProperties": false,
+  "id": "InferencePutDeepseekRequest",
+  "$defs": {
+    "__schema0": {
+      "type": "string",
+      "enum": [
+        "completion",
+        "chat_completion"
+      ],
+      "description": "The type of the inference task that the model will perform.",
+      "$ref": "#/$defs/InferenceTaskTypeDeepSeek"
+    },
+    "InferenceTaskTypeDeepSeek": {
+      "type": "string",
+      "enum": [
+        "completion",
+        "chat_completion"
+      ],
+      "id": "InferenceTaskTypeDeepSeek"
+    },
+    "__schema1": {
+      "description": "The unique identifier of the inference endpoint.",
+      "$ref": "#/$defs/Id"
+    },
+    "Id": {
+      "type": "string",
+      "id": "Id"
+    },
+    "__schema2": {
+      "$ref": "#/$defs/__schema3"
+    },
+    "__schema3": {
+      "description": "Specifies the amount of time to wait for the inference endpoint to be created.",
+      "$ref": "#/$defs/Duration"
+    },
+    "Duration": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/__schema4"
+        },
+        {
+          "$ref": "#/$defs/__schema5"
+        },
+        {
+          "$ref": "#/$defs/__schema6"
+        }
+      ],
+      "id": "Duration"
+    },
+    "__schema4": {
+      "type": "string"
+    },
+    "__schema5": {
+      "type": "number",
+      "const": -1
+    },
+    "__schema6": {
+      "type": "number",
+      "const": 0
+    },
+    "__schema7": {
+      "type": "string",
+      "enum": [
+        "deepseek"
+      ],
+      "description": "The type of service supported for the specified task type. In this case, `deepseek`.",
+      "$ref": "#/$defs/InferenceDeepSeekServiceType"
+    },
+    "InferenceDeepSeekServiceType": {
+      "type": "string",
+      "enum": [
+        "deepseek"
+      ],
+      "id": "InferenceDeepSeekServiceType"
+    },
+    "__schema8": {
+      "type": "object",
+      "properties": {
+        "api_key": {
+          "$ref": "#/$defs/__schema9"
+        },
+        "model_id": {
+          "$ref": "#/$defs/__schema10"
+        },
+        "url": {
+          "$ref": "#/$defs/__schema11"
+        }
+      },
+      "required": [
+        "api_key",
+        "model_id"
+      ],
+      "additionalProperties": false,
+      "description": "Settings used to install the inference model. These settings are specific to the `deepseek` service.",
+      "$ref": "#/$defs/InferenceDeepSeekServiceSettings"
+    },
+    "__schema9": {
+      "type": "string",
+      "description": "A valid API key for your DeepSeek account. You can find or create your DeepSeek API keys on the DeepSeek API key page. IMPORTANT: You need to provide the API key only once, during the inference model creation. The get inference endpoint API does not retrieve your API key."
+    },
+    "__schema10": {
+      "type": "string",
+      "description": "For a `completion` or `chat_completion` task, the name of the model to use for the inference task. For the available `completion` and `chat_completion` models, refer to the [DeepSeek Models & Pricing docs](https://api-docs.deepseek.com/quick_start/pricing)."
+    },
+    "__schema11": {
+      "type": "string",
+      "description": "The URL endpoint to use for the requests. Defaults to `https://api.deepseek.com/chat/completions`."
+    },
+    "InferenceDeepSeekServiceSettings": {
+      "type": "object",
+      "properties": {
+        "api_key": {
+          "$ref": "#/$defs/__schema9"
+        },
+        "model_id": {
+          "$ref": "#/$defs/__schema10"
+        },
+        "url": {
+          "$ref": "#/$defs/__schema11"
+        }
+      },
+      "required": [
+        "api_key",
+        "model_id"
+      ],
+      "additionalProperties": false,
+      "id": "InferenceDeepSeekServiceSettings"
+    }
+  }
+}

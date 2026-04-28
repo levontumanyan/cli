@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "allowed_namespace_prefixes": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/__schema0"
+      },
+      "description": ""
+    }
+  },
+  "additionalProperties": {},
+  "$defs": {
+    "__schema0": {}
+  }
+}

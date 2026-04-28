@@ -1,0 +1,190 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "name": {
+      "$ref": "#/$defs/__schema0"
+    },
+    "h": {
+      "$ref": "#/$defs/__schema4"
+    },
+    "s": {
+      "$ref": "#/$defs/__schema9"
+    },
+    "expand_wildcards": {
+      "$ref": "#/$defs/__schema11"
+    },
+    "master_timeout": {
+      "$ref": "#/$defs/__schema14"
+    }
+  },
+  "additionalProperties": false,
+  "id": "CatAliasesRequest",
+  "$defs": {
+    "__schema0": {
+      "$ref": "#/$defs/__schema1"
+    },
+    "__schema1": {
+      "description": "A comma-separated list of aliases to retrieve. Supports wildcards (`*`).  To retrieve all aliases, omit this parameter or use `*` or `_all`.",
+      "$ref": "#/$defs/Names"
+    },
+    "Names": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/__schema2"
+        },
+        {
+          "$ref": "#/$defs/__schema3"
+        }
+      ],
+      "id": "Names"
+    },
+    "__schema2": {
+      "$ref": "#/$defs/Name"
+    },
+    "Name": {
+      "type": "string",
+      "id": "Name"
+    },
+    "__schema3": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/Name"
+      }
+    },
+    "__schema4": {
+      "$ref": "#/$defs/__schema5"
+    },
+    "__schema5": {
+      "description": "A comma-separated list of columns names to display. It supports simple wildcards.",
+      "$ref": "#/$defs/CatCatAliasesColumns"
+    },
+    "CatCatAliasesColumn": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/__schema6"
+        },
+        {
+          "$ref": "#/$defs/__schema7"
+        }
+      ],
+      "id": "CatCatAliasesColumn"
+    },
+    "__schema6": {
+      "type": "string",
+      "enum": [
+        "alias",
+        "a",
+        "index",
+        "i",
+        "idx",
+        "filter",
+        "f",
+        "fi",
+        "routing.index",
+        "ri",
+        "routingIndex",
+        "routing.search",
+        "rs",
+        "routingSearch",
+        "is_write_index",
+        "w",
+        "isWriteIndex"
+      ]
+    },
+    "__schema7": {
+      "type": "string"
+    },
+    "__schema8": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/CatCatAliasesColumn"
+      }
+    },
+    "CatCatAliasesColumns": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/CatCatAliasesColumn"
+        },
+        {
+          "$ref": "#/$defs/__schema8"
+        }
+      ],
+      "id": "CatCatAliasesColumns"
+    },
+    "__schema9": {
+      "$ref": "#/$defs/__schema10"
+    },
+    "__schema10": {
+      "description": "List of columns that determine how the table should be sorted. Sorting defaults to ascending and can be changed by setting `:asc` or `:desc` as a suffix to the column name.",
+      "$ref": "#/$defs/Names"
+    },
+    "__schema11": {
+      "$ref": "#/$defs/__schema12"
+    },
+    "__schema12": {
+      "description": "The type of index that wildcard patterns can match. If the request can target data streams, this argument determines whether wildcard expressions match hidden data streams. It supports comma-separated values, such as `open,hidden`.",
+      "$ref": "#/$defs/ExpandWildcards"
+    },
+    "ExpandWildcards": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/ExpandWildcard"
+        },
+        {
+          "$ref": "#/$defs/__schema13"
+        }
+      ],
+      "id": "ExpandWildcards"
+    },
+    "ExpandWildcard": {
+      "type": "string",
+      "enum": [
+        "all",
+        "open",
+        "closed",
+        "hidden",
+        "none"
+      ],
+      "id": "ExpandWildcard"
+    },
+    "__schema13": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/ExpandWildcard"
+      }
+    },
+    "__schema14": {
+      "$ref": "#/$defs/__schema15"
+    },
+    "__schema15": {
+      "description": "The period to wait for a connection to the master node. If the master node is not available before the timeout expires, the request fails and returns an error. To indicated that the request should never timeout, you can set it to `-1`.",
+      "$ref": "#/$defs/Duration"
+    },
+    "Duration": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/__schema16"
+        },
+        {
+          "$ref": "#/$defs/__schema17"
+        },
+        {
+          "$ref": "#/$defs/__schema18"
+        }
+      ],
+      "id": "Duration"
+    },
+    "__schema16": {
+      "type": "string"
+    },
+    "__schema17": {
+      "type": "number",
+      "const": -1
+    },
+    "__schema18": {
+      "type": "number",
+      "const": 0
+    }
+  }
+}

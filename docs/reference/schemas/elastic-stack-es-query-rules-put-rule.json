@@ -1,0 +1,215 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "ruleset_id": {
+      "$ref": "#/$defs/__schema0"
+    },
+    "rule_id": {
+      "$ref": "#/$defs/__schema1"
+    },
+    "type": {
+      "$ref": "#/$defs/__schema2"
+    },
+    "criteria": {
+      "$ref": "#/$defs/__schema3"
+    },
+    "actions": {
+      "$ref": "#/$defs/__schema9"
+    },
+    "priority": {
+      "$ref": "#/$defs/__schema15"
+    }
+  },
+  "required": [
+    "ruleset_id",
+    "rule_id",
+    "type",
+    "criteria",
+    "actions"
+  ],
+  "additionalProperties": false,
+  "id": "QueryRulesPutRuleRequest",
+  "$defs": {
+    "__schema0": {
+      "description": "The unique identifier of the query ruleset containing the rule to be created or updated.",
+      "$ref": "#/$defs/Id"
+    },
+    "Id": {
+      "type": "string",
+      "id": "Id"
+    },
+    "__schema1": {
+      "description": "The unique identifier of the query rule within the specified ruleset to be created or updated.",
+      "$ref": "#/$defs/Id"
+    },
+    "__schema2": {
+      "type": "string",
+      "enum": [
+        "pinned",
+        "exclude"
+      ],
+      "description": "The type of rule.",
+      "$ref": "#/$defs/QueryRulesQueryRuleType"
+    },
+    "QueryRulesQueryRuleType": {
+      "type": "string",
+      "enum": [
+        "pinned",
+        "exclude"
+      ],
+      "id": "QueryRulesQueryRuleType"
+    },
+    "__schema3": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/QueryRulesQueryRuleCriteria"
+        },
+        {
+          "$ref": "#/$defs/__schema8"
+        }
+      ],
+      "description": "The criteria that must be met for the rule to be applied. If multiple criteria are specified for a rule, all criteria must be met for the rule to be applied."
+    },
+    "QueryRulesQueryRuleCriteria": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "$ref": "#/$defs/__schema4"
+        },
+        "metadata": {
+          "$ref": "#/$defs/__schema5"
+        },
+        "values": {
+          "$ref": "#/$defs/__schema6"
+        }
+      },
+      "required": [
+        "type"
+      ],
+      "additionalProperties": false,
+      "id": "QueryRulesQueryRuleCriteria"
+    },
+    "__schema4": {
+      "description": "The type of criteria. The following criteria types are supported: * `always`: Matches all queries, regardless of input. * `contains`: Matches that contain this value anywhere in the field meet the criteria defined by the rule. Only applicable for string values. * `exact`: Only exact matches meet the criteria defined by the rule. Applicable for string or numerical values. * `fuzzy`: Exact matches or matches within the allowed Levenshtein Edit Distance meet the criteria defined by the rule. Only applicable for string values. * `gt`: Matches with a value greater than this value meet the criteria defined by the rule. Only applicable for numerical values. * `gte`: Matches with a value greater than or equal to this value meet the criteria defined by the rule. Only applicable for numerical values. * `lt`: Matches with a value less than this value meet the criteria defined by the rule. Only applicable for numerical values. * `lte`: Matches with a value less than or equal to this value meet the criteria defined by the rule. Only applicable for numerical values. * `prefix`: Matches that start with this value meet the criteria defined by the rule. Only applicable for string values. * `suffix`: Matches that end with this value meet the criteria defined by the rule. Only applicable for string values.",
+      "$ref": "#/$defs/QueryRulesQueryRuleCriteriaType"
+    },
+    "QueryRulesQueryRuleCriteriaType": {
+      "type": "string",
+      "enum": [
+        "global",
+        "exact",
+        "fuzzy",
+        "prefix",
+        "suffix",
+        "contains",
+        "lt",
+        "lte",
+        "gt",
+        "gte",
+        "always"
+      ],
+      "id": "QueryRulesQueryRuleCriteriaType"
+    },
+    "__schema5": {
+      "type": "string",
+      "description": "The metadata field to match against. This metadata will be used to match against `match_criteria` sent in the rule. It is required for all criteria types except `always`."
+    },
+    "__schema6": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/__schema7"
+      },
+      "description": "The values to match against the `metadata` field. Only one value must match for the criteria to be met. It is required for all criteria types except `always`."
+    },
+    "__schema7": {},
+    "__schema8": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/QueryRulesQueryRuleCriteria"
+      }
+    },
+    "__schema9": {
+      "type": "object",
+      "properties": {
+        "ids": {
+          "$ref": "#/$defs/__schema10"
+        },
+        "docs": {
+          "$ref": "#/$defs/__schema12"
+        }
+      },
+      "additionalProperties": false,
+      "description": "The actions to take when the rule is matched. The format of this action depends on the rule type.",
+      "$ref": "#/$defs/QueryRulesQueryRuleActions"
+    },
+    "__schema10": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/__schema11"
+      },
+      "description": "The unique document IDs of the documents to apply the rule to. Only one of `ids` or `docs` may be specified and at least one must be specified."
+    },
+    "__schema11": {
+      "$ref": "#/$defs/Id"
+    },
+    "__schema12": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/QueryDslPinnedDoc"
+      },
+      "description": "The documents to apply the rule to. Only one of `ids` or `docs` may be specified and at least one must be specified. There is a maximum value of 100 documents in a rule. You can specify the following attributes for each document: * `_index`: The index of the document to pin. * `_id`: The unique document ID."
+    },
+    "QueryDslPinnedDoc": {
+      "type": "object",
+      "properties": {
+        "_id": {
+          "$ref": "#/$defs/__schema13"
+        },
+        "_index": {
+          "$ref": "#/$defs/__schema14"
+        }
+      },
+      "required": [
+        "_id"
+      ],
+      "additionalProperties": false,
+      "id": "QueryDslPinnedDoc"
+    },
+    "__schema13": {
+      "description": "The unique document ID.",
+      "$ref": "#/$defs/Id"
+    },
+    "__schema14": {
+      "description": "The index that contains the document.",
+      "$ref": "#/$defs/IndexName"
+    },
+    "IndexName": {
+      "type": "string",
+      "id": "IndexName"
+    },
+    "QueryRulesQueryRuleActions": {
+      "type": "object",
+      "properties": {
+        "ids": {
+          "$ref": "#/$defs/__schema10"
+        },
+        "docs": {
+          "$ref": "#/$defs/__schema12"
+        }
+      },
+      "additionalProperties": false,
+      "id": "QueryRulesQueryRuleActions"
+    },
+    "__schema15": {
+      "$ref": "#/$defs/__schema16"
+    },
+    "__schema16": {
+      "$ref": "#/$defs/integer"
+    },
+    "integer": {
+      "type": "number",
+      "id": "integer"
+    }
+  }
+}

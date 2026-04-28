@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "loose": {
+      "type": "boolean",
+      "description": "When true, returns a permissive schema that allows additional properties. When false, returns a strict schema for full validation."
+    }
+  },
+  "required": [
+    "loose"
+  ],
+  "additionalProperties": {}
+}

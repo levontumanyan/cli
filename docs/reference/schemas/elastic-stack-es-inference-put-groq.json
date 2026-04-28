@@ -1,0 +1,170 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "task_type": {
+      "$ref": "#/$defs/__schema0"
+    },
+    "groq_inference_id": {
+      "$ref": "#/$defs/__schema1"
+    },
+    "timeout": {
+      "$ref": "#/$defs/__schema2"
+    },
+    "service": {
+      "$ref": "#/$defs/__schema7"
+    },
+    "service_settings": {
+      "$ref": "#/$defs/__schema8"
+    }
+  },
+  "required": [
+    "task_type",
+    "groq_inference_id",
+    "service",
+    "service_settings"
+  ],
+  "additionalProperties": false,
+  "id": "InferencePutGroqRequest",
+  "$defs": {
+    "__schema0": {
+      "type": "string",
+      "enum": [
+        "chat_completion"
+      ],
+      "description": "The type of the inference task that the model will perform.",
+      "$ref": "#/$defs/InferenceGroqTaskType"
+    },
+    "InferenceGroqTaskType": {
+      "type": "string",
+      "enum": [
+        "chat_completion"
+      ],
+      "id": "InferenceGroqTaskType"
+    },
+    "__schema1": {
+      "description": "The unique identifier of the inference endpoint.",
+      "$ref": "#/$defs/Id"
+    },
+    "Id": {
+      "type": "string",
+      "id": "Id"
+    },
+    "__schema2": {
+      "$ref": "#/$defs/__schema3"
+    },
+    "__schema3": {
+      "description": "Specifies the amount of time to wait for the inference endpoint to be created.",
+      "$ref": "#/$defs/Duration"
+    },
+    "Duration": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/__schema4"
+        },
+        {
+          "$ref": "#/$defs/__schema5"
+        },
+        {
+          "$ref": "#/$defs/__schema6"
+        }
+      ],
+      "id": "Duration"
+    },
+    "__schema4": {
+      "type": "string"
+    },
+    "__schema5": {
+      "type": "number",
+      "const": -1
+    },
+    "__schema6": {
+      "type": "number",
+      "const": 0
+    },
+    "__schema7": {
+      "type": "string",
+      "enum": [
+        "groq"
+      ],
+      "description": "The type of service supported for the specified task type. In this case, `groq`.",
+      "$ref": "#/$defs/InferenceGroqServiceType"
+    },
+    "InferenceGroqServiceType": {
+      "type": "string",
+      "enum": [
+        "groq"
+      ],
+      "id": "InferenceGroqServiceType"
+    },
+    "__schema8": {
+      "type": "object",
+      "properties": {
+        "model_id": {
+          "$ref": "#/$defs/__schema9"
+        },
+        "api_key": {
+          "$ref": "#/$defs/__schema10"
+        },
+        "rate_limit": {
+          "$ref": "#/$defs/__schema11"
+        }
+      },
+      "required": [
+        "model_id"
+      ],
+      "additionalProperties": false,
+      "description": "Settings used to install the inference model. These settings are specific to the `groq` service.",
+      "$ref": "#/$defs/InferenceGroqServiceSettings"
+    },
+    "__schema9": {
+      "type": "string",
+      "description": "The name of the model to use for the inference task. Refer to the Groq model documentation for the list of supported models and versions. Service has been tested and confirmed to be working for `completion` and `chat_completion` tasks with the following models: * `llama-3.3-70b-versatile`"
+    },
+    "__schema10": {
+      "type": "string",
+      "description": "A valid API key for accessing Groq API. IMPORTANT: You need to provide the API key only once, during the inference model creation. The get inference endpoint API does not retrieve your API key."
+    },
+    "__schema11": {
+      "description": "This setting helps to minimize the number of rate limit errors returned from the Groq API. By default, the `groq` service sets the number of requests allowed per minute to 1000. Refer to Groq documentation for more details.",
+      "$ref": "#/$defs/InferenceRateLimitSetting"
+    },
+    "__schema12": {
+      "description": "The number of requests allowed per minute. By default, the number of requests allowed per minute is set by each service as follows: * `alibabacloud-ai-search` service: `1000` * `amazonbedrock` service: `240` * `anthropic` service: `50` * `azureaistudio` service: `240` * `azureopenai` service and task type `text_embedding`: `1440` * `azureopenai` service and task types `completion` or `chat_completion`: `120` * `cohere` service: `10000` * `contextualai` service: `1000` * `elastic` service and task type `chat_completion`: `240` * `fireworksai` service: `6000` * `googleaistudio` service: `360` * `googlevertexai` service: `30000` * `hugging_face` service: `3000` * `jinaai` service: `2000` * `llama` service: `3000` * `mistral` service: `240` * `openai` service and task type `text_embedding`: `3000` * `openai` service and task type `completion`: `500` * `openshift_ai` service: `3000` * `voyageai` service: `2000` * `watsonxai` service: `120`",
+      "$ref": "#/$defs/integer"
+    },
+    "integer": {
+      "type": "number",
+      "id": "integer"
+    },
+    "InferenceRateLimitSetting": {
+      "type": "object",
+      "properties": {
+        "requests_per_minute": {
+          "$ref": "#/$defs/__schema12"
+        }
+      },
+      "additionalProperties": false,
+      "id": "InferenceRateLimitSetting"
+    },
+    "InferenceGroqServiceSettings": {
+      "type": "object",
+      "properties": {
+        "model_id": {
+          "$ref": "#/$defs/__schema9"
+        },
+        "api_key": {
+          "$ref": "#/$defs/__schema10"
+        },
+        "rate_limit": {
+          "$ref": "#/$defs/__schema11"
+        }
+      },
+      "required": [
+        "model_id"
+      ],
+      "additionalProperties": false,
+      "id": "InferenceGroqServiceSettings"
+    }
+  }
+}

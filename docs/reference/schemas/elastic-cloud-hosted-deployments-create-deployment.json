@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "request_id": {
+      "type": "string",
+      "description": "An optional idempotency token - if two create requests share the same request_id token (min size 32 characters, max 128) then only one deployment will be created, the second request will return the info of that deployment (in the same format described below, but with blanks for auth-related fields)"
+    },
+    "validate_only": {
+      "type": "boolean",
+      "description": "If true, will just validate the Deployment definition but will not perform the creation"
+    },
+    "template_id": {
+      "type": "string",
+      "description": "An optional template id - if present, the referenced template will be used to fill in the resources field of the deployment creation request. If any resources are present in the request together with the template, the ones coming in the request will prevail and no merging with the template will be performed."
+    }
+  },
+  "additionalProperties": {}
+}

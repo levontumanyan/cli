@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Exception list's identifier. Either `id` or `list_id` must be specified."
+    },
+    "list_id": {
+      "type": "string",
+      "description": "Human readable exception list string identifier, e.g. `trusted-linux-processes`. Either `id` or `list_id` must be specified."
+    },
+    "namespace_type": {
+      "type": "string",
+      "description": ""
+    }
+  },
+  "additionalProperties": {}
+}

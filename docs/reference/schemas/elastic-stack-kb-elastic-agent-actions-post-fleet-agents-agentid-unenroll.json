@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "agentId": {
+      "type": "string",
+      "description": "The agentId parameter"
+    },
+    "force": {
+      "type": "boolean",
+      "description": ""
+    },
+    "revoke": {
+      "type": "boolean",
+      "description": ""
+    }
+  },
+  "required": [
+    "agentId"
+  ],
+  "additionalProperties": {}
+}

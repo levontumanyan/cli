@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "organization_id": {
+      "type": "string",
+      "description": "Identifier for the Organization"
+    },
+    "invitation_tokens": {
+      "type": "string",
+      "description": "CSV list of Invitation tokens"
+    }
+  },
+  "required": [
+    "organization_id",
+    "invitation_tokens"
+  ],
+  "additionalProperties": {}
+}

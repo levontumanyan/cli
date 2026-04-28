@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "name": {
+      "$ref": "#/$defs/__schema0"
+    },
+    "query": {
+      "$ref": "#/$defs/__schema1"
+    }
+  },
+  "required": [
+    "name",
+    "query"
+  ],
+  "additionalProperties": false,
+  "id": "EsqlPutViewRequest",
+  "$defs": {
+    "__schema0": {
+      "description": "The view name to create or update.",
+      "$ref": "#/$defs/Id"
+    },
+    "Id": {
+      "type": "string",
+      "id": "Id"
+    },
+    "__schema1": {
+      "type": "string",
+      "description": "The ES|QL query string from which to create a view."
+    }
+  }
+}

@@ -1,0 +1,203 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "index": {
+      "$ref": "#/$defs/__schema0"
+    },
+    "allow_no_indices": {
+      "$ref": "#/$defs/__schema3"
+    },
+    "expand_wildcards": {
+      "$ref": "#/$defs/__schema5"
+    },
+    "flat_settings": {
+      "$ref": "#/$defs/__schema8"
+    },
+    "ignore_unavailable": {
+      "$ref": "#/$defs/__schema10"
+    },
+    "include_defaults": {
+      "$ref": "#/$defs/__schema12"
+    },
+    "local": {
+      "$ref": "#/$defs/__schema14"
+    },
+    "master_timeout": {
+      "$ref": "#/$defs/__schema16"
+    },
+    "features": {
+      "$ref": "#/$defs/__schema21"
+    }
+  },
+  "required": [
+    "index"
+  ],
+  "additionalProperties": false,
+  "id": "IndicesGetRequest",
+  "$defs": {
+    "__schema0": {
+      "description": "Comma-separated list of data streams, indices, and index aliases used to limit the request. Wildcard expressions (*) are supported.",
+      "$ref": "#/$defs/Indices"
+    },
+    "Indices": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/__schema1"
+        },
+        {
+          "$ref": "#/$defs/__schema2"
+        }
+      ],
+      "id": "Indices"
+    },
+    "__schema1": {
+      "$ref": "#/$defs/IndexName"
+    },
+    "IndexName": {
+      "type": "string",
+      "id": "IndexName"
+    },
+    "__schema2": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/IndexName"
+      }
+    },
+    "__schema3": {
+      "$ref": "#/$defs/__schema4"
+    },
+    "__schema4": {
+      "type": "boolean",
+      "description": "A setting that does two separate checks on the index expression. If `false`, the request returns an error (1) if any wildcard expression (including `_all` and `*`) resolves to zero matching indices or (2) if the complete set of resolved indices, aliases or data streams is empty after all expressions are evaluated. If `true`, index expressions that resolve to no indices are allowed and the request returns an empty result."
+    },
+    "__schema5": {
+      "$ref": "#/$defs/__schema6"
+    },
+    "__schema6": {
+      "description": "Type of index that wildcard expressions can match. If the request can target data streams, this argument determines whether wildcard expressions match hidden data streams. Supports comma-separated values, such as open,hidden.",
+      "$ref": "#/$defs/ExpandWildcards"
+    },
+    "ExpandWildcards": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/ExpandWildcard"
+        },
+        {
+          "$ref": "#/$defs/__schema7"
+        }
+      ],
+      "id": "ExpandWildcards"
+    },
+    "ExpandWildcard": {
+      "type": "string",
+      "enum": [
+        "all",
+        "open",
+        "closed",
+        "hidden",
+        "none"
+      ],
+      "id": "ExpandWildcard"
+    },
+    "__schema7": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/ExpandWildcard"
+      }
+    },
+    "__schema8": {
+      "$ref": "#/$defs/__schema9"
+    },
+    "__schema9": {
+      "type": "boolean",
+      "description": "If true, returns settings in flat format."
+    },
+    "__schema10": {
+      "$ref": "#/$defs/__schema11"
+    },
+    "__schema11": {
+      "type": "boolean",
+      "description": "If `false`, the request returns an error if it targets a concrete (non-wildcarded) index, alias, or data stream that is missing, closed, or otherwise unavailable. If `true`, unavailable concrete targets are silently ignored."
+    },
+    "__schema12": {
+      "$ref": "#/$defs/__schema13"
+    },
+    "__schema13": {
+      "type": "boolean",
+      "description": "If true, return all default settings in the response."
+    },
+    "__schema14": {
+      "$ref": "#/$defs/__schema15"
+    },
+    "__schema15": {
+      "type": "boolean",
+      "description": "If true, the request retrieves information from the local node only. Defaults to false, which means information is retrieved from the master node."
+    },
+    "__schema16": {
+      "$ref": "#/$defs/__schema17"
+    },
+    "__schema17": {
+      "description": "Period to wait for a connection to the master node. If no response is received before the timeout expires, the request fails and returns an error.",
+      "$ref": "#/$defs/Duration"
+    },
+    "Duration": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/__schema18"
+        },
+        {
+          "$ref": "#/$defs/__schema19"
+        },
+        {
+          "$ref": "#/$defs/__schema20"
+        }
+      ],
+      "id": "Duration"
+    },
+    "__schema18": {
+      "type": "string"
+    },
+    "__schema19": {
+      "type": "number",
+      "const": -1
+    },
+    "__schema20": {
+      "type": "number",
+      "const": 0
+    },
+    "__schema21": {
+      "$ref": "#/$defs/__schema22"
+    },
+    "__schema22": {
+      "description": "Return only information on specified index features",
+      "$ref": "#/$defs/IndicesGetFeatures"
+    },
+    "IndicesGetFeature": {
+      "type": "string",
+      "enum": [
+        "aliases",
+        "mappings",
+        "settings"
+      ],
+      "id": "IndicesGetFeature"
+    },
+    "__schema23": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/IndicesGetFeature"
+      }
+    },
+    "IndicesGetFeatures": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/IndicesGetFeature"
+        },
+        {
+          "$ref": "#/$defs/__schema23"
+        }
+      ],
+      "id": "IndicesGetFeatures"
+    }
+  }
+}

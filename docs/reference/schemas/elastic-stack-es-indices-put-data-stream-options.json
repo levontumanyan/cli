@@ -1,0 +1,179 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "name": {
+      "$ref": "#/$defs/__schema0"
+    },
+    "expand_wildcards": {
+      "$ref": "#/$defs/__schema3"
+    },
+    "master_timeout": {
+      "$ref": "#/$defs/__schema6"
+    },
+    "timeout": {
+      "$ref": "#/$defs/__schema11"
+    },
+    "failure_store": {
+      "$ref": "#/$defs/__schema13"
+    }
+  },
+  "required": [
+    "name"
+  ],
+  "additionalProperties": false,
+  "id": "IndicesPutDataStreamOptionsRequest",
+  "$defs": {
+    "__schema0": {
+      "description": "Comma-separated list of data streams used to limit the request. Supports wildcards (`*`). To target all data streams use `*` or `_all`.",
+      "$ref": "#/$defs/DataStreamNames"
+    },
+    "DataStreamNames": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/__schema1"
+        },
+        {
+          "$ref": "#/$defs/__schema2"
+        }
+      ],
+      "id": "DataStreamNames"
+    },
+    "__schema1": {
+      "$ref": "#/$defs/DataStreamName"
+    },
+    "DataStreamName": {
+      "type": "string",
+      "id": "DataStreamName"
+    },
+    "__schema2": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/DataStreamName"
+      }
+    },
+    "__schema3": {
+      "$ref": "#/$defs/__schema4"
+    },
+    "__schema4": {
+      "description": "Type of data stream that wildcard patterns can match. Supports comma-separated values, such as `open,hidden`.",
+      "$ref": "#/$defs/ExpandWildcards"
+    },
+    "ExpandWildcards": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/ExpandWildcard"
+        },
+        {
+          "$ref": "#/$defs/__schema5"
+        }
+      ],
+      "id": "ExpandWildcards"
+    },
+    "ExpandWildcard": {
+      "type": "string",
+      "enum": [
+        "all",
+        "open",
+        "closed",
+        "hidden",
+        "none"
+      ],
+      "id": "ExpandWildcard"
+    },
+    "__schema5": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/ExpandWildcard"
+      }
+    },
+    "__schema6": {
+      "$ref": "#/$defs/__schema7"
+    },
+    "__schema7": {
+      "description": "Period to wait for a connection to the master node. If no response is received before the timeout expires, the request fails and returns an error.",
+      "$ref": "#/$defs/Duration"
+    },
+    "Duration": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/__schema8"
+        },
+        {
+          "$ref": "#/$defs/__schema9"
+        },
+        {
+          "$ref": "#/$defs/__schema10"
+        }
+      ],
+      "id": "Duration"
+    },
+    "__schema8": {
+      "type": "string"
+    },
+    "__schema9": {
+      "type": "number",
+      "const": -1
+    },
+    "__schema10": {
+      "type": "number",
+      "const": 0
+    },
+    "__schema11": {
+      "$ref": "#/$defs/__schema12"
+    },
+    "__schema12": {
+      "description": "Period to wait for a response. If no response is received before the timeout expires, the request fails and returns an error.",
+      "$ref": "#/$defs/Duration"
+    },
+    "__schema13": {
+      "$ref": "#/$defs/__schema14"
+    },
+    "__schema14": {
+      "description": "If defined, it will update the failure store configuration of every data stream resolved by the name expression.",
+      "$ref": "#/$defs/IndicesDataStreamFailureStore"
+    },
+    "__schema15": {
+      "type": "boolean",
+      "description": "If defined, it turns the failure store on/off (`true`/`false`) for this data stream. A data stream failure store that's disabled (enabled: `false`) will redirect no new failed indices to the failure store; however, it will not remove any existing data from the failure store."
+    },
+    "__schema16": {
+      "description": "If defined, it specifies the lifecycle configuration for the failure store of this data stream.",
+      "$ref": "#/$defs/IndicesFailureStoreLifecycle"
+    },
+    "__schema17": {
+      "description": "If defined, every document added to this data stream will be stored at least for this time frame. Any time after this duration the document could be deleted. When empty, every document in this data stream will be stored indefinitely.",
+      "$ref": "#/$defs/Duration"
+    },
+    "__schema18": {
+      "type": "boolean",
+      "description": "If defined, it turns data stream lifecycle on/off (`true`/`false`) for this data stream. A data stream lifecycle that's disabled (enabled: `false`) will have no effect on the data stream."
+    },
+    "IndicesFailureStoreLifecycle": {
+      "type": "object",
+      "properties": {
+        "data_retention": {
+          "$ref": "#/$defs/__schema17"
+        },
+        "enabled": {
+          "$ref": "#/$defs/__schema18"
+        }
+      },
+      "additionalProperties": false,
+      "id": "IndicesFailureStoreLifecycle"
+    },
+    "IndicesDataStreamFailureStore": {
+      "type": "object",
+      "properties": {
+        "enabled": {
+          "$ref": "#/$defs/__schema15"
+        },
+        "lifecycle": {
+          "$ref": "#/$defs/__schema16"
+        }
+      },
+      "additionalProperties": false,
+      "id": "IndicesDataStreamFailureStore"
+    }
+  }
+}

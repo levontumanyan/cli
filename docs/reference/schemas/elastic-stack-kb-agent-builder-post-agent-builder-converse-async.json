@@ -1,0 +1,91 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "_execution_mode": {
+      "type": "string",
+      "description": "**Experimental; added in 9.4.0.** define how to execute the agent (local execution or via task_manager)"
+    },
+    "action": {
+      "type": "string",
+      "description": "The action to perform. \"regenerate\" re-executes the last round with the original input. Requires conversation_id."
+    },
+    "agent_id": {
+      "type": "string",
+      "description": "The ID of the agent to chat with. Defaults to the default Elastic AI agent."
+    },
+    "attachments": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/__schema0"
+      },
+      "description": "**Technical Preview; added in 9.3.0.** Optional attachments to send with the message."
+    },
+    "browser_api_tools": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/__schema1"
+      },
+      "description": "Optional browser API tools to be registered as LLM tools with browser.* namespace. These tools execute on the client side."
+    },
+    "capabilities": {
+      "type": "object",
+      "propertyNames": {
+        "$ref": "#/$defs/__schema2"
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/__schema3"
+      },
+      "description": "Controls agent capabilities during conversation. Currently supports visualization rendering for tabular tool results."
+    },
+    "configuration_overrides": {
+      "type": "object",
+      "propertyNames": {
+        "$ref": "#/$defs/__schema4"
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/__schema5"
+      },
+      "description": "Runtime configuration overrides. These override the stored agent configuration for this execution only."
+    },
+    "connector_id": {
+      "type": "string",
+      "description": "Optional connector ID for the agent to use for external integrations."
+    },
+    "conversation_id": {
+      "type": "string",
+      "description": "Optional existing conversation ID to continue a previous conversation."
+    },
+    "input": {
+      "type": "string",
+      "description": "The user input message to send to the agent."
+    },
+    "prompts": {
+      "type": "object",
+      "propertyNames": {
+        "$ref": "#/$defs/__schema6"
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/__schema7"
+      },
+      "description": "Can be used to respond to a confirmation prompt."
+    }
+  },
+  "additionalProperties": {},
+  "$defs": {
+    "__schema0": {},
+    "__schema1": {},
+    "__schema2": {
+      "type": "string"
+    },
+    "__schema3": {},
+    "__schema4": {
+      "type": "string"
+    },
+    "__schema5": {},
+    "__schema6": {
+      "type": "string"
+    },
+    "__schema7": {}
+  }
+}

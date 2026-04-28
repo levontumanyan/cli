@@ -1,0 +1,348 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "task_type": {
+      "$ref": "#/$defs/__schema0"
+    },
+    "cohere_inference_id": {
+      "$ref": "#/$defs/__schema1"
+    },
+    "timeout": {
+      "$ref": "#/$defs/__schema2"
+    },
+    "chunking_settings": {
+      "$ref": "#/$defs/__schema7"
+    },
+    "service": {
+      "$ref": "#/$defs/__schema16"
+    },
+    "service_settings": {
+      "$ref": "#/$defs/__schema17"
+    },
+    "task_settings": {
+      "$ref": "#/$defs/__schema24"
+    }
+  },
+  "required": [
+    "task_type",
+    "cohere_inference_id",
+    "service",
+    "service_settings"
+  ],
+  "additionalProperties": false,
+  "id": "InferencePutCohereRequest",
+  "$defs": {
+    "__schema0": {
+      "type": "string",
+      "enum": [
+        "completion",
+        "rerank",
+        "text_embedding"
+      ],
+      "description": "The type of the inference task that the model will perform.",
+      "$ref": "#/$defs/InferenceCohereTaskType"
+    },
+    "InferenceCohereTaskType": {
+      "type": "string",
+      "enum": [
+        "completion",
+        "rerank",
+        "text_embedding"
+      ],
+      "id": "InferenceCohereTaskType"
+    },
+    "__schema1": {
+      "description": "The unique identifier of the inference endpoint.",
+      "$ref": "#/$defs/Id"
+    },
+    "Id": {
+      "type": "string",
+      "id": "Id"
+    },
+    "__schema2": {
+      "$ref": "#/$defs/__schema3"
+    },
+    "__schema3": {
+      "description": "Specifies the amount of time to wait for the inference endpoint to be created.",
+      "$ref": "#/$defs/Duration"
+    },
+    "Duration": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/__schema4"
+        },
+        {
+          "$ref": "#/$defs/__schema5"
+        },
+        {
+          "$ref": "#/$defs/__schema6"
+        }
+      ],
+      "id": "Duration"
+    },
+    "__schema4": {
+      "type": "string"
+    },
+    "__schema5": {
+      "type": "number",
+      "const": -1
+    },
+    "__schema6": {
+      "type": "number",
+      "const": 0
+    },
+    "__schema7": {
+      "$ref": "#/$defs/__schema8"
+    },
+    "__schema8": {
+      "description": "The chunking configuration object. Applies only to the `text_embedding` task type. Not applicable to the `rerank` or `completion` task type.",
+      "$ref": "#/$defs/InferenceInferenceChunkingSettings"
+    },
+    "__schema9": {
+      "description": "The maximum size of a chunk in words. This value cannot be lower than `20` (for `sentence` strategy) or `10` (for `word` strategy). This value should not exceed the window size for the associated model.",
+      "$ref": "#/$defs/integer"
+    },
+    "integer": {
+      "type": "number",
+      "id": "integer"
+    },
+    "__schema10": {
+      "description": "The number of overlapping words for chunks. It is applicable only to a `word` chunking strategy. This value cannot be higher than half the `max_chunk_size` value.",
+      "$ref": "#/$defs/integer"
+    },
+    "__schema11": {
+      "description": "The number of overlapping sentences for chunks. It is applicable only for a `sentence` chunking strategy. It can be either `1` or `0`.",
+      "$ref": "#/$defs/integer"
+    },
+    "__schema12": {
+      "type": "string",
+      "description": "Only applicable to the `recursive` strategy and required when using it. Sets a predefined list of separators in the saved chunking settings based on the selected text type. Values can be `markdown` or `plaintext`. Using this parameter is an alternative to manually specifying a custom `separators` list."
+    },
+    "__schema13": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/__schema14"
+      },
+      "description": "Only applicable to the `recursive` strategy and required when using it. A list of strings used as possible split points when chunking text. Each string can be a plain string or a regular expression (regex) pattern. The system tries each separator in order to split the text, starting from the first item in the list. After splitting, it attempts to recombine smaller pieces into larger chunks that stay within the `max_chunk_size` limit, to reduce the total number of chunks generated."
+    },
+    "__schema14": {
+      "type": "string"
+    },
+    "__schema15": {
+      "type": "string",
+      "description": "The chunking strategy: `sentence`, `word`, `none` or `recursive`.  * If `strategy` is set to `recursive`, you must also specify: - `max_chunk_size` - either `separators` or`separator_group` Learn more about different chunking strategies in the linked documentation."
+    },
+    "InferenceInferenceChunkingSettings": {
+      "type": "object",
+      "properties": {
+        "max_chunk_size": {
+          "$ref": "#/$defs/__schema9"
+        },
+        "overlap": {
+          "$ref": "#/$defs/__schema10"
+        },
+        "sentence_overlap": {
+          "$ref": "#/$defs/__schema11"
+        },
+        "separator_group": {
+          "$ref": "#/$defs/__schema12"
+        },
+        "separators": {
+          "$ref": "#/$defs/__schema13"
+        },
+        "strategy": {
+          "$ref": "#/$defs/__schema15"
+        }
+      },
+      "additionalProperties": false,
+      "id": "InferenceInferenceChunkingSettings"
+    },
+    "__schema16": {
+      "type": "string",
+      "enum": [
+        "cohere"
+      ],
+      "description": "The type of service supported for the specified task type. In this case, `cohere`.",
+      "$ref": "#/$defs/InferenceCohereServiceType"
+    },
+    "InferenceCohereServiceType": {
+      "type": "string",
+      "enum": [
+        "cohere"
+      ],
+      "id": "InferenceCohereServiceType"
+    },
+    "__schema17": {
+      "type": "object",
+      "properties": {
+        "api_key": {
+          "$ref": "#/$defs/__schema18"
+        },
+        "embedding_type": {
+          "$ref": "#/$defs/__schema19"
+        },
+        "model_id": {
+          "$ref": "#/$defs/__schema20"
+        },
+        "rate_limit": {
+          "$ref": "#/$defs/__schema21"
+        },
+        "similarity": {
+          "$ref": "#/$defs/__schema23"
+        }
+      },
+      "required": [
+        "api_key",
+        "model_id"
+      ],
+      "additionalProperties": false,
+      "description": "Settings used to install the inference model. These settings are specific to the `cohere` service.",
+      "$ref": "#/$defs/InferenceCohereServiceSettings"
+    },
+    "__schema18": {
+      "type": "string",
+      "description": "A valid API key for your Cohere account. You can find or create your Cohere API keys on the Cohere API key settings page. IMPORTANT: You need to provide the API key only once, during the inference model creation. The get inference endpoint API does not retrieve your API key."
+    },
+    "__schema19": {
+      "description": "For a `text_embedding` task, the types of embeddings you want to get back. Use `binary` for binary embeddings, which are encoded as bytes with signed int8 precision. Use `bit` for binary embeddings, which are encoded as bytes with signed int8 precision (this is a synonym of `binary`). Use `byte` for signed int8 embeddings (this is a synonym of `int8`). Use `float` for the default float embeddings. Use `int8` for signed int8 embeddings.",
+      "$ref": "#/$defs/InferenceCohereEmbeddingType"
+    },
+    "InferenceCohereEmbeddingType": {
+      "type": "string",
+      "enum": [
+        "binary",
+        "bit",
+        "byte",
+        "float",
+        "int8"
+      ],
+      "id": "InferenceCohereEmbeddingType"
+    },
+    "__schema20": {
+      "type": "string",
+      "description": "For a `completion`, `rerank`, or `text_embedding` task, the name of the model to use for the inference task. * For the available `completion` models, refer to the [Cohere command docs](https://docs.cohere.com/docs/models#command). * For the available `rerank` models, refer to the [Cohere rerank docs](https://docs.cohere.com/reference/rerank-1). * For the available `text_embedding` models, refer to [Cohere embed docs](https://docs.cohere.com/reference/embed)."
+    },
+    "__schema21": {
+      "description": "This setting helps to minimize the number of rate limit errors returned from Cohere. By default, the `cohere` service sets the number of requests allowed per minute to 10000.",
+      "$ref": "#/$defs/InferenceRateLimitSetting"
+    },
+    "__schema22": {
+      "description": "The number of requests allowed per minute. By default, the number of requests allowed per minute is set by each service as follows: * `alibabacloud-ai-search` service: `1000` * `amazonbedrock` service: `240` * `anthropic` service: `50` * `azureaistudio` service: `240` * `azureopenai` service and task type `text_embedding`: `1440` * `azureopenai` service and task types `completion` or `chat_completion`: `120` * `cohere` service: `10000` * `contextualai` service: `1000` * `elastic` service and task type `chat_completion`: `240` * `fireworksai` service: `6000` * `googleaistudio` service: `360` * `googlevertexai` service: `30000` * `hugging_face` service: `3000` * `jinaai` service: `2000` * `llama` service: `3000` * `mistral` service: `240` * `openai` service and task type `text_embedding`: `3000` * `openai` service and task type `completion`: `500` * `openshift_ai` service: `3000` * `voyageai` service: `2000` * `watsonxai` service: `120`",
+      "$ref": "#/$defs/integer"
+    },
+    "InferenceRateLimitSetting": {
+      "type": "object",
+      "properties": {
+        "requests_per_minute": {
+          "$ref": "#/$defs/__schema22"
+        }
+      },
+      "additionalProperties": false,
+      "id": "InferenceRateLimitSetting"
+    },
+    "__schema23": {
+      "description": "The similarity measure. If the `embedding_type` is `float`, the default value is `dot_product`. If the `embedding_type` is `int8` or `byte`, the default value is `cosine`.",
+      "$ref": "#/$defs/InferenceCohereSimilarityType"
+    },
+    "InferenceCohereSimilarityType": {
+      "type": "string",
+      "enum": [
+        "cosine",
+        "dot_product",
+        "l2_norm"
+      ],
+      "id": "InferenceCohereSimilarityType"
+    },
+    "InferenceCohereServiceSettings": {
+      "type": "object",
+      "properties": {
+        "api_key": {
+          "$ref": "#/$defs/__schema18"
+        },
+        "embedding_type": {
+          "$ref": "#/$defs/__schema19"
+        },
+        "model_id": {
+          "$ref": "#/$defs/__schema20"
+        },
+        "rate_limit": {
+          "$ref": "#/$defs/__schema21"
+        },
+        "similarity": {
+          "$ref": "#/$defs/__schema23"
+        }
+      },
+      "required": [
+        "api_key",
+        "model_id"
+      ],
+      "additionalProperties": false,
+      "id": "InferenceCohereServiceSettings"
+    },
+    "__schema24": {
+      "$ref": "#/$defs/__schema25"
+    },
+    "__schema25": {
+      "description": "Settings to configure the inference task. These settings are specific to the task type you specified.",
+      "$ref": "#/$defs/InferenceCohereTaskSettings"
+    },
+    "__schema26": {
+      "description": "For a `text_embedding` task, the type of input passed to the model. Valid values are: * `classification`: Use it for embeddings passed through a text classifier. * `clustering`: Use it for the embeddings run through a clustering algorithm. * `ingest`: Use it for storing document embeddings in a vector database. * `search`: Use it for storing embeddings of search queries run against a vector database to find relevant documents. IMPORTANT: The `input_type` field is required when using embedding models `v3` and higher.",
+      "$ref": "#/$defs/InferenceCohereInputType"
+    },
+    "InferenceCohereInputType": {
+      "type": "string",
+      "enum": [
+        "classification",
+        "clustering",
+        "ingest",
+        "search"
+      ],
+      "id": "InferenceCohereInputType"
+    },
+    "__schema27": {
+      "type": "boolean",
+      "description": "For a `rerank` task, return doc text within the results."
+    },
+    "__schema28": {
+      "description": "For a `rerank` task, the number of most relevant documents to return. It defaults to the number of the documents. If this inference endpoint is used in a `text_similarity_reranker` retriever query and `top_n` is set, it must be greater than or equal to `rank_window_size` in the query.",
+      "$ref": "#/$defs/integer"
+    },
+    "__schema29": {
+      "description": "For a `text_embedding` task, the method to handle inputs longer than the maximum token length. Valid values are: * `END`: When the input exceeds the maximum input token length, the end of the input is discarded. * `NONE`: When the input exceeds the maximum input token length, an error is returned. * `START`: When the input exceeds the maximum input token length, the start of the input is discarded.",
+      "$ref": "#/$defs/InferenceCohereTruncateType"
+    },
+    "InferenceCohereTruncateType": {
+      "type": "string",
+      "enum": [
+        "END",
+        "NONE",
+        "START"
+      ],
+      "id": "InferenceCohereTruncateType"
+    },
+    "InferenceCohereTaskSettings": {
+      "type": "object",
+      "properties": {
+        "input_type": {
+          "$ref": "#/$defs/__schema26"
+        },
+        "return_documents": {
+          "$ref": "#/$defs/__schema27"
+        },
+        "top_n": {
+          "$ref": "#/$defs/__schema28"
+        },
+        "truncate": {
+          "$ref": "#/$defs/__schema29"
+        }
+      },
+      "required": [
+        "input_type"
+      ],
+      "additionalProperties": false,
+      "id": "InferenceCohereTaskSettings"
+    }
+  }
+}

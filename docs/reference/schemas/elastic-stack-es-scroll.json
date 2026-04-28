@@ -1,0 +1,69 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "rest_total_hits_as_int": {
+      "$ref": "#/$defs/__schema0"
+    },
+    "scroll": {
+      "$ref": "#/$defs/__schema2"
+    },
+    "scroll_id": {
+      "$ref": "#/$defs/__schema7"
+    }
+  },
+  "required": [
+    "scroll_id"
+  ],
+  "additionalProperties": false,
+  "id": "ScrollRequest",
+  "$defs": {
+    "__schema0": {
+      "$ref": "#/$defs/__schema1"
+    },
+    "__schema1": {
+      "type": "boolean",
+      "description": "If true, the API response’s hit.total property is returned as an integer. If false, the API response’s hit.total property is returned as an object."
+    },
+    "__schema2": {
+      "$ref": "#/$defs/__schema3"
+    },
+    "__schema3": {
+      "description": "The period to retain the search context for scrolling.",
+      "$ref": "#/$defs/Duration"
+    },
+    "Duration": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/__schema4"
+        },
+        {
+          "$ref": "#/$defs/__schema5"
+        },
+        {
+          "$ref": "#/$defs/__schema6"
+        }
+      ],
+      "id": "Duration"
+    },
+    "__schema4": {
+      "type": "string"
+    },
+    "__schema5": {
+      "type": "number",
+      "const": -1
+    },
+    "__schema6": {
+      "type": "number",
+      "const": 0
+    },
+    "__schema7": {
+      "description": "The scroll ID of the search.",
+      "$ref": "#/$defs/ScrollId"
+    },
+    "ScrollId": {
+      "type": "string",
+      "id": "ScrollId"
+    }
+  }
+}

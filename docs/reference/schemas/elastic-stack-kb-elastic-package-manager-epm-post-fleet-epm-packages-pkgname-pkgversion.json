@@ -1,0 +1,43 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "pkgName": {
+      "type": "string",
+      "description": "The pkgName parameter"
+    },
+    "pkgVersion": {
+      "type": "string",
+      "description": "The pkgVersion parameter"
+    },
+    "prerelease": {
+      "type": "boolean",
+      "description": ""
+    },
+    "ignoreMappingUpdateErrors": {
+      "type": "boolean",
+      "description": ""
+    },
+    "skipDataStreamRollover": {
+      "type": "boolean",
+      "description": ""
+    },
+    "skipDependencyCheck": {
+      "type": "boolean",
+      "description": "Skip dependency validation when installing a package with dependencies"
+    },
+    "force": {
+      "type": "boolean",
+      "description": ""
+    },
+    "ignore_constraints": {
+      "type": "boolean",
+      "description": ""
+    }
+  },
+  "required": [
+    "pkgName",
+    "pkgVersion"
+  ],
+  "additionalProperties": {}
+}

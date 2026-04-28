@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "ruleset_id": {
+      "type": "string",
+      "description": "The mandatory ruleset ID."
+    },
+    "include_associations": {
+      "type": "boolean",
+      "description": "Retrieves a list of resources that are associated to the specified ruleset."
+    }
+  },
+  "required": [
+    "ruleset_id"
+  ],
+  "additionalProperties": {}
+}

@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "page": {
+      "type": "number",
+      "description": ""
+    },
+    "perPage": {
+      "type": "number",
+      "description": ""
+    },
+    "sortField": {
+      "type": "string",
+      "description": ""
+    },
+    "sortOrder": {
+      "type": "string",
+      "description": ""
+    },
+    "showUpgradeable": {
+      "type": "boolean",
+      "description": ""
+    },
+    "kuery": {
+      "type": "string",
+      "description": ""
+    },
+    "kb-format": {
+      "type": "string",
+      "description": ""
+    },
+    "withAgentCount": {
+      "type": "boolean",
+      "description": ""
+    }
+  },
+  "additionalProperties": {}
+}

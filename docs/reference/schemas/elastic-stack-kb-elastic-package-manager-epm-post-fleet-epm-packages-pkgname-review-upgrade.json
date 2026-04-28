@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "pkgName": {
+      "type": "string",
+      "description": "Package name to review upgrade for"
+    },
+    "action": {
+      "type": "string",
+      "description": ""
+    },
+    "target_version": {
+      "type": "string",
+      "description": ""
+    }
+  },
+  "required": [
+    "pkgName",
+    "action",
+    "target_version"
+  ],
+  "additionalProperties": {}
+}

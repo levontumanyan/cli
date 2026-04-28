@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "set_id": {
+      "$ref": "#/$defs/__schema0"
+    },
+    "rule_id": {
+      "$ref": "#/$defs/__schema1"
+    },
+    "synonyms": {
+      "$ref": "#/$defs/__schema2"
+    }
+  },
+  "required": [
+    "set_id",
+    "rule_id",
+    "synonyms"
+  ],
+  "additionalProperties": false,
+  "id": "SynonymsPutSynonymRuleRequest",
+  "$defs": {
+    "__schema0": {
+      "description": "The ID of the synonym set.",
+      "$ref": "#/$defs/Id"
+    },
+    "Id": {
+      "type": "string",
+      "id": "Id"
+    },
+    "__schema1": {
+      "description": "The ID of the synonym rule to be updated or created.",
+      "$ref": "#/$defs/Id"
+    },
+    "__schema2": {
+      "type": "string",
+      "description": "The synonym rule information definition, which must be in Solr format.",
+      "$ref": "#/$defs/SynonymsSynonymString"
+    },
+    "SynonymsSynonymString": {
+      "type": "string",
+      "id": "SynonymsSynonymString"
+    }
+  }
+}

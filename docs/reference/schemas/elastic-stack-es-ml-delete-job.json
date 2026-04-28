@@ -1,0 +1,54 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "job_id": {
+      "$ref": "#/$defs/__schema0"
+    },
+    "force": {
+      "$ref": "#/$defs/__schema1"
+    },
+    "delete_user_annotations": {
+      "$ref": "#/$defs/__schema3"
+    },
+    "wait_for_completion": {
+      "$ref": "#/$defs/__schema5"
+    }
+  },
+  "required": [
+    "job_id"
+  ],
+  "additionalProperties": false,
+  "id": "MlDeleteJobRequest",
+  "$defs": {
+    "__schema0": {
+      "description": "Identifier for the anomaly detection job.",
+      "$ref": "#/$defs/Id"
+    },
+    "Id": {
+      "type": "string",
+      "id": "Id"
+    },
+    "__schema1": {
+      "$ref": "#/$defs/__schema2"
+    },
+    "__schema2": {
+      "type": "boolean",
+      "description": "Use to forcefully delete an opened job; this method is quicker than closing and deleting the job."
+    },
+    "__schema3": {
+      "$ref": "#/$defs/__schema4"
+    },
+    "__schema4": {
+      "type": "boolean",
+      "description": "Specifies whether annotations that have been added by the user should be deleted along with any auto-generated annotations when the job is reset."
+    },
+    "__schema5": {
+      "$ref": "#/$defs/__schema6"
+    },
+    "__schema6": {
+      "type": "boolean",
+      "description": "Specifies whether the request should return immediately or wait until the job deletion completes."
+    }
+  }
+}

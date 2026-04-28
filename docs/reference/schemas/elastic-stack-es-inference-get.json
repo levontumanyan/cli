@@ -1,0 +1,46 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "task_type": {
+      "$ref": "#/$defs/__schema0"
+    },
+    "inference_id": {
+      "$ref": "#/$defs/__schema2"
+    }
+  },
+  "additionalProperties": false,
+  "id": "InferenceGetRequest",
+  "$defs": {
+    "__schema0": {
+      "$ref": "#/$defs/__schema1"
+    },
+    "__schema1": {
+      "description": "The task type of the endpoint to return",
+      "$ref": "#/$defs/InferenceTaskType"
+    },
+    "InferenceTaskType": {
+      "type": "string",
+      "enum": [
+        "sparse_embedding",
+        "text_embedding",
+        "rerank",
+        "completion",
+        "chat_completion",
+        "embedding"
+      ],
+      "id": "InferenceTaskType"
+    },
+    "__schema2": {
+      "$ref": "#/$defs/__schema3"
+    },
+    "__schema3": {
+      "description": "The inference Id of the endpoint to return. Using `_all` or `*` will return all endpoints with the specified `task_type` if one is specified, or all endpoints for all task types if no `task_type` is specified",
+      "$ref": "#/$defs/Id"
+    },
+    "Id": {
+      "type": "string",
+      "id": "Id"
+    }
+  }
+}

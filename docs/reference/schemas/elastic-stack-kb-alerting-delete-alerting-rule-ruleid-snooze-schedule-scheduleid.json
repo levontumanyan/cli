@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "ruleId": {
+      "type": "string",
+      "description": "The identifier for the rule."
+    },
+    "scheduleId": {
+      "type": "string",
+      "description": "The identifier for the snooze schedule."
+    }
+  },
+  "required": [
+    "ruleId",
+    "scheduleId"
+  ],
+  "additionalProperties": {}
+}

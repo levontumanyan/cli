@@ -1,0 +1,109 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "agent_all": {
+      "type": "boolean",
+      "description": "When `true`, the query runs on all agents."
+    },
+    "agent_ids": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/__schema0"
+      },
+      "description": "A list of agent IDs to run the query on."
+    },
+    "agent_platforms": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/__schema1"
+      },
+      "description": "A list of agent platforms to run the query on."
+    },
+    "agent_policy_ids": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/__schema2"
+      },
+      "description": "A list of agent policy IDs to run the query on."
+    },
+    "alert_ids": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/__schema3"
+      },
+      "description": "A list of alert IDs associated with the live query."
+    },
+    "case_ids": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/__schema4"
+      },
+      "description": "A list of case IDs associated with the live query."
+    },
+    "ecs_mapping": {
+      "type": "object",
+      "propertyNames": {
+        "$ref": "#/$defs/__schema5"
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/__schema6"
+      },
+      "description": "Map osquery results columns or static values to Elastic Common Schema (ECS) fields"
+    },
+    "event_ids": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/__schema7"
+      },
+      "description": "A list of event IDs associated with the live query."
+    },
+    "metadata": {
+      "type": "object",
+      "propertyNames": {
+        "$ref": "#/$defs/__schema8"
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/__schema9"
+      },
+      "description": "Custom metadata object associated with the live query."
+    },
+    "pack_id": {
+      "type": "string",
+      "description": "The ID of the pack you want to run, retrieve, update, or delete."
+    },
+    "queries": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/__schema10"
+      },
+      "description": "An array of queries to run."
+    },
+    "query": {
+      "type": "string",
+      "description": "The SQL query you want to run."
+    },
+    "saved_query_id": {
+      "type": "string",
+      "description": "The ID of a saved query."
+    }
+  },
+  "additionalProperties": {},
+  "$defs": {
+    "__schema0": {},
+    "__schema1": {},
+    "__schema2": {},
+    "__schema3": {},
+    "__schema4": {},
+    "__schema5": {
+      "type": "string"
+    },
+    "__schema6": {},
+    "__schema7": {},
+    "__schema8": {
+      "type": "string"
+    },
+    "__schema9": {},
+    "__schema10": {}
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "extension_id": {
+      "type": "string",
+      "description": "Id of an extension"
+    },
+    "include_deployments": {
+      "type": "boolean",
+      "description": "Include deployments referencing this extension. Up to only 10000 deployments will be included."
+    }
+  },
+  "required": [
+    "extension_id"
+  ],
+  "additionalProperties": {}
+}

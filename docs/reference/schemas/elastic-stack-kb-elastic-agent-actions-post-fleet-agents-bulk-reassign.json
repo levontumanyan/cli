@@ -1,0 +1,27 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "agents": {
+      "type": "string",
+      "description": ""
+    },
+    "batchSize": {
+      "type": "number",
+      "description": ""
+    },
+    "includeInactive": {
+      "type": "boolean",
+      "description": ""
+    },
+    "policy_id": {
+      "type": "string",
+      "description": ""
+    }
+  },
+  "required": [
+    "agents",
+    "policy_id"
+  ],
+  "additionalProperties": {}
+}

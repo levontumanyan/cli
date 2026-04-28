@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "package_policy_id": {
+      "type": "string",
+      "description": "The package_policy_id parameter"
+    },
+    "note": {
+      "type": "string",
+      "description": ""
+    }
+  },
+  "required": [
+    "package_policy_id"
+  ],
+  "additionalProperties": {}
+}

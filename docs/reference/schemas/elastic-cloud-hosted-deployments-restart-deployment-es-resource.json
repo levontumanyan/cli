@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "deployment_id": {
+      "type": "string",
+      "description": "Identifier for the Deployment."
+    },
+    "ref_id": {
+      "type": "string",
+      "description": "User-specified RefId for the Resource (or '_main' if there is only one)."
+    },
+    "restore_snapshot": {
+      "type": "boolean",
+      "description": "When set to true and restoring from shutdown, then will restore the cluster from the last snapshot (if available)."
+    },
+    "skip_snapshot": {
+      "type": "boolean",
+      "description": "If true, will not take a snapshot of the cluster before restarting."
+    },
+    "cancel_pending": {
+      "type": "boolean",
+      "description": "If true, cancels any pending plans before restarting. If false and there are pending plans, returns an error."
+    },
+    "group_attribute": {
+      "type": "string",
+      "description": "Indicates the property or properties used to divide the list of instances to restart in groups. Valid options are: '\\_\\_all\\_\\_' (restart all at once), '\\_\\_zone\\_\\_' by logical zone, '\\_\\_name\\_\\_' one instance at a time, or a comma-separated list of attributes of the instances"
+    },
+    "shard_init_wait_time": {
+      "type": "number",
+      "description": "The time, in seconds, to wait for shards that show no progress of initializing, before rolling the next group (default: 10 minutes)"
+    }
+  },
+  "required": [
+    "deployment_id",
+    "ref_id"
+  ],
+  "additionalProperties": {}
+}

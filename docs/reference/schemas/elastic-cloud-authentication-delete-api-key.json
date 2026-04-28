@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "api_key_id": {
+      "type": "string",
+      "description": "The API Key ID."
+    }
+  },
+  "required": [
+    "api_key_id"
+  ],
+  "additionalProperties": {}
+}

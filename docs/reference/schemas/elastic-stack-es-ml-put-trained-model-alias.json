@@ -1,0 +1,46 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "model_alias": {
+      "$ref": "#/$defs/__schema0"
+    },
+    "model_id": {
+      "$ref": "#/$defs/__schema1"
+    },
+    "reassign": {
+      "$ref": "#/$defs/__schema2"
+    }
+  },
+  "required": [
+    "model_alias",
+    "model_id"
+  ],
+  "additionalProperties": false,
+  "id": "MlPutTrainedModelAliasRequest",
+  "$defs": {
+    "__schema0": {
+      "description": "The alias to create or update. This value cannot end in numbers.",
+      "$ref": "#/$defs/Name"
+    },
+    "Name": {
+      "type": "string",
+      "id": "Name"
+    },
+    "__schema1": {
+      "description": "The identifier for the trained model that the alias refers to.",
+      "$ref": "#/$defs/Id"
+    },
+    "Id": {
+      "type": "string",
+      "id": "Id"
+    },
+    "__schema2": {
+      "$ref": "#/$defs/__schema3"
+    },
+    "__schema3": {
+      "type": "boolean",
+      "description": "Specifies whether the alias gets reassigned to the specified trained model if it is already assigned to a different model. If the alias is already assigned and this parameter is false, the API returns an error."
+    }
+  }
+}

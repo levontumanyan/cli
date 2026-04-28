@@ -1,0 +1,296 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "index": {
+      "$ref": "#/$defs/__schema0"
+    },
+    "id": {
+      "$ref": "#/$defs/__schema1"
+    },
+    "preference": {
+      "$ref": "#/$defs/__schema3"
+    },
+    "realtime": {
+      "$ref": "#/$defs/__schema5"
+    },
+    "doc": {
+      "$ref": "#/$defs/__schema7"
+    },
+    "filter": {
+      "$ref": "#/$defs/__schema9"
+    },
+    "per_field_analyzer": {
+      "$ref": "#/$defs/__schema18"
+    },
+    "fields": {
+      "$ref": "#/$defs/__schema22"
+    },
+    "field_statistics": {
+      "$ref": "#/$defs/__schema25"
+    },
+    "offsets": {
+      "$ref": "#/$defs/__schema27"
+    },
+    "payloads": {
+      "$ref": "#/$defs/__schema29"
+    },
+    "positions": {
+      "$ref": "#/$defs/__schema31"
+    },
+    "term_statistics": {
+      "$ref": "#/$defs/__schema33"
+    },
+    "routing": {
+      "$ref": "#/$defs/__schema35"
+    },
+    "version": {
+      "$ref": "#/$defs/__schema39"
+    },
+    "version_type": {
+      "$ref": "#/$defs/__schema41"
+    }
+  },
+  "required": [
+    "index"
+  ],
+  "additionalProperties": false,
+  "id": "TermvectorsRequest",
+  "$defs": {
+    "__schema0": {
+      "description": "The name of the index that contains the document.",
+      "$ref": "#/$defs/IndexName"
+    },
+    "IndexName": {
+      "type": "string",
+      "id": "IndexName"
+    },
+    "__schema1": {
+      "$ref": "#/$defs/__schema2"
+    },
+    "__schema2": {
+      "description": "A unique identifier for the document.",
+      "$ref": "#/$defs/Id"
+    },
+    "Id": {
+      "type": "string",
+      "id": "Id"
+    },
+    "__schema3": {
+      "$ref": "#/$defs/__schema4"
+    },
+    "__schema4": {
+      "type": "string",
+      "description": "The node or shard the operation should be performed on. It is random by default."
+    },
+    "__schema5": {
+      "$ref": "#/$defs/__schema6"
+    },
+    "__schema6": {
+      "type": "boolean",
+      "description": "If true, the request is real-time as opposed to near-real-time."
+    },
+    "__schema7": {
+      "$ref": "#/$defs/__schema8"
+    },
+    "__schema8": {
+      "description": "An artificial document (a document not present in the index) for which you want to retrieve term vectors."
+    },
+    "__schema9": {
+      "$ref": "#/$defs/__schema10"
+    },
+    "__schema10": {
+      "description": "Filter terms based on their tf-idf scores. This could be useful in order find out a good characteristic vector of a document. This feature works in a similar manner to the second phase of the More Like This Query.",
+      "$ref": "#/$defs/TermvectorsFilter"
+    },
+    "__schema11": {
+      "description": "Ignore words which occur in more than this many docs. Defaults to unbounded.",
+      "$ref": "#/$defs/integer"
+    },
+    "integer": {
+      "type": "number",
+      "id": "integer"
+    },
+    "__schema12": {
+      "description": "The maximum number of terms that must be returned per field.",
+      "$ref": "#/$defs/integer"
+    },
+    "__schema13": {
+      "description": "Ignore words with more than this frequency in the source doc. It defaults to unbounded.",
+      "$ref": "#/$defs/integer"
+    },
+    "__schema14": {
+      "description": "The maximum word length above which words will be ignored. Defaults to unbounded.",
+      "$ref": "#/$defs/integer"
+    },
+    "__schema15": {
+      "description": "Ignore terms which do not occur in at least this many docs.",
+      "$ref": "#/$defs/integer"
+    },
+    "__schema16": {
+      "description": "Ignore words with less than this frequency in the source doc.",
+      "$ref": "#/$defs/integer"
+    },
+    "__schema17": {
+      "description": "The minimum word length below which words will be ignored.",
+      "$ref": "#/$defs/integer"
+    },
+    "TermvectorsFilter": {
+      "type": "object",
+      "properties": {
+        "max_doc_freq": {
+          "$ref": "#/$defs/__schema11"
+        },
+        "max_num_terms": {
+          "$ref": "#/$defs/__schema12"
+        },
+        "max_term_freq": {
+          "$ref": "#/$defs/__schema13"
+        },
+        "max_word_length": {
+          "$ref": "#/$defs/__schema14"
+        },
+        "min_doc_freq": {
+          "$ref": "#/$defs/__schema15"
+        },
+        "min_term_freq": {
+          "$ref": "#/$defs/__schema16"
+        },
+        "min_word_length": {
+          "$ref": "#/$defs/__schema17"
+        }
+      },
+      "additionalProperties": false,
+      "id": "TermvectorsFilter"
+    },
+    "__schema18": {
+      "$ref": "#/$defs/__schema19"
+    },
+    "__schema19": {
+      "type": "object",
+      "propertyNames": {
+        "$ref": "#/$defs/__schema20"
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/__schema21"
+      },
+      "description": "Override the default per-field analyzer. This is useful in order to generate term vectors in any fashion, especially when using artificial documents. When providing an analyzer for a field that already stores term vectors, the term vectors will be regenerated."
+    },
+    "__schema20": {
+      "$ref": "#/$defs/Field"
+    },
+    "Field": {
+      "type": "string",
+      "id": "Field"
+    },
+    "__schema21": {
+      "type": "string"
+    },
+    "__schema22": {
+      "$ref": "#/$defs/__schema23"
+    },
+    "__schema23": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/__schema24"
+      },
+      "description": "A list of fields to include in the statistics. It is used as the default list unless a specific field list is provided in the `completion_fields` or `fielddata_fields` parameters."
+    },
+    "__schema24": {
+      "$ref": "#/$defs/Field"
+    },
+    "__schema25": {
+      "$ref": "#/$defs/__schema26"
+    },
+    "__schema26": {
+      "type": "boolean",
+      "description": "If `true`, the response includes: * The document count (how many documents contain this field). * The sum of document frequencies (the sum of document frequencies for all terms in this field). * The sum of total term frequencies (the sum of total term frequencies of each term in this field)."
+    },
+    "__schema27": {
+      "$ref": "#/$defs/__schema28"
+    },
+    "__schema28": {
+      "type": "boolean",
+      "description": "If `true`, the response includes term offsets."
+    },
+    "__schema29": {
+      "$ref": "#/$defs/__schema30"
+    },
+    "__schema30": {
+      "type": "boolean",
+      "description": "If `true`, the response includes term payloads."
+    },
+    "__schema31": {
+      "$ref": "#/$defs/__schema32"
+    },
+    "__schema32": {
+      "type": "boolean",
+      "description": "If `true`, the response includes term positions."
+    },
+    "__schema33": {
+      "$ref": "#/$defs/__schema34"
+    },
+    "__schema34": {
+      "type": "boolean",
+      "description": "If `true`, the response includes: * The total term frequency (how often a term occurs in all documents). * The document frequency (the number of documents containing the current term). By default these values are not returned since term statistics can have a serious performance impact."
+    },
+    "__schema35": {
+      "$ref": "#/$defs/__schema36"
+    },
+    "__schema36": {
+      "description": "A custom value that is used to route operations to a specific shard.",
+      "$ref": "#/$defs/Routing"
+    },
+    "Routing": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/__schema37"
+        },
+        {
+          "$ref": "#/$defs/__schema38"
+        }
+      ],
+      "id": "Routing"
+    },
+    "__schema37": {
+      "type": "string"
+    },
+    "__schema38": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "__schema39": {
+      "$ref": "#/$defs/__schema40"
+    },
+    "__schema40": {
+      "description": "If `true`, returns the document version as part of a hit.",
+      "$ref": "#/$defs/VersionNumber"
+    },
+    "VersionNumber": {
+      "id": "VersionNumber",
+      "$ref": "#/$defs/long"
+    },
+    "long": {
+      "type": "number",
+      "id": "long"
+    },
+    "__schema41": {
+      "$ref": "#/$defs/__schema42"
+    },
+    "__schema42": {
+      "description": "The version type.",
+      "$ref": "#/$defs/VersionType"
+    },
+    "VersionType": {
+      "type": "string",
+      "enum": [
+        "internal",
+        "external",
+        "external_gte"
+      ],
+      "id": "VersionType"
+    }
+  }
+}

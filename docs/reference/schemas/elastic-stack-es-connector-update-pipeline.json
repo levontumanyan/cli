@@ -1,0 +1,68 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "connector_id": {
+      "$ref": "#/$defs/__schema0"
+    },
+    "pipeline": {
+      "$ref": "#/$defs/__schema1"
+    }
+  },
+  "required": [
+    "connector_id",
+    "pipeline"
+  ],
+  "additionalProperties": false,
+  "id": "ConnectorUpdatePipelineRequest",
+  "$defs": {
+    "__schema0": {
+      "description": "The unique identifier of the connector to be updated",
+      "$ref": "#/$defs/Id"
+    },
+    "Id": {
+      "type": "string",
+      "id": "Id"
+    },
+    "__schema1": {
+      "$ref": "#/$defs/ConnectorIngestPipelineParams"
+    },
+    "__schema2": {
+      "type": "boolean"
+    },
+    "__schema3": {
+      "type": "string"
+    },
+    "__schema4": {
+      "type": "boolean"
+    },
+    "__schema5": {
+      "type": "boolean"
+    },
+    "ConnectorIngestPipelineParams": {
+      "type": "object",
+      "properties": {
+        "extract_binary_content": {
+          "$ref": "#/$defs/__schema2"
+        },
+        "name": {
+          "$ref": "#/$defs/__schema3"
+        },
+        "reduce_whitespace": {
+          "$ref": "#/$defs/__schema4"
+        },
+        "run_ml_inference": {
+          "$ref": "#/$defs/__schema5"
+        }
+      },
+      "required": [
+        "extract_binary_content",
+        "name",
+        "reduce_whitespace",
+        "run_ml_inference"
+      ],
+      "additionalProperties": false,
+      "id": "ConnectorIngestPipelineParams"
+    }
+  }
+}

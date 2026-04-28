@@ -1,0 +1,27 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "deployment_id": {
+      "type": "string",
+      "description": "Identifier for the Deployment."
+    },
+    "ref_id": {
+      "type": "string",
+      "description": "User-specified RefId for the Resource (or '_main' if there is only one)."
+    },
+    "hide": {
+      "type": "boolean",
+      "description": "Hide cluster on shutdown. Hidden clusters are not listed by default. Only applicable for Platform administrators."
+    },
+    "skip_snapshot": {
+      "type": "boolean",
+      "description": "If true, will skip taking a snapshot of the cluster before shutting the cluster down (if even possible)."
+    }
+  },
+  "required": [
+    "deployment_id",
+    "ref_id"
+  ],
+  "additionalProperties": {}
+}

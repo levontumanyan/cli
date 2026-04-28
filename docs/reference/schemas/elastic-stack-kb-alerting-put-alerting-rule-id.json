@@ -1,0 +1,116 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "The identifier for the rule."
+    },
+    "actions": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/__schema0"
+      },
+      "description": ""
+    },
+    "alert_delay": {
+      "type": "object",
+      "propertyNames": {
+        "$ref": "#/$defs/__schema1"
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/__schema2"
+      },
+      "description": "Indicates that an alert occurs only when the specified number of consecutive runs met the rule conditions."
+    },
+    "artifacts": {
+      "type": "object",
+      "propertyNames": {
+        "$ref": "#/$defs/__schema3"
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/__schema4"
+      },
+      "description": ""
+    },
+    "flapping": {
+      "type": "object",
+      "propertyNames": {
+        "$ref": "#/$defs/__schema5"
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/__schema6"
+      },
+      "description": "When flapping detection is turned on, alerts that switch quickly between active and recovered states are identified as “flapping” and notifications are reduced."
+    },
+    "name": {
+      "type": "string",
+      "description": "The name of the rule. While this name does not have to be unique, a distinctive name can help you identify a rule."
+    },
+    "notify_when": {
+      "type": "string",
+      "description": "Indicates how often alerts generate actions. Valid values include: `onActionGroupChange`: Actions run when the alert status changes; `onActiveAlert`: Actions run when the alert becomes active and at each check interval while the rule conditions are met; `onThrottleInterval`: Actions run when the alert becomes active and at the interval specified in the throttle property while the rule conditions are met. NOTE: You cannot specify `notify_when` at both the rule and action level. The recommended method is to set it for each action. If you set it at the rule level then update the rule in Kibana, it is automatically changed to use action-specific values."
+    },
+    "params": {
+      "type": "object",
+      "propertyNames": {
+        "$ref": "#/$defs/__schema7"
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/__schema8"
+      },
+      "description": "The parameters for the rule."
+    },
+    "schedule": {
+      "type": "object",
+      "propertyNames": {
+        "$ref": "#/$defs/__schema9"
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/__schema10"
+      },
+      "description": ""
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/__schema11"
+      },
+      "description": ""
+    },
+    "throttle": {
+      "type": "string",
+      "description": "Use the `throttle` property in the action `frequency` object instead. The throttle interval, which defines how often an alert generates repeated actions. NOTE: You cannot specify the throttle interval at both the rule and action level. If you set it at the rule level then update the rule in Kibana, it is automatically changed to use action-specific values."
+    }
+  },
+  "required": [
+    "id",
+    "name",
+    "schedule"
+  ],
+  "additionalProperties": {},
+  "$defs": {
+    "__schema0": {},
+    "__schema1": {
+      "type": "string"
+    },
+    "__schema2": {},
+    "__schema3": {
+      "type": "string"
+    },
+    "__schema4": {},
+    "__schema5": {
+      "type": "string"
+    },
+    "__schema6": {},
+    "__schema7": {
+      "type": "string"
+    },
+    "__schema8": {},
+    "__schema9": {
+      "type": "string"
+    },
+    "__schema10": {},
+    "__schema11": {}
+  }
+}

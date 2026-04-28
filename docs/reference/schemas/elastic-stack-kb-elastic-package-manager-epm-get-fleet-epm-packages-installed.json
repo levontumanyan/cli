@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "dataStreamType": {
+      "type": "string",
+      "description": ""
+    },
+    "showOnlyActiveDataStreams": {
+      "type": "boolean",
+      "description": ""
+    },
+    "nameQuery": {
+      "type": "string",
+      "description": ""
+    },
+    "searchAfter": {
+      "type": "string",
+      "description": ""
+    },
+    "perPage": {
+      "type": "number",
+      "description": ""
+    },
+    "sortOrder": {
+      "type": "string",
+      "description": ""
+    }
+  },
+  "additionalProperties": {}
+}

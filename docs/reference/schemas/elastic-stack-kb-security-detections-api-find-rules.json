@@ -1,0 +1,47 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "fields": {
+      "type": "string",
+      "description": ""
+    },
+    "filter": {
+      "type": "string",
+      "description": "Search query"
+    },
+    "sort_field": {
+      "type": "string",
+      "description": "Field to sort by"
+    },
+    "sort_order": {
+      "type": "string",
+      "description": "Sort order"
+    },
+    "page": {
+      "type": "number",
+      "description": "Page number"
+    },
+    "per_page": {
+      "type": "number",
+      "description": "Rules per page"
+    },
+    "gaps_range_start": {
+      "type": "string",
+      "description": "Gaps range start"
+    },
+    "gaps_range_end": {
+      "type": "string",
+      "description": "Gaps range end"
+    },
+    "gap_fill_statuses": {
+      "type": "string",
+      "description": "Gap fill statuses"
+    },
+    "gap_auto_fill_scheduler_id": {
+      "type": "string",
+      "description": "Gap auto fill scheduler ID used to determine gap fill status for rules"
+    }
+  },
+  "additionalProperties": {}
+}

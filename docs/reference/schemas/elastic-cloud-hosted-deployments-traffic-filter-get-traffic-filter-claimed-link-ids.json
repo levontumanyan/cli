@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "region": {
+      "type": "string",
+      "description": "If provided limits the claimed id to that region only."
+    },
+    "organization_id": {
+      "type": "string",
+      "description": "Retrieves a list of resources that are associated to the specified organization ID. It only takes effect if the user is an admin."
+    }
+  },
+  "additionalProperties": {}
+}

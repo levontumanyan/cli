@@ -1,0 +1,342 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "index": {
+      "$ref": "#/$defs/__schema0"
+    },
+    "preference": {
+      "$ref": "#/$defs/__schema2"
+    },
+    "realtime": {
+      "$ref": "#/$defs/__schema4"
+    },
+    "refresh": {
+      "$ref": "#/$defs/__schema6"
+    },
+    "routing": {
+      "$ref": "#/$defs/__schema8"
+    },
+    "_source": {
+      "$ref": "#/$defs/__schema12"
+    },
+    "_source_excludes": {
+      "$ref": "#/$defs/__schema18"
+    },
+    "_source_includes": {
+      "$ref": "#/$defs/__schema20"
+    },
+    "stored_fields": {
+      "$ref": "#/$defs/__schema22"
+    },
+    "docs": {
+      "$ref": "#/$defs/__schema24"
+    },
+    "ids": {
+      "$ref": "#/$defs/__schema39"
+    }
+  },
+  "additionalProperties": false,
+  "id": "MgetRequest",
+  "$defs": {
+    "__schema0": {
+      "$ref": "#/$defs/__schema1"
+    },
+    "__schema1": {
+      "description": "Name of the index to retrieve documents from when `ids` are specified, or when a document in the `docs` array does not specify an index.",
+      "$ref": "#/$defs/IndexName"
+    },
+    "IndexName": {
+      "type": "string",
+      "id": "IndexName"
+    },
+    "__schema2": {
+      "$ref": "#/$defs/__schema3"
+    },
+    "__schema3": {
+      "type": "string",
+      "description": "Specifies the node or shard the operation should be performed on. Random by default."
+    },
+    "__schema4": {
+      "$ref": "#/$defs/__schema5"
+    },
+    "__schema5": {
+      "type": "boolean",
+      "description": "If `true`, the request is real-time as opposed to near-real-time."
+    },
+    "__schema6": {
+      "$ref": "#/$defs/__schema7"
+    },
+    "__schema7": {
+      "type": "boolean",
+      "description": "If `true`, the request refreshes relevant shards before retrieving documents."
+    },
+    "__schema8": {
+      "$ref": "#/$defs/__schema9"
+    },
+    "__schema9": {
+      "description": "Custom value used to route operations to a specific shard.",
+      "$ref": "#/$defs/Routing"
+    },
+    "Routing": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/__schema10"
+        },
+        {
+          "$ref": "#/$defs/__schema11"
+        }
+      ],
+      "id": "Routing"
+    },
+    "__schema10": {
+      "type": "string"
+    },
+    "__schema11": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "__schema12": {
+      "$ref": "#/$defs/__schema13"
+    },
+    "__schema13": {
+      "description": "True or false to return the `_source` field or not, or a list of fields to return.",
+      "$ref": "#/$defs/SearchSourceConfigParam"
+    },
+    "__schema14": {
+      "type": "boolean"
+    },
+    "__schema15": {
+      "$ref": "#/$defs/Fields"
+    },
+    "Fields": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/__schema16"
+        },
+        {
+          "$ref": "#/$defs/__schema17"
+        }
+      ],
+      "id": "Fields"
+    },
+    "__schema16": {
+      "$ref": "#/$defs/Field"
+    },
+    "Field": {
+      "type": "string",
+      "id": "Field"
+    },
+    "__schema17": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/Field"
+      }
+    },
+    "SearchSourceConfigParam": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/__schema14"
+        },
+        {
+          "$ref": "#/$defs/__schema15"
+        }
+      ],
+      "id": "SearchSourceConfigParam"
+    },
+    "__schema18": {
+      "$ref": "#/$defs/__schema19"
+    },
+    "__schema19": {
+      "description": "A comma-separated list of source fields to exclude from the response. You can also use this parameter to exclude fields from the subset specified in `_source_includes` query parameter.",
+      "$ref": "#/$defs/Fields"
+    },
+    "__schema20": {
+      "$ref": "#/$defs/__schema21"
+    },
+    "__schema21": {
+      "description": "A comma-separated list of source fields to include in the response. If this parameter is specified, only these source fields are returned. You can exclude fields from this subset using the `_source_excludes` query parameter. If the `_source` parameter is `false`, this parameter is ignored.",
+      "$ref": "#/$defs/Fields"
+    },
+    "__schema22": {
+      "$ref": "#/$defs/__schema23"
+    },
+    "__schema23": {
+      "description": "If `true`, retrieves the document fields stored in the index rather than the document `_source`.",
+      "$ref": "#/$defs/Fields"
+    },
+    "__schema24": {
+      "$ref": "#/$defs/__schema25"
+    },
+    "__schema25": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/MgetOperation"
+      },
+      "description": "The documents you want to retrieve. Required if no index is specified in the request URI."
+    },
+    "MgetOperation": {
+      "type": "object",
+      "properties": {
+        "_id": {
+          "$ref": "#/$defs/__schema26"
+        },
+        "_index": {
+          "$ref": "#/$defs/__schema27"
+        },
+        "routing": {
+          "$ref": "#/$defs/__schema28"
+        },
+        "_source": {
+          "$ref": "#/$defs/__schema29"
+        },
+        "stored_fields": {
+          "$ref": "#/$defs/__schema36"
+        },
+        "version": {
+          "$ref": "#/$defs/__schema37"
+        },
+        "version_type": {
+          "$ref": "#/$defs/__schema38"
+        }
+      },
+      "required": [
+        "_id"
+      ],
+      "additionalProperties": false,
+      "id": "MgetOperation"
+    },
+    "__schema26": {
+      "description": "The unique document ID.",
+      "$ref": "#/$defs/Id"
+    },
+    "Id": {
+      "type": "string",
+      "id": "Id"
+    },
+    "__schema27": {
+      "description": "The index that contains the document.",
+      "$ref": "#/$defs/IndexName"
+    },
+    "__schema28": {
+      "description": "The key for the primary shard the document resides on. Required if routing is used during indexing.",
+      "$ref": "#/$defs/Routing"
+    },
+    "__schema29": {
+      "description": "If `false`, excludes all _source fields.",
+      "$ref": "#/$defs/SearchSourceConfig"
+    },
+    "SearchSourceConfig": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/__schema30"
+        },
+        {
+          "$ref": "#/$defs/SearchSourceFilter"
+        }
+      ],
+      "id": "SearchSourceConfig"
+    },
+    "__schema30": {
+      "type": "boolean"
+    },
+    "SearchSourceFilter": {
+      "type": "object",
+      "properties": {
+        "exclude_vectors": {
+          "$ref": "#/$defs/__schema31"
+        },
+        "excludes": {
+          "$ref": "#/$defs/__schema32"
+        },
+        "exclude": {
+          "$ref": "#/$defs/__schema33"
+        },
+        "includes": {
+          "$ref": "#/$defs/__schema34"
+        },
+        "include": {
+          "$ref": "#/$defs/__schema35"
+        }
+      },
+      "additionalProperties": false,
+      "id": "SearchSourceFilter"
+    },
+    "__schema31": {
+      "type": "boolean",
+      "description": "If `true`, vector fields are excluded from the returned source. This option takes precedence over `includes`: any vector field will remain excluded even if it matches an `includes` rule."
+    },
+    "__schema32": {
+      "description": "A list of fields to exclude from the returned source.",
+      "$ref": "#/$defs/Fields"
+    },
+    "__schema33": {
+      "description": "A list of fields to exclude from the returned source.",
+      "$ref": "#/$defs/Fields"
+    },
+    "__schema34": {
+      "description": "A list of fields to include in the returned source.",
+      "$ref": "#/$defs/Fields"
+    },
+    "__schema35": {
+      "description": "A list of fields to include in the returned source.",
+      "$ref": "#/$defs/Fields"
+    },
+    "__schema36": {
+      "description": "The stored fields you want to retrieve.",
+      "$ref": "#/$defs/Fields"
+    },
+    "__schema37": {
+      "$ref": "#/$defs/VersionNumber"
+    },
+    "VersionNumber": {
+      "id": "VersionNumber",
+      "$ref": "#/$defs/long"
+    },
+    "long": {
+      "type": "number",
+      "id": "long"
+    },
+    "__schema38": {
+      "$ref": "#/$defs/VersionType"
+    },
+    "VersionType": {
+      "type": "string",
+      "enum": [
+        "internal",
+        "external",
+        "external_gte"
+      ],
+      "id": "VersionType"
+    },
+    "__schema39": {
+      "$ref": "#/$defs/__schema40"
+    },
+    "__schema40": {
+      "description": "The IDs of the documents you want to retrieve. Allowed when the index is specified in the request URI.",
+      "$ref": "#/$defs/Ids"
+    },
+    "Ids": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/__schema41"
+        },
+        {
+          "$ref": "#/$defs/__schema42"
+        }
+      ],
+      "id": "Ids"
+    },
+    "__schema41": {
+      "$ref": "#/$defs/Id"
+    },
+    "__schema42": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/Id"
+      }
+    }
+  }
+}

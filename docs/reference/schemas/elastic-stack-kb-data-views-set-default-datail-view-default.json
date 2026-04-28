@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "data_view_id": {
+      "type": "string",
+      "description": "The data view identifier. NOTE: The API does not validate whether it is a valid identifier. Use `null` to unset the default data view."
+    },
+    "force": {
+      "type": "boolean",
+      "description": "Update an existing default data view identifier."
+    }
+  },
+  "required": [
+    "data_view_id"
+  ],
+  "additionalProperties": {}
+}

@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "The identifier for the rule."
+    },
+    "untrack": {
+      "type": "boolean",
+      "description": "Defines whether this rule's alerts should be untracked."
+    }
+  },
+  "required": [
+    "id"
+  ],
+  "additionalProperties": {}
+}

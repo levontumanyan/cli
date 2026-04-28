@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "taskId": {
+      "type": "string",
+      "description": "Task ID of the bulk operation"
+    }
+  },
+  "required": [
+    "taskId"
+  ],
+  "additionalProperties": {}
+}

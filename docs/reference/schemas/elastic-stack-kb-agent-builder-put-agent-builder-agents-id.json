@@ -1,0 +1,58 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "The unique identifier of the agent to update."
+    },
+    "avatar_color": {
+      "type": "string",
+      "description": "Updated hex color code for the agent avatar."
+    },
+    "avatar_symbol": {
+      "type": "string",
+      "description": "Updated symbol/initials for the agent avatar."
+    },
+    "configuration": {
+      "type": "object",
+      "propertyNames": {
+        "$ref": "#/$defs/__schema0"
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/__schema1"
+      },
+      "description": "Updated configuration settings for the agent."
+    },
+    "description": {
+      "type": "string",
+      "description": "Updated description of what the agent does."
+    },
+    "labels": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/__schema2"
+      },
+      "description": "Updated labels for categorizing and organizing agents."
+    },
+    "name": {
+      "type": "string",
+      "description": "Updated display name for the agent."
+    },
+    "visibility": {
+      "type": "string",
+      "description": "**Technical Preview; added in 9.4.0.** Updated visibility setting: `public` (any privileged user can read/write), `shared` (any privileged user can read, only owner can write), `private` (only owner can read/write)."
+    }
+  },
+  "required": [
+    "id"
+  ],
+  "additionalProperties": {},
+  "$defs": {
+    "__schema0": {
+      "type": "string"
+    },
+    "__schema1": {},
+    "__schema2": {}
+  }
+}

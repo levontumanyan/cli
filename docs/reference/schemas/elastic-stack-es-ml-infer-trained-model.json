@@ -1,0 +1,583 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "model_id": {
+      "$ref": "#/$defs/__schema0"
+    },
+    "timeout": {
+      "$ref": "#/$defs/__schema1"
+    },
+    "docs": {
+      "$ref": "#/$defs/__schema6"
+    },
+    "inference_config": {
+      "$ref": "#/$defs/__schema8"
+    }
+  },
+  "required": [
+    "model_id",
+    "docs"
+  ],
+  "additionalProperties": false,
+  "id": "MlInferTrainedModelRequest",
+  "$defs": {
+    "__schema0": {
+      "description": "The unique identifier of the trained model.",
+      "$ref": "#/$defs/Id"
+    },
+    "Id": {
+      "type": "string",
+      "id": "Id"
+    },
+    "__schema1": {
+      "$ref": "#/$defs/__schema2"
+    },
+    "__schema2": {
+      "description": "Controls the amount of time to wait for inference results.",
+      "$ref": "#/$defs/Duration"
+    },
+    "Duration": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/__schema3"
+        },
+        {
+          "$ref": "#/$defs/__schema4"
+        },
+        {
+          "$ref": "#/$defs/__schema5"
+        }
+      ],
+      "id": "Duration"
+    },
+    "__schema3": {
+      "type": "string"
+    },
+    "__schema4": {
+      "type": "number",
+      "const": -1
+    },
+    "__schema5": {
+      "type": "number",
+      "const": 0
+    },
+    "__schema6": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/__schema7"
+      },
+      "description": "An array of objects to pass to the model for inference. The objects should contain a fields matching your configured trained model input. Typically, for NLP models, the field name is `text_field`. Currently, for NLP models, only a single value is allowed."
+    },
+    "__schema7": {
+      "type": "object",
+      "propertyNames": {
+        "type": "string"
+      },
+      "additionalProperties": {}
+    },
+    "__schema8": {
+      "$ref": "#/$defs/__schema9"
+    },
+    "__schema9": {
+      "description": "The inference configuration updates to apply on the API call",
+      "$ref": "#/$defs/MlInferenceConfigUpdateContainer"
+    },
+    "__schema10": {
+      "type": "object",
+      "properties": {
+        "regression": {
+          "$ref": "#/$defs/MlRegressionInferenceOptions"
+        }
+      },
+      "required": [
+        "regression"
+      ],
+      "additionalProperties": false
+    },
+    "MlRegressionInferenceOptions": {
+      "type": "object",
+      "properties": {
+        "results_field": {
+          "$ref": "#/$defs/__schema11"
+        },
+        "num_top_feature_importance_values": {
+          "$ref": "#/$defs/__schema12"
+        }
+      },
+      "additionalProperties": false,
+      "id": "MlRegressionInferenceOptions"
+    },
+    "__schema11": {
+      "description": "The field that is added to incoming documents to contain the inference prediction. Defaults to predicted_value.",
+      "$ref": "#/$defs/Field"
+    },
+    "Field": {
+      "type": "string",
+      "id": "Field"
+    },
+    "__schema12": {
+      "description": "Specifies the maximum number of feature importance values per document.",
+      "$ref": "#/$defs/integer"
+    },
+    "integer": {
+      "type": "number",
+      "id": "integer"
+    },
+    "__schema13": {
+      "type": "object",
+      "properties": {
+        "classification": {
+          "$ref": "#/$defs/MlClassificationInferenceOptions"
+        }
+      },
+      "required": [
+        "classification"
+      ],
+      "additionalProperties": false
+    },
+    "MlClassificationInferenceOptions": {
+      "type": "object",
+      "properties": {
+        "num_top_classes": {
+          "$ref": "#/$defs/__schema14"
+        },
+        "num_top_feature_importance_values": {
+          "$ref": "#/$defs/__schema15"
+        },
+        "prediction_field_type": {
+          "$ref": "#/$defs/__schema16"
+        },
+        "results_field": {
+          "$ref": "#/$defs/__schema17"
+        },
+        "top_classes_results_field": {
+          "$ref": "#/$defs/__schema18"
+        }
+      },
+      "additionalProperties": false,
+      "id": "MlClassificationInferenceOptions"
+    },
+    "__schema14": {
+      "description": "Specifies the number of top class predictions to return. Defaults to 0.",
+      "$ref": "#/$defs/integer"
+    },
+    "__schema15": {
+      "description": "Specifies the maximum number of feature importance values per document.",
+      "$ref": "#/$defs/integer"
+    },
+    "__schema16": {
+      "type": "string",
+      "description": "Specifies the type of the predicted field to write. Acceptable values are: string, number, boolean. When boolean is provided 1.0 is transformed to true and 0.0 to false."
+    },
+    "__schema17": {
+      "type": "string",
+      "description": "The field that is added to incoming documents to contain the inference prediction. Defaults to predicted_value."
+    },
+    "__schema18": {
+      "type": "string",
+      "description": "Specifies the field to which the top classes are written. Defaults to top_classes."
+    },
+    "__schema19": {
+      "type": "object",
+      "properties": {
+        "text_classification": {
+          "$ref": "#/$defs/MlTextClassificationInferenceUpdateOptions"
+        }
+      },
+      "required": [
+        "text_classification"
+      ],
+      "additionalProperties": false
+    },
+    "MlTextClassificationInferenceUpdateOptions": {
+      "type": "object",
+      "properties": {
+        "num_top_classes": {
+          "$ref": "#/$defs/__schema20"
+        },
+        "tokenization": {
+          "$ref": "#/$defs/__schema21"
+        },
+        "results_field": {
+          "$ref": "#/$defs/__schema24"
+        },
+        "classification_labels": {
+          "$ref": "#/$defs/__schema25"
+        }
+      },
+      "additionalProperties": false,
+      "id": "MlTextClassificationInferenceUpdateOptions"
+    },
+    "__schema20": {
+      "description": "Specifies the number of top class predictions to return. Defaults to 0.",
+      "$ref": "#/$defs/integer"
+    },
+    "__schema21": {
+      "description": "The tokenization options to update when inferring",
+      "$ref": "#/$defs/MlNlpTokenizationUpdateOptions"
+    },
+    "__schema22": {
+      "description": "Truncate options to apply",
+      "$ref": "#/$defs/MlTokenizationTruncate"
+    },
+    "MlTokenizationTruncate": {
+      "type": "string",
+      "enum": [
+        "first",
+        "second",
+        "none"
+      ],
+      "id": "MlTokenizationTruncate"
+    },
+    "__schema23": {
+      "description": "Span options to apply",
+      "$ref": "#/$defs/integer"
+    },
+    "MlNlpTokenizationUpdateOptions": {
+      "type": "object",
+      "properties": {
+        "truncate": {
+          "$ref": "#/$defs/__schema22"
+        },
+        "span": {
+          "$ref": "#/$defs/__schema23"
+        }
+      },
+      "additionalProperties": false,
+      "id": "MlNlpTokenizationUpdateOptions"
+    },
+    "__schema24": {
+      "type": "string",
+      "description": "The field that is added to incoming documents to contain the inference prediction. Defaults to predicted_value."
+    },
+    "__schema25": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/__schema26"
+      },
+      "description": "Classification labels to apply other than the stored labels. Must have the same deminsions as the default configured labels"
+    },
+    "__schema26": {
+      "type": "string"
+    },
+    "__schema27": {
+      "type": "object",
+      "properties": {
+        "zero_shot_classification": {
+          "$ref": "#/$defs/MlZeroShotClassificationInferenceUpdateOptions"
+        }
+      },
+      "required": [
+        "zero_shot_classification"
+      ],
+      "additionalProperties": false
+    },
+    "MlZeroShotClassificationInferenceUpdateOptions": {
+      "type": "object",
+      "properties": {
+        "tokenization": {
+          "$ref": "#/$defs/__schema28"
+        },
+        "results_field": {
+          "$ref": "#/$defs/__schema29"
+        },
+        "multi_label": {
+          "$ref": "#/$defs/__schema30"
+        },
+        "labels": {
+          "$ref": "#/$defs/__schema31"
+        }
+      },
+      "required": [
+        "labels"
+      ],
+      "additionalProperties": false,
+      "id": "MlZeroShotClassificationInferenceUpdateOptions"
+    },
+    "__schema28": {
+      "description": "The tokenization options to update when inferring",
+      "$ref": "#/$defs/MlNlpTokenizationUpdateOptions"
+    },
+    "__schema29": {
+      "type": "string",
+      "description": "The field that is added to incoming documents to contain the inference prediction. Defaults to predicted_value."
+    },
+    "__schema30": {
+      "type": "boolean",
+      "description": "Update the configured multi label option. Indicates if more than one true label exists. Defaults to the configured value."
+    },
+    "__schema31": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/__schema32"
+      },
+      "description": "The labels to predict."
+    },
+    "__schema32": {
+      "type": "string"
+    },
+    "__schema33": {
+      "type": "object",
+      "properties": {
+        "fill_mask": {
+          "$ref": "#/$defs/MlFillMaskInferenceUpdateOptions"
+        }
+      },
+      "required": [
+        "fill_mask"
+      ],
+      "additionalProperties": false
+    },
+    "MlFillMaskInferenceUpdateOptions": {
+      "type": "object",
+      "properties": {
+        "num_top_classes": {
+          "$ref": "#/$defs/__schema34"
+        },
+        "tokenization": {
+          "$ref": "#/$defs/__schema35"
+        },
+        "results_field": {
+          "$ref": "#/$defs/__schema36"
+        }
+      },
+      "additionalProperties": false,
+      "id": "MlFillMaskInferenceUpdateOptions"
+    },
+    "__schema34": {
+      "description": "Specifies the number of top class predictions to return. Defaults to 0.",
+      "$ref": "#/$defs/integer"
+    },
+    "__schema35": {
+      "description": "The tokenization options to update when inferring",
+      "$ref": "#/$defs/MlNlpTokenizationUpdateOptions"
+    },
+    "__schema36": {
+      "type": "string",
+      "description": "The field that is added to incoming documents to contain the inference prediction. Defaults to predicted_value."
+    },
+    "__schema37": {
+      "type": "object",
+      "properties": {
+        "ner": {
+          "$ref": "#/$defs/MlNerInferenceUpdateOptions"
+        }
+      },
+      "required": [
+        "ner"
+      ],
+      "additionalProperties": false
+    },
+    "MlNerInferenceUpdateOptions": {
+      "type": "object",
+      "properties": {
+        "tokenization": {
+          "$ref": "#/$defs/__schema38"
+        },
+        "results_field": {
+          "$ref": "#/$defs/__schema39"
+        }
+      },
+      "additionalProperties": false,
+      "id": "MlNerInferenceUpdateOptions"
+    },
+    "__schema38": {
+      "description": "The tokenization options to update when inferring",
+      "$ref": "#/$defs/MlNlpTokenizationUpdateOptions"
+    },
+    "__schema39": {
+      "type": "string",
+      "description": "The field that is added to incoming documents to contain the inference prediction. Defaults to predicted_value."
+    },
+    "__schema40": {
+      "type": "object",
+      "properties": {
+        "pass_through": {
+          "$ref": "#/$defs/MlPassThroughInferenceUpdateOptions"
+        }
+      },
+      "required": [
+        "pass_through"
+      ],
+      "additionalProperties": false
+    },
+    "MlPassThroughInferenceUpdateOptions": {
+      "type": "object",
+      "properties": {
+        "tokenization": {
+          "$ref": "#/$defs/__schema41"
+        },
+        "results_field": {
+          "$ref": "#/$defs/__schema42"
+        }
+      },
+      "additionalProperties": false,
+      "id": "MlPassThroughInferenceUpdateOptions"
+    },
+    "__schema41": {
+      "description": "The tokenization options to update when inferring",
+      "$ref": "#/$defs/MlNlpTokenizationUpdateOptions"
+    },
+    "__schema42": {
+      "type": "string",
+      "description": "The field that is added to incoming documents to contain the inference prediction. Defaults to predicted_value."
+    },
+    "__schema43": {
+      "type": "object",
+      "properties": {
+        "text_embedding": {
+          "$ref": "#/$defs/MlTextEmbeddingInferenceUpdateOptions"
+        }
+      },
+      "required": [
+        "text_embedding"
+      ],
+      "additionalProperties": false
+    },
+    "MlTextEmbeddingInferenceUpdateOptions": {
+      "type": "object",
+      "properties": {
+        "tokenization": {
+          "$ref": "#/$defs/__schema44"
+        },
+        "results_field": {
+          "$ref": "#/$defs/__schema45"
+        }
+      },
+      "additionalProperties": false,
+      "id": "MlTextEmbeddingInferenceUpdateOptions"
+    },
+    "__schema44": {
+      "$ref": "#/$defs/MlNlpTokenizationUpdateOptions"
+    },
+    "__schema45": {
+      "type": "string",
+      "description": "The field that is added to incoming documents to contain the inference prediction. Defaults to predicted_value."
+    },
+    "__schema46": {
+      "type": "object",
+      "properties": {
+        "text_expansion": {
+          "$ref": "#/$defs/MlTextExpansionInferenceUpdateOptions"
+        }
+      },
+      "required": [
+        "text_expansion"
+      ],
+      "additionalProperties": false
+    },
+    "MlTextExpansionInferenceUpdateOptions": {
+      "type": "object",
+      "properties": {
+        "tokenization": {
+          "$ref": "#/$defs/__schema47"
+        },
+        "results_field": {
+          "$ref": "#/$defs/__schema48"
+        }
+      },
+      "additionalProperties": false,
+      "id": "MlTextExpansionInferenceUpdateOptions"
+    },
+    "__schema47": {
+      "$ref": "#/$defs/MlNlpTokenizationUpdateOptions"
+    },
+    "__schema48": {
+      "type": "string",
+      "description": "The field that is added to incoming documents to contain the inference prediction. Defaults to predicted_value."
+    },
+    "__schema49": {
+      "type": "object",
+      "properties": {
+        "question_answering": {
+          "$ref": "#/$defs/MlQuestionAnsweringInferenceUpdateOptions"
+        }
+      },
+      "required": [
+        "question_answering"
+      ],
+      "additionalProperties": false
+    },
+    "MlQuestionAnsweringInferenceUpdateOptions": {
+      "type": "object",
+      "properties": {
+        "question": {
+          "$ref": "#/$defs/__schema50"
+        },
+        "num_top_classes": {
+          "$ref": "#/$defs/__schema51"
+        },
+        "tokenization": {
+          "$ref": "#/$defs/__schema52"
+        },
+        "results_field": {
+          "$ref": "#/$defs/__schema53"
+        },
+        "max_answer_length": {
+          "$ref": "#/$defs/__schema54"
+        }
+      },
+      "required": [
+        "question"
+      ],
+      "additionalProperties": false,
+      "id": "MlQuestionAnsweringInferenceUpdateOptions"
+    },
+    "__schema50": {
+      "type": "string",
+      "description": "The question to answer given the inference context"
+    },
+    "__schema51": {
+      "description": "Specifies the number of top class predictions to return. Defaults to 0.",
+      "$ref": "#/$defs/integer"
+    },
+    "__schema52": {
+      "description": "The tokenization options to update when inferring",
+      "$ref": "#/$defs/MlNlpTokenizationUpdateOptions"
+    },
+    "__schema53": {
+      "type": "string",
+      "description": "The field that is added to incoming documents to contain the inference prediction. Defaults to predicted_value."
+    },
+    "__schema54": {
+      "description": "The maximum answer length to consider for extraction",
+      "$ref": "#/$defs/integer"
+    },
+    "MlInferenceConfigUpdateContainer": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/__schema10"
+        },
+        {
+          "$ref": "#/$defs/__schema13"
+        },
+        {
+          "$ref": "#/$defs/__schema19"
+        },
+        {
+          "$ref": "#/$defs/__schema27"
+        },
+        {
+          "$ref": "#/$defs/__schema33"
+        },
+        {
+          "$ref": "#/$defs/__schema37"
+        },
+        {
+          "$ref": "#/$defs/__schema40"
+        },
+        {
+          "$ref": "#/$defs/__schema43"
+        },
+        {
+          "$ref": "#/$defs/__schema46"
+        },
+        {
+          "$ref": "#/$defs/__schema49"
+        }
+      ],
+      "id": "MlInferenceConfigUpdateContainer"
+    }
+  }
+}

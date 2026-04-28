@@ -1,0 +1,202 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "model_id": {
+      "$ref": "#/$defs/__schema0"
+    },
+    "cache_size": {
+      "$ref": "#/$defs/__schema1"
+    },
+    "number_of_allocations": {
+      "$ref": "#/$defs/__schema5"
+    },
+    "priority": {
+      "$ref": "#/$defs/__schema7"
+    },
+    "queue_capacity": {
+      "$ref": "#/$defs/__schema9"
+    },
+    "threads_per_allocation": {
+      "$ref": "#/$defs/__schema11"
+    },
+    "timeout": {
+      "$ref": "#/$defs/__schema13"
+    },
+    "wait_for": {
+      "$ref": "#/$defs/__schema18"
+    },
+    "adaptive_allocations": {
+      "$ref": "#/$defs/__schema20"
+    }
+  },
+  "required": [
+    "model_id"
+  ],
+  "additionalProperties": false,
+  "id": "MlStartTrainedModelDeploymentRequest",
+  "$defs": {
+    "__schema0": {
+      "description": "The unique identifier of the trained model. Currently, only PyTorch models are supported.",
+      "$ref": "#/$defs/Id"
+    },
+    "Id": {
+      "type": "string",
+      "id": "Id"
+    },
+    "__schema1": {
+      "$ref": "#/$defs/__schema2"
+    },
+    "__schema2": {
+      "description": "The inference cache size (in memory outside the JVM heap) per node for the model. The default value is the same size as the `model_size_bytes`. To disable the cache, `0b` can be provided.",
+      "$ref": "#/$defs/ByteSize"
+    },
+    "ByteSize": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/__schema3"
+        },
+        {
+          "$ref": "#/$defs/__schema4"
+        }
+      ],
+      "id": "ByteSize"
+    },
+    "__schema3": {
+      "$ref": "#/$defs/long"
+    },
+    "long": {
+      "type": "number",
+      "id": "long"
+    },
+    "__schema4": {
+      "type": "string"
+    },
+    "__schema5": {
+      "$ref": "#/$defs/__schema6"
+    },
+    "__schema6": {
+      "description": "The number of model allocations on each node where the model is deployed. All allocations on a node share the same copy of the model in memory but use a separate set of threads to evaluate the model. Increasing this value generally increases the throughput. If this setting is greater than the number of hardware threads it will automatically be changed to a value less than the number of hardware threads. If adaptive_allocations is enabled, do not set this value, because it’s automatically set.",
+      "$ref": "#/$defs/integer"
+    },
+    "integer": {
+      "type": "number",
+      "id": "integer"
+    },
+    "__schema7": {
+      "$ref": "#/$defs/__schema8"
+    },
+    "__schema8": {
+      "description": "The deployment priority",
+      "$ref": "#/$defs/MlTrainingPriority"
+    },
+    "MlTrainingPriority": {
+      "type": "string",
+      "enum": [
+        "normal",
+        "low"
+      ],
+      "id": "MlTrainingPriority"
+    },
+    "__schema9": {
+      "$ref": "#/$defs/__schema10"
+    },
+    "__schema10": {
+      "description": "Specifies the number of inference requests that are allowed in the queue. After the number of requests exceeds this value, new requests are rejected with a 429 error.",
+      "$ref": "#/$defs/integer"
+    },
+    "__schema11": {
+      "$ref": "#/$defs/__schema12"
+    },
+    "__schema12": {
+      "description": "Sets the number of threads used by each model allocation during inference. This generally increases the inference speed. The inference process is a compute-bound process; any number greater than the number of available hardware threads on the machine does not increase the inference speed. If this setting is greater than the number of hardware threads it will automatically be changed to a value less than the number of hardware threads.",
+      "$ref": "#/$defs/integer"
+    },
+    "__schema13": {
+      "$ref": "#/$defs/__schema14"
+    },
+    "__schema14": {
+      "description": "Specifies the amount of time to wait for the model to deploy.",
+      "$ref": "#/$defs/Duration"
+    },
+    "Duration": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/__schema15"
+        },
+        {
+          "$ref": "#/$defs/__schema16"
+        },
+        {
+          "$ref": "#/$defs/__schema17"
+        }
+      ],
+      "id": "Duration"
+    },
+    "__schema15": {
+      "type": "string"
+    },
+    "__schema16": {
+      "type": "number",
+      "const": -1
+    },
+    "__schema17": {
+      "type": "number",
+      "const": 0
+    },
+    "__schema18": {
+      "$ref": "#/$defs/__schema19"
+    },
+    "__schema19": {
+      "description": "Specifies the allocation status to wait for before returning.",
+      "$ref": "#/$defs/MlDeploymentAllocationState"
+    },
+    "MlDeploymentAllocationState": {
+      "type": "string",
+      "enum": [
+        "started",
+        "starting",
+        "fully_allocated"
+      ],
+      "id": "MlDeploymentAllocationState"
+    },
+    "__schema20": {
+      "$ref": "#/$defs/__schema21"
+    },
+    "__schema21": {
+      "description": "Adaptive allocations configuration. When enabled, the number of allocations is set based on the current load. If adaptive_allocations is enabled, do not set the number of allocations manually.",
+      "$ref": "#/$defs/MlAdaptiveAllocationsSettings"
+    },
+    "__schema22": {
+      "type": "boolean",
+      "description": "If true, adaptive_allocations is enabled"
+    },
+    "__schema23": {
+      "description": "Specifies the minimum number of allocations to scale to. If set, it must be greater than or equal to 0. If not defined, the deployment scales to 0.",
+      "$ref": "#/$defs/integer"
+    },
+    "__schema24": {
+      "description": "Specifies the maximum number of allocations to scale to. If set, it must be greater than or equal to min_number_of_allocations.",
+      "$ref": "#/$defs/integer"
+    },
+    "MlAdaptiveAllocationsSettings": {
+      "type": "object",
+      "properties": {
+        "enabled": {
+          "$ref": "#/$defs/__schema22"
+        },
+        "min_number_of_allocations": {
+          "$ref": "#/$defs/__schema23"
+        },
+        "max_number_of_allocations": {
+          "$ref": "#/$defs/__schema24"
+        }
+      },
+      "required": [
+        "enabled"
+      ],
+      "additionalProperties": false,
+      "id": "MlAdaptiveAllocationsSettings"
+    }
+  }
+}

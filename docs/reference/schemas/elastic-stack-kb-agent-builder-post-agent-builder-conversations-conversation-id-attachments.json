@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "conversation_id": {
+      "type": "string",
+      "description": "The unique identifier of the conversation."
+    },
+    "data": {
+      "type": "string",
+      "description": ""
+    },
+    "description": {
+      "type": "string",
+      "description": "Human-readable description of the attachment."
+    },
+    "hidden": {
+      "type": "boolean",
+      "description": "Whether the attachment should be hidden from the user."
+    },
+    "id": {
+      "type": "string",
+      "description": "Optional custom ID for the attachment."
+    },
+    "origin": {
+      "type": "string",
+      "description": "Origin string (for example, saved object ID) for by-reference attachments. When provided without data, the content is resolved once at creation time."
+    },
+    "type": {
+      "type": "string",
+      "description": "The type of the attachment (e.g., text, esql, visualization)."
+    }
+  },
+  "required": [
+    "conversation_id",
+    "data",
+    "type"
+  ],
+  "additionalProperties": {}
+}

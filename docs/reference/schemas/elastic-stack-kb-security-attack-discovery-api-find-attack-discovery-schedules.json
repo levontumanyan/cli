@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "page": {
+      "type": "number",
+      "description": "Page number to return (used for pagination). Defaults to 1."
+    },
+    "per_page": {
+      "type": "number",
+      "description": "Number of Attack discovery schedules to return per page (used for pagination). Defaults to 10."
+    },
+    "sort_field": {
+      "type": "string",
+      "description": "Field used to sort results. Common fields include 'name', 'created_at', 'updated_at', and 'enabled'."
+    },
+    "sort_direction": {
+      "type": "string",
+      "description": "Sort order direction. Use 'asc' for ascending or 'desc' for descending. Defaults to 'asc'."
+    }
+  },
+  "additionalProperties": {}
+}

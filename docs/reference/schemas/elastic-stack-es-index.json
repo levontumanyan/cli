@@ -1,0 +1,297 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "id": {
+      "$ref": "#/$defs/__schema0"
+    },
+    "index": {
+      "$ref": "#/$defs/__schema2"
+    },
+    "if_primary_term": {
+      "$ref": "#/$defs/__schema3"
+    },
+    "if_seq_no": {
+      "$ref": "#/$defs/__schema5"
+    },
+    "include_source_on_error": {
+      "$ref": "#/$defs/__schema7"
+    },
+    "op_type": {
+      "$ref": "#/$defs/__schema9"
+    },
+    "pipeline": {
+      "$ref": "#/$defs/__schema11"
+    },
+    "refresh": {
+      "$ref": "#/$defs/__schema13"
+    },
+    "routing": {
+      "$ref": "#/$defs/__schema17"
+    },
+    "timeout": {
+      "$ref": "#/$defs/__schema21"
+    },
+    "version": {
+      "$ref": "#/$defs/__schema26"
+    },
+    "version_type": {
+      "$ref": "#/$defs/__schema28"
+    },
+    "wait_for_active_shards": {
+      "$ref": "#/$defs/__schema30"
+    },
+    "require_alias": {
+      "$ref": "#/$defs/__schema33"
+    },
+    "require_data_stream": {
+      "$ref": "#/$defs/__schema35"
+    },
+    "document": {
+      "$ref": "#/$defs/__schema37"
+    }
+  },
+  "required": [
+    "index"
+  ],
+  "additionalProperties": false,
+  "id": "IndexRequest",
+  "$defs": {
+    "__schema0": {
+      "$ref": "#/$defs/__schema1"
+    },
+    "__schema1": {
+      "description": "A unique identifier for the document. To automatically generate a document ID, use the `POST /<target>/_doc/` request format and omit this parameter.",
+      "$ref": "#/$defs/Id"
+    },
+    "Id": {
+      "type": "string",
+      "id": "Id"
+    },
+    "__schema2": {
+      "description": "The name of the data stream or index to target. If the target doesn't exist and matches the name or wildcard (`*`) pattern of an index template with a `data_stream` definition, this request creates the data stream. If the target doesn't exist and doesn't match a data stream template, this request creates the index. You can check for existing targets with the resolve index API.",
+      "$ref": "#/$defs/IndexName"
+    },
+    "IndexName": {
+      "type": "string",
+      "id": "IndexName"
+    },
+    "__schema3": {
+      "$ref": "#/$defs/__schema4"
+    },
+    "__schema4": {
+      "description": "Only perform the operation if the document has this primary term.",
+      "$ref": "#/$defs/long"
+    },
+    "long": {
+      "type": "number",
+      "id": "long"
+    },
+    "__schema5": {
+      "$ref": "#/$defs/__schema6"
+    },
+    "__schema6": {
+      "description": "Only perform the operation if the document has this sequence number.",
+      "$ref": "#/$defs/SequenceNumber"
+    },
+    "SequenceNumber": {
+      "id": "SequenceNumber",
+      "$ref": "#/$defs/long"
+    },
+    "__schema7": {
+      "$ref": "#/$defs/__schema8"
+    },
+    "__schema8": {
+      "type": "boolean",
+      "description": "True or false if to include the document source in the error message in case of parsing errors."
+    },
+    "__schema9": {
+      "$ref": "#/$defs/__schema10"
+    },
+    "__schema10": {
+      "description": "Set to `create` to only index the document if it does not already exist (put if absent). If a document with the specified `_id` already exists, the indexing operation will fail. The behavior is the same as using the `<index>/_create` endpoint. If a document ID is specified, this paramater defaults to `index`. Otherwise, it defaults to `create`. If the request targets a data stream, an `op_type` of `create` is required.",
+      "$ref": "#/$defs/OpType"
+    },
+    "OpType": {
+      "type": "string",
+      "enum": [
+        "index",
+        "create"
+      ],
+      "id": "OpType"
+    },
+    "__schema11": {
+      "$ref": "#/$defs/__schema12"
+    },
+    "__schema12": {
+      "type": "string",
+      "description": "The ID of the pipeline to use to preprocess incoming documents. If the index has a default ingest pipeline specified, then setting the value to `_none` disables the default ingest pipeline for this request. If a final pipeline is configured it will always run, regardless of the value of this parameter."
+    },
+    "__schema13": {
+      "$ref": "#/$defs/__schema14"
+    },
+    "__schema14": {
+      "description": "If `true`, Elasticsearch refreshes the affected shards to make this operation visible to search. If `wait_for`, it waits for a refresh to make this operation visible to search. If `false`, it does nothing with refreshes.",
+      "$ref": "#/$defs/Refresh"
+    },
+    "Refresh": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/__schema15"
+        },
+        {
+          "$ref": "#/$defs/__schema16"
+        }
+      ],
+      "id": "Refresh"
+    },
+    "__schema15": {
+      "type": "boolean"
+    },
+    "__schema16": {
+      "type": "string",
+      "enum": [
+        "true",
+        "false",
+        "wait_for"
+      ]
+    },
+    "__schema17": {
+      "$ref": "#/$defs/__schema18"
+    },
+    "__schema18": {
+      "description": "A custom value that is used to route operations to a specific shard.",
+      "$ref": "#/$defs/Routing"
+    },
+    "Routing": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/__schema19"
+        },
+        {
+          "$ref": "#/$defs/__schema20"
+        }
+      ],
+      "id": "Routing"
+    },
+    "__schema19": {
+      "type": "string"
+    },
+    "__schema20": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "__schema21": {
+      "$ref": "#/$defs/__schema22"
+    },
+    "__schema22": {
+      "description": "The period the request waits for the following operations: automatic index creation, dynamic mapping updates, waiting for active shards. This parameter is useful for situations where the primary shard assigned to perform the operation might not be available when the operation runs. Some reasons for this might be that the primary shard is currently recovering from a gateway or undergoing relocation. By default, the operation will wait on the primary shard to become available for at least 1 minute before failing and responding with an error. The actual wait time could be longer, particularly when multiple waits occur.",
+      "$ref": "#/$defs/Duration"
+    },
+    "Duration": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/__schema23"
+        },
+        {
+          "$ref": "#/$defs/__schema24"
+        },
+        {
+          "$ref": "#/$defs/__schema25"
+        }
+      ],
+      "id": "Duration"
+    },
+    "__schema23": {
+      "type": "string"
+    },
+    "__schema24": {
+      "type": "number",
+      "const": -1
+    },
+    "__schema25": {
+      "type": "number",
+      "const": 0
+    },
+    "__schema26": {
+      "$ref": "#/$defs/__schema27"
+    },
+    "__schema27": {
+      "description": "An explicit version number for concurrency control. It must be a non-negative long number.",
+      "$ref": "#/$defs/VersionNumber"
+    },
+    "VersionNumber": {
+      "id": "VersionNumber",
+      "$ref": "#/$defs/long"
+    },
+    "__schema28": {
+      "$ref": "#/$defs/__schema29"
+    },
+    "__schema29": {
+      "description": "The version type.",
+      "$ref": "#/$defs/VersionType"
+    },
+    "VersionType": {
+      "type": "string",
+      "enum": [
+        "internal",
+        "external",
+        "external_gte"
+      ],
+      "id": "VersionType"
+    },
+    "__schema30": {
+      "$ref": "#/$defs/__schema31"
+    },
+    "__schema31": {
+      "description": "The number of shard copies that must be active before proceeding with the operation. You can set it to `all` or any positive integer up to the total number of shards in the index (`number_of_replicas+1`). The default value of `1` means it waits for each primary shard to be active.",
+      "$ref": "#/$defs/WaitForActiveShards"
+    },
+    "WaitForActiveShards": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/__schema32"
+        },
+        {
+          "$ref": "#/$defs/WaitForActiveShardOptions"
+        }
+      ],
+      "id": "WaitForActiveShards"
+    },
+    "__schema32": {
+      "$ref": "#/$defs/integer"
+    },
+    "integer": {
+      "type": "number",
+      "id": "integer"
+    },
+    "WaitForActiveShardOptions": {
+      "type": "string",
+      "enum": [
+        "all",
+        "index-setting"
+      ],
+      "id": "WaitForActiveShardOptions"
+    },
+    "__schema33": {
+      "$ref": "#/$defs/__schema34"
+    },
+    "__schema34": {
+      "type": "boolean",
+      "description": "If `true`, the destination must be an index alias."
+    },
+    "__schema35": {
+      "$ref": "#/$defs/__schema36"
+    },
+    "__schema36": {
+      "type": "boolean",
+      "description": "If `true`, the request's actions must target a data stream (existing or to be created)."
+    },
+    "__schema37": {
+      "$ref": "#/$defs/__schema38"
+    },
+    "__schema38": {}
+  }
+}

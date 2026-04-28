@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "exclude_export_details": {
+      "type": "boolean",
+      "description": "Determines whether a summary of the exported rules is returned."
+    },
+    "file_name": {
+      "type": "string",
+      "description": "File name for saving the exported rules."
+    },
+    "objects": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/__schema0"
+      },
+      "description": "Array of objects with a rule's `rule_id` field. Do not use rule's `id` here. Exports all rules when unspecified."
+    }
+  },
+  "required": [
+    "objects"
+  ],
+  "additionalProperties": {},
+  "$defs": {
+    "__schema0": {}
+  }
+}

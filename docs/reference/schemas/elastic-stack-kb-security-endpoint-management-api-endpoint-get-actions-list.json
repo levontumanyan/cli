@@ -1,0 +1,47 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "page": {
+      "type": "number",
+      "description": ""
+    },
+    "pageSize": {
+      "type": "number",
+      "description": ""
+    },
+    "commands": {
+      "type": "string",
+      "description": ""
+    },
+    "agentIds": {
+      "type": "string",
+      "description": ""
+    },
+    "userIds": {
+      "type": "string",
+      "description": ""
+    },
+    "startDate": {
+      "type": "string",
+      "description": ""
+    },
+    "endDate": {
+      "type": "string",
+      "description": ""
+    },
+    "agentTypes": {
+      "type": "string",
+      "description": ""
+    },
+    "withOutputs": {
+      "type": "string",
+      "description": ""
+    },
+    "types": {
+      "type": "string",
+      "description": ""
+    }
+  },
+  "additionalProperties": {}
+}

@@ -1,0 +1,91 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "actions": {
+      "$ref": "#/$defs/__schema0"
+    }
+  },
+  "required": [
+    "actions"
+  ],
+  "additionalProperties": false,
+  "id": "IndicesModifyDataStreamRequest",
+  "$defs": {
+    "__schema0": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/IndicesModifyDataStreamAction"
+      },
+      "description": "Actions to perform."
+    },
+    "IndicesModifyDataStreamAction": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/__schema1"
+        },
+        {
+          "$ref": "#/$defs/__schema4"
+        }
+      ],
+      "id": "IndicesModifyDataStreamAction"
+    },
+    "__schema1": {
+      "type": "object",
+      "properties": {
+        "add_backing_index": {
+          "$ref": "#/$defs/IndicesModifyDataStreamIndexAndDataStreamAction"
+        }
+      },
+      "required": [
+        "add_backing_index"
+      ],
+      "additionalProperties": false
+    },
+    "IndicesModifyDataStreamIndexAndDataStreamAction": {
+      "type": "object",
+      "properties": {
+        "data_stream": {
+          "$ref": "#/$defs/__schema2"
+        },
+        "index": {
+          "$ref": "#/$defs/__schema3"
+        }
+      },
+      "required": [
+        "data_stream",
+        "index"
+      ],
+      "additionalProperties": false,
+      "id": "IndicesModifyDataStreamIndexAndDataStreamAction"
+    },
+    "__schema2": {
+      "description": "Data stream targeted by the action.",
+      "$ref": "#/$defs/DataStreamName"
+    },
+    "DataStreamName": {
+      "type": "string",
+      "id": "DataStreamName"
+    },
+    "__schema3": {
+      "description": "Index for the action.",
+      "$ref": "#/$defs/IndexName"
+    },
+    "IndexName": {
+      "type": "string",
+      "id": "IndexName"
+    },
+    "__schema4": {
+      "type": "object",
+      "properties": {
+        "remove_backing_index": {
+          "$ref": "#/$defs/IndicesModifyDataStreamIndexAndDataStreamAction"
+        }
+      },
+      "required": [
+        "remove_backing_index"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

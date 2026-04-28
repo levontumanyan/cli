@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "viewId": {
+      "type": "string",
+      "description": "The viewId parameter"
+    }
+  },
+  "required": [
+    "viewId"
+  ],
+  "additionalProperties": {}
+}

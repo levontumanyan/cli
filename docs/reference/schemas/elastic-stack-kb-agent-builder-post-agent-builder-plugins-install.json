@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "plugin_name": {
+      "type": "string",
+      "description": "Optional name override for the plugin. Defaults to the manifest name."
+    },
+    "url": {
+      "type": "string",
+      "description": "URL to install the plugin from (GitHub URL or direct zip URL)."
+    }
+  },
+  "required": [
+    "url"
+  ],
+  "additionalProperties": {}
+}

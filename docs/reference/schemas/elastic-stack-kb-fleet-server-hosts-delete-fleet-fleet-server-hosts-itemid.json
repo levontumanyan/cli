@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "itemId": {
+      "type": "string",
+      "description": "The itemId parameter"
+    }
+  },
+  "required": [
+    "itemId"
+  ],
+  "additionalProperties": {}
+}

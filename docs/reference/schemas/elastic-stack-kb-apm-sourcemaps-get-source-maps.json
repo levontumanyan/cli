@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "page": {
+      "type": "number",
+      "description": "Page number"
+    },
+    "perPage": {
+      "type": "number",
+      "description": "Number of records per page"
+    }
+  },
+  "additionalProperties": {}
+}

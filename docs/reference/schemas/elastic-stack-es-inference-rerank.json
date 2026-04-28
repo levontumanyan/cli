@@ -1,0 +1,118 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "inference_id": {
+      "$ref": "#/$defs/__schema0"
+    },
+    "timeout": {
+      "$ref": "#/$defs/__schema1"
+    },
+    "query": {
+      "$ref": "#/$defs/__schema6"
+    },
+    "input": {
+      "$ref": "#/$defs/__schema7"
+    },
+    "return_documents": {
+      "$ref": "#/$defs/__schema9"
+    },
+    "top_n": {
+      "$ref": "#/$defs/__schema11"
+    },
+    "task_settings": {
+      "$ref": "#/$defs/__schema13"
+    }
+  },
+  "required": [
+    "inference_id",
+    "query",
+    "input"
+  ],
+  "additionalProperties": false,
+  "id": "InferenceRerankRequest",
+  "$defs": {
+    "__schema0": {
+      "description": "The unique identifier for the inference endpoint.",
+      "$ref": "#/$defs/Id"
+    },
+    "Id": {
+      "type": "string",
+      "id": "Id"
+    },
+    "__schema1": {
+      "$ref": "#/$defs/__schema2"
+    },
+    "__schema2": {
+      "description": "The amount of time to wait for the inference request to complete.",
+      "$ref": "#/$defs/Duration"
+    },
+    "Duration": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/__schema3"
+        },
+        {
+          "$ref": "#/$defs/__schema4"
+        },
+        {
+          "$ref": "#/$defs/__schema5"
+        }
+      ],
+      "id": "Duration"
+    },
+    "__schema3": {
+      "type": "string"
+    },
+    "__schema4": {
+      "type": "number",
+      "const": -1
+    },
+    "__schema5": {
+      "type": "number",
+      "const": 0
+    },
+    "__schema6": {
+      "type": "string",
+      "description": "Query input."
+    },
+    "__schema7": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/__schema8"
+      },
+      "description": "The documents to rank."
+    },
+    "__schema8": {
+      "type": "string"
+    },
+    "__schema9": {
+      "$ref": "#/$defs/__schema10"
+    },
+    "__schema10": {
+      "type": "boolean",
+      "description": "Include the document text in the response."
+    },
+    "__schema11": {
+      "$ref": "#/$defs/__schema12"
+    },
+    "__schema12": {
+      "description": "Limit the response to the top N documents.",
+      "$ref": "#/$defs/integer"
+    },
+    "integer": {
+      "type": "number",
+      "id": "integer"
+    },
+    "__schema13": {
+      "$ref": "#/$defs/__schema14"
+    },
+    "__schema14": {
+      "description": "Task settings for the individual inference request. These settings are specific to the task type you specified and override the task settings specified when initializing the service.",
+      "$ref": "#/$defs/InferenceTaskSettings"
+    },
+    "InferenceTaskSettings": {
+      "id": "InferenceTaskSettings"
+    }
+  }
+}
