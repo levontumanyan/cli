@@ -145,6 +145,13 @@ if (firstArg === 'config') {
 } else {
   program.addCommand(defineGroup({ name: 'config', description: 'Author and maintain the elastic config file' }))
 }
+
+if (firstArg === 'esql') {
+  const { registerEsqlCommands } = await import('./esql/register.ts')
+  program.addCommand(registerEsqlCommands())
+} else {
+  program.addCommand(defineGroup({ name: 'esql', description: 'Query Elasticsearch using ES|QL from the command line' }))
+}
 // Load config early so --help can hide blocked commands. Skip for commands
 // that don't need config (e.g. `version`, or `config` which authors the file)
 // to avoid unnecessary file I/O and a confusing "no config found" path.
