@@ -8,7 +8,6 @@ import { runQuery } from '../esql-client.ts'
 import { formatOutput, printStats, warnIfPartial } from '../formatter.ts'
 import { applyParams, loadSavedQueries } from '../saved-queries.ts'
 import { injectWhere } from '../inject.ts'
-import { handleError } from './query.ts'
 
 function parseDuration (s: string): number {
   const m = /^(\d+(?:\.\d+)?)(ms|s|m|h)$/.exec(s)
@@ -144,7 +143,6 @@ export function createWatchCommand (): Command {
       process.once('SIGTERM', resolve)
     })
     clearInterval(intervalId)
-    handleError // reference to suppress unused import warning
   })
 
   return cmd
