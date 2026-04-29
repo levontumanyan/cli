@@ -75,3 +75,12 @@ export function getTransport (): Transport {
 export function _testResetTransport (): void {
   _transport = undefined
 }
+
+/**
+ * Directly sets the cached Transport instance.
+ *
+ * @internal test seam -- use when you need a custom transport (e.g. maxRetries: 0)
+ */
+export function _testSetTransport (t: Transport): void {
+  _transport = t
+}
