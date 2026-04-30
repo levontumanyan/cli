@@ -10,7 +10,7 @@
  */
 
 import { z } from 'zod'
-import { MsearchTemplateRequest } from '@elastic/es-schemas/_global.js'
+import { MsearchTemplateRequest } from '@elastic/es-schemas/_global.msearch_template.js'
 import type { EsApiDefinition } from '../types.ts'
 
 const MsearchTemplateRequestPassthrough = MsearchTemplateRequest.extend({
