@@ -47,6 +47,7 @@ program.hook('preAction', async (thisCommand, actionCommand) => {
   // `status` loads the config itself so a partially broken config is reported as
   // a structured result rather than exiting before any probe runs.
   if (actionCommand.name() === 'status') return
+  if (actionCommand.name() === 'cli-schema') return
   if (actionCommand.parent?.name() === 'docs') return
   if (actionCommand.parent?.name() === 'sanitize') return
   // `config` commands author the config file itself — loading it would be
@@ -246,13 +247,20 @@ if (firstArg === 'status') {
   }))
 }
 
+if (firstArg === 'cli-schema') {
+  const { registerCliSchemaCommand } = await import('./cli-schema.ts')
+  program.addCommand(await registerCliSchemaCommand(VERSION, program))
+} else {
+  program.addCommand(defineGroup({ name: 'cli-schema', description: 'Emit the CLI structure as argh-schema JSON' }))
+}
+
 // Load config early so --help can hide blocked commands. Skip for commands
 // that don't need config (e.g. `version`, `sanitize`, `config` which authors
 // the file, and the completion subsystem which runs before any context exists)
 // to avoid unnecessary file I/O and a confusing "no config found" path.
 // loadConfig() caches the result in-process; the preAction hook reuses it via the default cache path.
 const SKIP_EARLY_CONFIG = new Set<string>([
-  'version', 'config', 'sanitize', 'extension', 'status', ...COMPLETION_COMMAND_NAMES,
+  'version', 'config', 'sanitize', 'extension', 'status', 'cli-schema', ...COMPLETION_COMMAND_NAMES,
 ])
 if (firstArg == null || !SKIP_EARLY_CONFIG.has(firstArg)) {
   // Parse --profile early (before Commander's full parse) so the early config load
