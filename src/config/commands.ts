@@ -138,7 +138,7 @@ async function applyFieldUpdates (
   baseContext: RawContext,
   updates: FieldUpdate,
   contextName: string,
-  store: SecretStore,
+  store: SecretStore | null,
   inlineSecrets: boolean
 ): Promise<ApplyFieldUpdatesResult> {
   let ctx = baseContext as Record<string, unknown>
@@ -149,7 +149,8 @@ async function applyFieldUpdates (
     ctx = setPath(ctx, field.path, value)
   }
 
-  const storeAvailable = await store.isAvailable()
+  // When inlineSecrets is true we never use the store, so skip the probe entirely.
+  const storeAvailable = store != null && !inlineSecrets && await store.isAvailable()
   if (updates.secrets.length > 0 && !storeAvailable && !inlineSecrets) {
     warnings.push(
       'No OS secret store is available; secrets will be written inline to the config file. ' +
@@ -157,10 +158,10 @@ async function applyFieldUpdates (
     )
   }
 
-  const useStore = storeAvailable && !inlineSecrets
+  const useStore = storeAvailable && store != null
   for (const { field, value } of updates.secrets) {
     const account = `${contextName}:${field.path.join('.')}`
-    if (useStore) {
+    if (useStore && store != null) {
       await store.put(KEYCHAIN_SERVICE, account, value)
       const expr = store.resolverExpr(KEYCHAIN_SERVICE, account)
       ctx = setPath(ctx, field.path, expr)
@@ -188,14 +189,18 @@ function getPath (obj: Record<string, unknown>, path: string[]): unknown {
  * failures are swallowed so a `context remove` never fails because a specific
  * keychain entry was already deleted.
  */
-async function purgeContextSecrets (store: SecretStore, contextName: string, ctx: RawContext | undefined): Promise<void> {
+async function purgeContextSecrets (contextName: string, ctx: RawContext | undefined): Promise<void> {
   if (ctx == null) return
-  for (const field of SECRET_FIELDS) {
+  // Identify fields that have resolver expressions — these are the only ones
+  // stored in the OS keychain. Inline secrets have nothing to purge.
+  const keychainFields = SECRET_FIELDS.filter(field => {
     const val = getPath(ctx as Record<string, unknown>, field.path)
-    if (typeof val !== 'string') continue
-    // Only delete keychain entries we wrote (resolver expressions). Inline
-    // values would require parsing, and deleting them would do nothing useful.
-    if (!val.includes('$(')) continue
+    return typeof val === 'string' && val.includes('$(')
+  })
+  if (keychainFields.length === 0) return
+  // Only probe the secret store when there is actually something to delete.
+  const store = await getSecretStore()
+  for (const field of keychainFields) {
     const account = `${contextName}:${field.path.join('.')}`
     try {
       await store.delete(KEYCHAIN_SERVICE, account)
@@ -253,7 +258,7 @@ async function handleContextAdd (parsed: {
     )
   }
 
-  const store = await getSecretStore()
+  const store = inlineSecrets ? null : await getSecretStore()
   const { context: ctx, secretsLog, warnings } = await applyFieldUpdates({}, updates, name, store, inlineSecrets)
 
   const contextValidation = ContextSchema.safeParse(resolveForValidation(ctx))
@@ -296,8 +301,7 @@ async function handleContextRemove (parsed: {
     )
   }
 
-  const store = await getSecretStore()
-  await purgeContextSecrets(store, name, config.contexts[name])
+  await purgeContextSecrets(name, config.contexts[name])
 
   const next = removeContext(config, name)
   if (Object.keys(next.contexts).length === 0) {
@@ -340,7 +344,7 @@ async function handleContextEdit (parsed: {
 
   if (hasFlagEdits) {
     // Flag-patch mode
-    const store = await getSecretStore()
+    const store = inlineSecrets ? null : await getSecretStore()
     const { context: ctx, secretsLog, warnings } = await applyFieldUpdates(
       extractContext(config, name),
       updates,
