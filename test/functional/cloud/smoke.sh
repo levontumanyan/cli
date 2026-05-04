@@ -58,8 +58,9 @@ trap summary EXIT
 # First arg is the test name (used for output) and the remaining args are the command to run.
 assert_exit_zero() {
   local name="$1"
+  local _output
   shift
-  if output=$("$@" 2>&1); then
+  if _output=$("$@" 2>&1); then
     pass "$name"
   else
     fail "$name" "exit code $?"
@@ -126,7 +127,8 @@ echo ""
 echo "Cross-cutting API:"
 
 # accounts get-current-account (promoted to cloud level)
-output=$(retry_with_backoff $CLI cloud accounts get-current-account --json 2>&1) || true
+# Capture stdout only so that CLI warnings on stderr don't corrupt the JSON.
+output=$(retry_with_backoff $CLI cloud accounts get-current-account --json) || true
 if [ -n "$output" ]; then
   assert_exit_zero "accounts get-current-account" $CLI cloud accounts get-current-account --json
   assert_json_field "accounts get-current-account" "$output" "id"
@@ -141,7 +143,7 @@ echo ""
 echo "Cloud Hosted API:"
 
 # hosted deployments list-deployments
-output=$(retry_with_backoff $CLI cloud hosted deployments list-deployments --json 2>&1) || true
+output=$(retry_with_backoff $CLI cloud hosted deployments list-deployments --json) || true
 if [ -n "$output" ]; then
   assert_exit_zero "hosted deployments list-deployments" $CLI cloud hosted deployments list-deployments --json
 else
@@ -155,7 +157,7 @@ echo ""
 echo "Serverless API:"
 
 # serverless es projects list
-output=$(retry_with_backoff $CLI cloud serverless es projects list --json 2>&1) || true
+output=$(retry_with_backoff $CLI cloud serverless es projects list --json) || true
 if [ -n "$output" ]; then
   assert_exit_zero "serverless es projects list" $CLI cloud serverless es projects list --json
 else
@@ -163,7 +165,7 @@ else
 fi
 
 # serverless regions list-regions
-output=$(retry_with_backoff $CLI cloud serverless regions list-regions --json 2>&1) || true
+output=$(retry_with_backoff $CLI cloud serverless regions list-regions --json) || true
 if [ -n "$output" ]; then
   assert_exit_zero "serverless regions list-regions" $CLI cloud serverless regions list-regions --json
 else
