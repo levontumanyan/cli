@@ -144,6 +144,40 @@ describe('bulk-ingest command', () => {
     assert.ok(body.includes('"b"'))
   })
 
+  it('ingests .ndjson files from --data-dir without an explicit --glob', async () => {
+    const tmpDir = mkdtempSync(join(tmpdir(), 'bulk-test-ndjson-'))
+    writeFileSync(join(tmpDir, 'a.ndjson'), '{"x":1}\n{"x":2}\n')
+
+    const { transport, requests } = mockTransport([successResponse(2)])
+
+    await runCommand([
+      '--index', 'test-idx',
+      '--data-dir', tmpDir,
+      '--json'
+    ], makeDeps(transport))
+
+    assert.equal(requests.length, 1)
+    const body = requests[0]!.params.body as string
+    assert.ok(body.includes('"x"'), 'expected .ndjson file to be picked up by default glob')
+  })
+
+  it('ingests .jsonl files from --data-dir without an explicit --glob', async () => {
+    const tmpDir = mkdtempSync(join(tmpdir(), 'bulk-test-jsonl-'))
+    writeFileSync(join(tmpDir, 'a.jsonl'), '{"y":1}\n{"y":2}\n')
+
+    const { transport, requests } = mockTransport([successResponse(2)])
+
+    await runCommand([
+      '--index', 'test-idx',
+      '--data-dir', tmpDir,
+      '--json'
+    ], makeDeps(transport))
+
+    assert.equal(requests.length, 1)
+    const body = requests[0]!.params.body as string
+    assert.ok(body.includes('"y"'), 'expected .jsonl file to be picked up by default glob')
+  })
+
   it('recurses into subdirectories by default', async () => {
     const tmpDir = mkdtempSync(join(tmpdir(), 'bulk-test-'))
     mkdirSync(join(tmpDir, 'sub'))
@@ -252,5 +286,140 @@ describe('bulk-ingest command', () => {
 
     assert.equal(result.total, 0)
     assert.equal(result.succeeded, 0)
+  })
+
+  describe('CSV ingestion', () => {
+    it('ingests a CSV file with a header row', async () => {
+      const tmpDir = mkdtempSync(join(tmpdir(), 'bulk-test-csv-'))
+      const filePath = join(tmpDir, 'data.csv')
+      writeFileSync(filePath, 'name,age,city\nAlice,30,London\nBob,25,Paris\n')
+
+      const { transport, requests } = mockTransport([successResponse(2)])
+
+      await runCommand([
+        '--index', 'test-idx',
+        '--data-file', filePath,
+        '--source-format', 'csv',
+        '--json'
+      ], makeDeps(transport))
+
+      assert.equal(requests.length, 1)
+      const body = requests[0]!.params.body as string
+      const lines = body.trim().split('\n')
+      const doc1 = JSON.parse(lines[1]!)
+      const doc2 = JSON.parse(lines[3]!)
+      assert.equal(doc1.name, 'Alice')
+      assert.equal(doc1.age, 30)
+      assert.equal(doc1.city, 'London')
+      assert.equal(doc2.name, 'Bob')
+      assert.equal(doc2.age, 25)
+    })
+
+    it('uses custom delimiter with --csv-delimiter', async () => {
+      const tmpDir = mkdtempSync(join(tmpdir(), 'bulk-test-csv-'))
+      const filePath = join(tmpDir, 'data.csv')
+      writeFileSync(filePath, 'name;score\nAlice;42\nBob;99\n')
+
+      const { transport, requests } = mockTransport([successResponse(2)])
+
+      await runCommand([
+        '--index', 'test-idx',
+        '--data-file', filePath,
+        '--source-format', 'csv',
+        '--csv-delimiter', ';',
+        '--json'
+      ], makeDeps(transport))
+
+      const body = requests[0]!.params.body as string
+      const doc = JSON.parse(body.trim().split('\n')[1]!)
+      assert.equal(doc.name, 'Alice')
+      assert.equal(doc.score, 42)
+    })
+
+    it('accepts explicit column names via --csv-columns (no header row)', async () => {
+      const tmpDir = mkdtempSync(join(tmpdir(), 'bulk-test-csv-'))
+      const filePath = join(tmpDir, 'data.csv')
+      writeFileSync(filePath, 'Alice,30\nBob,25\n')
+
+      const { transport, requests } = mockTransport([successResponse(2)])
+
+      await runCommand([
+        '--index', 'test-idx',
+        '--data-file', filePath,
+        '--source-format', 'csv',
+        '--csv-columns', 'name,age',
+        '--json'
+      ], makeDeps(transport))
+
+      const body = requests[0]!.params.body as string
+      const doc = JSON.parse(body.trim().split('\n')[1]!)
+      assert.equal(doc.name, 'Alice')
+      assert.equal(doc.age, 30)
+    })
+
+    it('skips the header row with --skip-header and renames columns', async () => {
+      const tmpDir = mkdtempSync(join(tmpdir(), 'bulk-test-csv-'))
+      const filePath = join(tmpDir, 'data.csv')
+      writeFileSync(filePath, 'old_name,old_age\nAlice,30\nBob,25\n')
+
+      const { transport, requests } = mockTransport([successResponse(2)])
+
+      await runCommand([
+        '--index', 'test-idx',
+        '--data-file', filePath,
+        '--source-format', 'csv',
+        '--skip-header',
+        '--csv-columns', 'name,age',
+        '--json'
+      ], makeDeps(transport))
+
+      const body = requests[0]!.params.body as string
+      const lines = body.trim().split('\n')
+      assert.equal(lines.length, 4, 'Expected 2 doc pairs (4 lines)')
+      const doc1 = JSON.parse(lines[1]!)
+      assert.equal(doc1.name, 'Alice')
+      assert.ok(!Object.keys(doc1).includes('old_name'), 'old header names should not appear')
+    })
+
+    it('ingests CSV files from --data-dir using default glob', async () => {
+      const tmpDir = mkdtempSync(join(tmpdir(), 'bulk-test-csv-'))
+      writeFileSync(join(tmpDir, 'a.csv'), 'id,val\n1,foo\n')
+      writeFileSync(join(tmpDir, 'b.csv'), 'id,val\n2,bar\n')
+
+      const { transport, requests } = mockTransport([successResponse(2)])
+
+      await runCommand([
+        '--index', 'test-idx',
+        '--data-dir', tmpDir,
+        '--source-format', 'csv',
+        '--json'
+      ], makeDeps(transport))
+
+      assert.equal(requests.length, 1)
+      const body = requests[0]!.params.body as string
+      assert.ok(body.includes('"foo"'))
+      assert.ok(body.includes('"bar"'))
+    })
+
+    it('casts numeric and boolean values from CSV', async () => {
+      const tmpDir = mkdtempSync(join(tmpdir(), 'bulk-test-csv-'))
+      const filePath = join(tmpDir, 'data.csv')
+      writeFileSync(filePath, 'id,active,score\n1,true,3.14\n')
+
+      const { transport, requests } = mockTransport([successResponse(1)])
+
+      await runCommand([
+        '--index', 'test-idx',
+        '--data-file', filePath,
+        '--source-format', 'csv',
+        '--json'
+      ], makeDeps(transport))
+
+      const body = requests[0]!.params.body as string
+      const doc = JSON.parse(body.trim().split('\n')[1]!)
+      assert.strictEqual(doc.id, 1)
+      assert.strictEqual(doc.active, true)
+      assert.strictEqual(doc.score, 3.14)
+    })
   })
 })
