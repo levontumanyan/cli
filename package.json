@@ -10,6 +10,7 @@
     "packages/*"
   ],
   "scripts": {
+    "prepare": "git config core.hooksPath .githooks || true",
     "build": "node --max-old-space-size=6144 node_modules/typescript/bin/tsc -b",
     "postbuild": "node -e \"const {unlinkSync,readdirSync,existsSync}=require('fs'),{join}=require('path'),d='dist/es/apis/schemas';if(existsSync(d))readdirSync(d).filter(f=>/\\.(d\\.ts|d\\.ts\\.map|js\\.map)$/.test(f)).forEach(f=>unlinkSync(join(d,f)))\"",
     "test": "npm run build && npm run test:unit && npm run test:license",
