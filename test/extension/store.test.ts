@@ -15,6 +15,7 @@ import {
   upsertExtension,
   removeExtension,
   _testSetRegistryPath,
+  _testSetPlatform,
 } from '../../src/extension/store.ts'
 import type { InstalledExtension } from '../../src/extension/store.ts'
 
@@ -91,11 +92,20 @@ describe('extension store', () => {
       assert.deepEqual(result, [ext2])
     })
 
-    it('writes file with 0o600 permissions', async () => {
+    it('writes file with 0o600 permissions (Unix only)', { skip: process.platform === 'win32' }, async () => {
       await writeExtensions([ext1])
       const s = await stat(registryFile)
       const mode = s.mode & 0o777
       assert.equal(mode, 0o600, `expected 0o600 permissions, got 0o${mode.toString(8)}`)
+    })
+
+    it('skips chmod on win32 without throwing', async () => {
+      _testSetPlatform('win32')
+      try {
+        await assert.doesNotReject(writeExtensions([ext1]))
+      } finally {
+        _testSetPlatform(process.platform)
+      }
     })
   })
 
