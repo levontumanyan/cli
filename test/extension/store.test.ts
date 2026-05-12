@@ -92,7 +92,8 @@ describe('extension store', () => {
       assert.deepEqual(result, [ext2])
     })
 
-    it('writes file with 0o600 permissions (Unix only)', { skip: process.platform === 'win32' }, async () => {
+    it('writes file with 0o600 permissions (Unix only)', async () => {
+      if (process.platform === 'win32') return
       await writeExtensions([ext1])
       const s = await stat(registryFile)
       const mode = s.mode & 0o777
