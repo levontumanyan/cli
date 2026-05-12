@@ -5,7 +5,7 @@
 
 import { describe, it, before, after, afterEach } from 'node:test'
 import assert from 'node:assert/strict'
-import { mkdtemp, rm, readFile } from 'node:fs/promises'
+import { mkdtemp, rm, readFile, stat, writeFile } from 'node:fs/promises'
 import { join } from 'node:path'
 import { tmpdir } from 'node:os'
 import {
@@ -90,6 +90,13 @@ describe('extension store', () => {
       const result = await readExtensions()
       assert.deepEqual(result, [ext2])
     })
+
+    it('writes file with 0o600 permissions', async () => {
+      await writeExtensions([ext1])
+      const s = await stat(registryFile)
+      const mode = s.mode & 0o777
+      assert.equal(mode, 0o600, `expected 0o600 permissions, got 0o${mode.toString(8)}`)
+    })
   })
 
   describe('findExtension', () => {
@@ -152,6 +159,47 @@ describe('extension store', () => {
       await writeExtensions([ext1])
       await removeExtension('local')
       assert.deepEqual(await readExtensions(), [])
+    })
+  })
+
+  describe('readExtensions -- tampered/malformed registry (security)', () => {
+    it('throws when the file is not valid JSON', async () => {
+      await writeFile(registryFile, 'not json', 'utf-8')
+      await assert.rejects(readExtensions(), /not valid JSON/)
+    })
+
+    it('throws when the top level is not an array', async () => {
+      await writeFile(registryFile, '{"name":"local"}', 'utf-8')
+      await assert.rejects(readExtensions(), /expected a JSON array/)
+    })
+
+    it('throws when an entry is missing a required field', async () => {
+      await writeFile(registryFile, JSON.stringify([{ name: 'local', source: 'github:x/y' }]), 'utf-8')
+      await assert.rejects(readExtensions(), /path must be a non-empty string/)
+    })
+
+    it('throws when name contains path traversal characters', async () => {
+      const bad = { ...ext1, name: '../evil' }
+      await writeFile(registryFile, JSON.stringify([bad]), 'utf-8')
+      await assert.rejects(readExtensions(), /invalid characters/)
+    })
+
+    it('throws when name contains a null byte', async () => {
+      const bad = { ...ext1, name: 'local\x00evil' }
+      await writeFile(registryFile, JSON.stringify([bad]), 'utf-8')
+      await assert.rejects(readExtensions(), /invalid characters/)
+    })
+
+    it('throws when entrypoint is a relative path', async () => {
+      const bad = { ...ext1, entrypoint: 'relative/path/elastic-local' }
+      await writeFile(registryFile, JSON.stringify([bad]), 'utf-8')
+      await assert.rejects(readExtensions(), /must be an absolute path/)
+    })
+
+    it('throws when path is a relative path', async () => {
+      const bad = { ...ext1, path: '../outside' }
+      await writeFile(registryFile, JSON.stringify([bad]), 'utf-8')
+      await assert.rejects(readExtensions(), /must be an absolute path/)
     })
   })
 })

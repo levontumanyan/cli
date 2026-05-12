@@ -6,18 +6,27 @@
 /**
  * On-disk registry of installed extensions.
  *
- * The registry is a JSON array persisted at `~/.elastic/extensions.json`.
- * Each entry records the extension name, the install source, the path to the
- * install directory, and the resolved entrypoint executable.
+ * The registry is a JSON array persisted at `~/.elastic/extensions.json` with
+ * 0o600 permissions (owner read/write only). Each entry records the extension
+ * name, the install source, the path to the install directory, and the
+ * resolved entrypoint executable.
  *
  * All public functions are async and safe to call concurrently for reads;
  * writes are not locked (single-writer assumption: the CLI runs one command
  * at a time).
+ *
+ * Security notes:
+ * - The registry file is written with 0o600 permissions.
+ * - All entries are validated against a schema on read so a corrupt or
+ *   tampered file is rejected with a clear error rather than silently
+ *   executing unexpected paths.
+ * - Extension names are restricted to `[a-z0-9-]+` to prevent path traversal
+ *   if a name is used to construct filesystem paths.
  */
 
-import { mkdir, readFile, writeFile } from 'node:fs/promises'
+import { chmod, mkdir, readFile, writeFile } from 'node:fs/promises'
 import { homedir } from 'node:os'
-import { dirname, join } from 'node:path'
+import { dirname, isAbsolute, join } from 'node:path'
 
 /** A single installed extension entry in the registry. */
 export interface InstalledExtension {
@@ -34,6 +43,12 @@ export interface InstalledExtension {
   /** Absolute path to the executable that is spawned when the extension runs. */
   entrypoint: string
 }
+
+/**
+ * Safe extension name: lowercase letters, digits, and hyphens only.
+ * Prevents path traversal if the name is used to construct filesystem paths.
+ */
+const SAFE_NAME_RE = /^[a-z0-9-]+$/
 
 // ---------------------------------------------------------------------------
 // Test seam
@@ -58,6 +73,45 @@ function registryPath (): string {
   return _registryPath ?? join(homedir(), '.elastic', 'extensions.json')
 }
 
+/**
+ * Validates that `value` is a well-formed `InstalledExtension`.
+ * Throws a descriptive error if any field is missing, the wrong type,
+ * contains an unsafe name, or has a non-absolute path.
+ */
+function validateEntry (value: unknown, index: number): InstalledExtension {
+  if (value == null || typeof value !== 'object' || Array.isArray(value)) {
+    throw new Error(`extensions.json: entry at index ${index} is not an object`)
+  }
+  const obj = value as Record<string, unknown>
+
+  for (const field of ['name', 'source', 'path', 'entrypoint'] as const) {
+    if (typeof obj[field] !== 'string' || (obj[field] as string).length === 0) {
+      throw new Error(`extensions.json: entry[${index}].${field} must be a non-empty string`)
+    }
+  }
+
+  const name = obj['name'] as string
+  if (!SAFE_NAME_RE.test(name)) {
+    throw new Error(
+      `extensions.json: entry[${index}].name "${name}" contains invalid characters (allowed: a-z, 0-9, hyphen)`
+    )
+  }
+
+  for (const field of ['path', 'entrypoint'] as const) {
+    const val = obj[field] as string
+    if (!isAbsolute(val)) {
+      throw new Error(`extensions.json: entry[${index}].${field} must be an absolute path, got "${val}"`)
+    }
+  }
+
+  return {
+    name,
+    source: obj['source'] as string,
+    path: obj['path'] as string,
+    entrypoint: obj['entrypoint'] as string,
+  }
+}
+
 // ---------------------------------------------------------------------------
 // Public API
 // ---------------------------------------------------------------------------
@@ -65,25 +119,41 @@ function registryPath (): string {
 /**
  * Reads and returns all installed extensions from the registry.
  * Returns an empty array if the registry file does not yet exist.
+ * Throws if the file exists but contains invalid or tampered data.
  */
 export async function readExtensions (): Promise<InstalledExtension[]> {
+  let raw: string
   try {
-    const raw = await readFile(registryPath(), 'utf-8')
-    return JSON.parse(raw) as InstalledExtension[]
+    raw = await readFile(registryPath(), 'utf-8')
   } catch (err: unknown) {
     if ((err as NodeJS.ErrnoException).code === 'ENOENT') return []
     throw err
   }
+
+  let parsed: unknown
+  try {
+    parsed = JSON.parse(raw)
+  } catch {
+    throw new Error('extensions.json: file is not valid JSON')
+  }
+
+  if (!Array.isArray(parsed)) {
+    throw new Error('extensions.json: expected a JSON array at the top level')
+  }
+
+  return parsed.map((entry, i) => validateEntry(entry, i))
 }
 
 /**
- * Persists the given extension list to the registry file.
+ * Persists the given extension list to the registry file with 0o600 permissions.
  * Creates `~/.elastic/` if it does not exist.
  */
 export async function writeExtensions (extensions: InstalledExtension[]): Promise<void> {
   const path = registryPath()
   await mkdir(dirname(path), { recursive: true })
-  await writeFile(path, JSON.stringify(extensions, null, 2) + '\n', 'utf-8')
+  await writeFile(path, JSON.stringify(extensions, null, 2) + '\n', { encoding: 'utf-8', mode: 0o600 })
+  // Explicitly chmod in case the file already existed with broader permissions.
+  await chmod(path, 0o600)
 }
 
 /**
