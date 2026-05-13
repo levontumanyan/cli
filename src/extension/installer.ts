@@ -66,10 +66,10 @@ function assertSafeName (name: string): void {
 }
 
 interface ParsedSource {
-  type: 'github' | 'npm' | 'local'
+  type: 'github' | 'npm'
   /** Full package name for npm sources, e.g. `@elastic/start-local`. */
   package?: string
-  /** Clone URL for github sources, or absolute local path for local sources. */
+  /** GitHub clone URL, e.g. `https://github.com/elastic/elastic-local`. */
   cloneUrl?: string
   /** Derived repo/package base name (without scope or owner), e.g. `elastic-local`. */
   baseName: string
@@ -88,24 +88,12 @@ function parseSource (source: string): ParsedSource {
     return { type: 'npm', package: pkg, baseName: base, name }
   }
 
-  // local:/abs/path/to/repo — for local development and e2e testing
-  if (source.startsWith('local:')) {
-    const localPath = source.slice('local:'.length).trim()
-    if (!localPath.startsWith('/')) {
-      throw new Error(`local: source must be an absolute path, e.g. local:/path/to/repo`)
-    }
-    const baseName = localPath.split('/').filter(Boolean).pop() ?? 'extension'
-    const name = deriveName(baseName)
-    assertSafeName(name)
-    return { type: 'local', cloneUrl: localPath, baseName, name }
-  }
-
   // github:owner/repo or bare owner/repo
   const slug = source.startsWith('github:') ? source.slice('github:'.length) : source
   const parts = slug.split('/')
   if (parts.length !== 2 || parts.some((p) => p.trim().length === 0)) {
     throw new Error(
-      `Invalid GitHub source "${source}". Use github:owner/repo, owner/repo, local:/path, or npm:package.`
+      `Invalid GitHub source "${source}". Use github:owner/repo or owner/repo.`
     )
   }
   const owner = parts[0]!.trim()
@@ -230,7 +218,7 @@ export async function installExtension (source: string): Promise<InstalledExtens
 
   let entrypoint: string
 
-  if (parsed.type === 'github' || parsed.type === 'local') {
+  if (parsed.type === 'github') {
     run('git', ['clone', '--depth', '1', parsed.cloneUrl!, installDir], extensionsDir())
 
     // Build if package.json present
@@ -297,7 +285,7 @@ export async function upgradeExtension (name: string): Promise<InstalledExtensio
 
   const parsed = parseSource(ext.source)
 
-  if (parsed.type === 'github' || parsed.type === 'local') {
+  if (parsed.type === 'github') {
     run('git', ['pull', '--ff-only'], ext.path)
     const hasPkg = await readFile(join(ext.path, 'package.json'), 'utf-8').then(() => true).catch(() => false)
     if (hasPkg) {
