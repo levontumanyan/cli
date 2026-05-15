@@ -26,7 +26,7 @@ import { access, constants, mkdir, readFile, rm } from 'node:fs/promises'
 import { homedir } from 'node:os'
 import { join, isAbsolute, resolve } from 'node:path'
 import { spawnSync } from 'node:child_process'
-import { upsertExtension, removeExtension as removeFromStore } from './store.ts'
+import { upsertExtension, removeExtension as removeFromStore, findExtension } from './store.ts'
 import type { InstalledExtension } from './store.ts'
 
 // ---------------------------------------------------------------------------
@@ -139,7 +139,7 @@ async function resolveNpmBin (dir: string, binName: string): Promise<string | un
   try {
     const raw = await readFile(pkgPath, 'utf-8')
     const pkg = JSON.parse(raw) as Record<string, unknown>
-    const bin = pkg['bin']
+    const { bin } = pkg
     if (bin == null) return undefined
     let rel: string | undefined
     if (typeof bin === 'string') {
@@ -267,6 +267,15 @@ export async function installExtension (source: string): Promise<InstalledExtens
  */
 export async function uninstallExtension (name: string): Promise<void> {
   const installDir = join(extensionsDir(), `elastic-${name}`)
+  const entry = await findExtension(name)
+  if (entry?.source.startsWith('npm:')) {
+    const pkg = entry.source.slice('npm:'.length)
+    try {
+      run('npm', ['uninstall', '--prefix', installDir, pkg], extensionsDir())
+    } catch {
+      // proceed with rm -rf regardless
+    }
+  }
   await rm(installDir, { recursive: true, force: true })
   await removeFromStore(name)
 }
