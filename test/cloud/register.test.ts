@@ -233,6 +233,42 @@ describe('registerCloudCommands', () => {
       assert.ok(createCmd.options.map((o) => o.long).includes('--wait'))
       assert.ok(!listCmd.options.map((o) => o.long).includes('--wait'))
     })
+
+    it('exposes --name and --region-id flags on serverless project create commands (#328)', () => {
+      const defs: CloudApiDefinition[] = [
+        { name: 'create-elasticsearch-project',  namespace: 'elasticsearch-projects',  description: 'Create search project',        method: 'POST', path: '/api/v1/serverless/projects/elasticsearch' },
+        { name: 'create-observability-project',  namespace: 'observability-projects',  description: 'Create observability project', method: 'POST', path: '/api/v1/serverless/projects/observability' },
+        { name: 'create-security-project',       namespace: 'security-projects',       description: 'Create security project',      method: 'POST', path: '/api/v1/serverless/projects/security' },
+      ]
+      const group = registerCloudCommands(defs)
+      const projects = group.commands.find((c) => c.name() === 'serverless')!
+        .commands.find((c) => c.name() === 'projects')!
+      for (const typeName of ['search', 'observability', 'security']) {
+        const typeGroup = projects.commands.find((c) => c.name() === typeName)!
+        const createCmd = typeGroup.commands.find((c) => c.name() === 'create')!
+        const flags = createCmd.options.map((o) => o.long)
+        assert.ok(flags.includes('--name'),      `${typeName} create should expose --name`)
+        assert.ok(flags.includes('--region-id'), `${typeName} create should expose --region-id`)
+      }
+    })
+
+    it('does not add --name/--region-id flags to non-create project commands', () => {
+      const defs: CloudApiDefinition[] = [
+        { name: 'create-elasticsearch-project', namespace: 'elasticsearch-projects', description: 'Create', method: 'POST', path: '/api/v1/serverless/projects/elasticsearch' },
+        { name: 'list-elasticsearch-projects',  namespace: 'elasticsearch-projects', description: 'List',   method: 'GET',  path: '/api/v1/serverless/projects/elasticsearch' },
+        { name: 'get-elasticsearch-project',    namespace: 'elasticsearch-projects', description: 'Get',    method: 'GET',  path: '/api/v1/serverless/projects/elasticsearch/{id}', pathParams: [{ name: 'id', description: 'ID', required: true }] },
+      ]
+      const group = registerCloudCommands(defs)
+      const search = group.commands.find((c) => c.name() === 'serverless')!
+        .commands.find((c) => c.name() === 'projects')!
+        .commands.find((c) => c.name() === 'search')!
+      const listFlags = search.commands.find((c) => c.name() === 'list')!.options.map((o) => o.long)
+      const getFlags  = search.commands.find((c) => c.name() === 'get')!.options.map((o) => o.long)
+      assert.ok(!listFlags.includes('--name'),      'list must not expose --name')
+      assert.ok(!listFlags.includes('--region-id'), 'list must not expose --region-id')
+      assert.ok(!getFlags.includes('--name'),       'get must not expose --name')
+      assert.ok(!getFlags.includes('--region-id'),  'get must not expose --region-id')
+    })
   })
 
   describe('validation', () => {

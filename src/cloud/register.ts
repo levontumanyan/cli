@@ -11,6 +11,7 @@ import type { CloudApiDefinition, CloudPathParam, CloudQueryParam } from './type
 import { validateCloudApiDefinition } from './types.ts'
 import { allCloudApis } from './apis.ts'
 import { allServerlessApis } from './serverless-apis.ts'
+import { cloudBodySchemas } from './body-schemas.ts'
 import { createCloudHandler, isCreateProjectCommand } from './handler.ts'
 import {
   applyCredentialPolicy,
@@ -18,6 +19,12 @@ import {
   readCredentialPolicyOptions,
 } from './credentials.ts'
 import type { JsonValue, ParsedResult } from '../factory.ts'
+
+function applyBodyOverlay (def: CloudApiDefinition): CloudApiDefinition {
+  if (def.body != null) return def
+  const overlay = cloudBodySchemas.get(def.name)
+  return overlay != null ? { ...def, body: overlay } : def
+}
 
 /**
  * Builds the unified flat Zod schema for a Cloud API command.
@@ -381,11 +388,12 @@ async function wrapWithCredentialPolicy (
 export function registerCloudCommands(
   definitions: CloudApiDefinition[] = [...allCloudApis, ...allServerlessApis],
 ): OpaqueCommandHandle {
-  for (const def of definitions) {
+  const overlayed = definitions.map(applyBodyOverlay)
+  for (const def of overlayed) {
     validateCloudApiDefinition(def)
   }
 
-  const { promoted, hosted, serverless } = partitionDefinitions(definitions)
+  const { promoted, hosted, serverless } = partitionDefinitions(overlayed)
 
   const promotedGroups = buildFlatNamespaceGroups(promoted, 'Cloud', PROMOTED_NAMESPACES)
   const hostedGroup = buildHostedGroup(hosted)

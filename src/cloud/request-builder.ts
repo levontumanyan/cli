@@ -3,7 +3,6 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { z } from 'zod'
 import type { CloudApiDefinition } from './types.ts'
 import type { CloudRequestParams } from '../lib/cloud-client.ts'
 import type { ParsedResult } from '../factory.ts'
@@ -81,20 +80,12 @@ function buildQuerystring(
 
 const BODY_METHODS: ReadonlySet<string> = new Set(['POST', 'PUT', 'PATCH'])
 
+// Forwards every input key not consumed by path or query routing, so declared
+// body fields and undeclared --input-file/stdin fields both flow through (#328, #86).
 function collectBody(
   def: CloudApiDefinition,
   input: Record<string, unknown>,
 ): Record<string, unknown> | undefined {
-  if (def.body instanceof z.ZodObject) {
-    const body: Record<string, unknown> = {}
-    for (const fieldName of Object.keys(def.body.shape as Record<string, unknown>)) {
-      if (input[fieldName] !== undefined) {
-        body[fieldName] = input[fieldName]
-      }
-    }
-    return Object.keys(body).length > 0 ? body : undefined
-  }
-
   if (!BODY_METHODS.has(def.method)) return undefined
 
   const reserved = new Set([

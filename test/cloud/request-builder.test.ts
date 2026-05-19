@@ -217,4 +217,27 @@ describe('buildCloudRequestParams', () => {
     const result = buildCloudRequestParams(def, parsed({ id: 'abc', extra: 'value' }))
     assert.equal(result.body, undefined)
   })
+
+  it('merges declared body schema with passthrough of additional input fields (#328)', () => {
+    const def: CloudApiDefinition = {
+      name: 'create-elasticsearch-project',
+      namespace: 'elasticsearch-projects',
+      description: 'Create',
+      method: 'POST',
+      path: '/api/v1/serverless/projects/elasticsearch',
+      body: z.object({ name: z.string(), region_id: z.string() }),
+    }
+    const result = buildCloudRequestParams(def, parsed({
+      name: 'demo',
+      region_id: 'aws-us-east-1',
+      alias: 'demo-alias',
+      metadata: { team: 'platform' },
+    }))
+    assert.deepEqual(result.body, {
+      name: 'demo',
+      region_id: 'aws-us-east-1',
+      alias: 'demo-alias',
+      metadata: { team: 'platform' },
+    })
+  })
 })
