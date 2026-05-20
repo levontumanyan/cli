@@ -32,8 +32,6 @@ export interface NamespaceShortcut {
   from: string
   /** Full namespace path it resolves to (e.g. `["stack", "es"]`). */
   to: string[]
-  /** One-line description shown in `--help`. */
-  description: string
 }
 
 export interface NamespaceEntry {
@@ -61,10 +59,10 @@ export const NAMESPACES: NamespaceEntry[] = [
     name: 'stack',
     description: 'Interact with Elastic Stack components (Elasticsearch, Kibana, Fleet)',
     shortcuts: [
-      { from: 'es',            to: ['stack', 'es'],  description: 'Interact with the Elasticsearch API' },
-      { from: 'elasticsearch', to: ['stack', 'es'],  description: 'Interact with the Elasticsearch API' },
-      { from: 'kb',            to: ['stack', 'kb'],  description: 'Interact with the Kibana API' },
-      { from: 'kibana',        to: ['stack', 'kb'],  description: 'Interact with the Kibana API' },
+      { from: 'es',            to: ['stack', 'es'] },
+      { from: 'elasticsearch', to: ['stack', 'es'] },
+      { from: 'kb',            to: ['stack', 'kb'] },
+      { from: 'kibana',        to: ['stack', 'kb'] },
     ],
     load: async (opts) => {
       const eager = opts?.eager === true

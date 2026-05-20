@@ -127,16 +127,20 @@ for (const ns of NAMESPACES) {
 }
 
 // Register root-level shortcut stubs derived from NAMESPACES so they appear in
-// `elastic --help`. Argv has already been rewritten above so Commander routes correctly.
-const registeredStubs = new Map<string, OpaqueCommandHandle>()
+// `elastic --help`. Group by `to` path so multiple `from` names for the same
+// target become Commander aliases of a single stub rather than separate commands.
+// Argv has already been rewritten above so Commander routes correctly.
+const stubsByTarget = new Map<string, OpaqueCommandHandle>()
 for (const shortcut of allShortcuts) {
-  let stub = registeredStubs.get(shortcut.from)
-  if (stub == null) {
-    stub = defineGroup({ name: shortcut.from, description: shortcut.description })
-    registeredStubs.set(shortcut.from, stub)
+  const targetKey = shortcut.to.join('.')
+  const existing = stubsByTarget.get(targetKey)
+  if (existing == null) {
+    const description = `Shortcut for 'elastic ${shortcut.to.join(' ')}'`
+    const stub = defineGroup({ name: shortcut.from, description })
+    stubsByTarget.set(targetKey, stub)
     program.addCommand(stub)
   } else {
-    stub.alias(shortcut.from)
+    existing.alias(shortcut.from)
   }
 }
 

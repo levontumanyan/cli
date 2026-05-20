@@ -78,7 +78,6 @@ interface CliEnvironment {
 interface CliShortcut {
   from: string
   to: string[]
-  description: string
 }
 
 interface CliSchema {
@@ -547,7 +546,7 @@ export function buildCliSchema (
   }
   const promoted = promoteToGlobalOptions(namespaces, allCommands)
 
-  const cliShortcuts: CliShortcut[] = shortcuts.map(s => ({ from: s.from, to: s.to, description: s.description }))
+  const cliShortcuts: CliShortcut[] = shortcuts.map(s => ({ from: s.from, to: s.to }))
 
   return {
     schemaVersion: 1,
