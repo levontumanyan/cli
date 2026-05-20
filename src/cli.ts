@@ -11,7 +11,6 @@ import { loadConfig } from './config/loader.ts'
 import { BUILT_IN_PROFILES, type BuiltInProfile } from './config/profiles.ts'
 import { setResolvedConfig } from './config/store.ts'
 import { renderLogo } from './lib/logo.ts'
-import { rewriteTopLevelAliases } from './completion/argv-aliases.ts'
 import { registerCompletionCommands, COMPLETION_COMMAND_NAMES } from './completion/index.ts'
 import { NAMESPACES } from './namespaces.ts'
 
@@ -99,52 +98,22 @@ for (const cmd of registerCompletionCommands()) {
 const { operands } = program.parseOptions(process.argv.slice(2))
 let firstArg = operands[0]
 
-// Transparent aliases: `elastic es ...` and `elastic kb ...` are first-class
-// shortcuts for `elastic stack es ...` and `elastic stack kb ...`.
-// argv is rewritten before Commander parses so all routing and dot-paths remain
-// consistent (e.g. policy entries still use `stack.es.*`).
-const aliasRewritten = rewriteTopLevelAliases(operands)
-if (aliasRewritten.length !== operands.length) {
-  // Find the position of the first operand in process.argv by scanning past
-  // options and their values. We can't use indexOf because an option value
-  // might coincidentally equal the alias (e.g. --command-profile es).
-  const original = firstArg!
-  
-  // Build set of options that take values from the program's option definitions
-  const valueOptions = new Set<string>()
-  for (const opt of program.options) {
-    if (opt.required || opt.optional) {
-      // Option takes a value
-      if (opt.long) valueOptions.add(opt.long)
-      if (opt.short) valueOptions.add(opt.short)
-    }
+// Build a map of shortcut `from` names to the top-level namespace they belong to,
+// so argv can be rewritten before Commander parses.
+const allShortcuts = NAMESPACES.flatMap(ns => (ns.shortcuts ?? []).map(s => ({ ...s, nsName: ns.name })))
+const shortcutMap = new Map(allShortcuts.map(s => [s.from, s]))
+
+// Transparent argv rewrite: `elastic es ...` becomes `elastic stack es ...`.
+// Done before Commander parses so routing, dot-paths, and option parsing are consistent.
+const shortcutMatch = firstArg != null ? shortcutMap.get(firstArg) : undefined
+if (shortcutMatch != null) {
+  const parentNs = shortcutMatch.to[0]
+  if (parentNs != null) {
+    const idx = process.argv.indexOf(firstArg as string, 2)
+    if (idx !== -1) process.argv.splice(idx, 0, parentNs)
+    operands.splice(0, 0, parentNs)
+    firstArg = parentNs
   }
-  
-  let idx = 2  // start after 'node' and script name
-  while (idx < process.argv.length) {
-    const arg = process.argv[idx]
-    if (arg == null) break  // defensive: should never happen given loop condition
-    if (arg === original) {
-      // Found the first operand
-      process.argv.splice(idx, 0, 'stack')
-      break
-    }
-    // Skip this argument
-    idx++
-    // If it's an option that takes a value, skip the value too
-    if (arg.startsWith('-')) {
-      const eqIdx = arg.indexOf('=')
-      if (eqIdx === -1) {
-        // No = sign, check if this option takes a value
-        if (valueOptions.has(arg)) {
-          idx++  // skip the value
-        }
-      }
-      // else: --option=value format, value is already part of this arg
-    }
-  }
-  operands.splice(0, 0, 'stack')
-  firstArg = 'stack'
 }
 
 // Register namespaces: load eagerly when first arg matches, otherwise register a lightweight stub.
@@ -157,16 +126,19 @@ for (const ns of NAMESPACES) {
   }
 }
 
-// Register top-level es|elasticsearch and kb|kibana stubs so they appear in
-// `elastic --help` as first-class aliases. When invoked, argv has already been
-// rewritten above so Commander routes through `stack es` / `stack kb`.
-const esAlias = defineGroup({ name: 'es', description: 'Interact with the Elasticsearch API' })
-esAlias.alias('elasticsearch')
-program.addCommand(esAlias)
-
-const kbAlias = defineGroup({ name: 'kb', description: 'Interact with the Kibana API' })
-kbAlias.alias('kibana')
-program.addCommand(kbAlias)
+// Register root-level shortcut stubs derived from NAMESPACES so they appear in
+// `elastic --help`. Argv has already been rewritten above so Commander routes correctly.
+const registeredStubs = new Map<string, OpaqueCommandHandle>()
+for (const shortcut of allShortcuts) {
+  let stub = registeredStubs.get(shortcut.from)
+  if (stub == null) {
+    stub = defineGroup({ name: shortcut.from, description: shortcut.description })
+    registeredStubs.set(shortcut.from, stub)
+    program.addCommand(stub)
+  } else {
+    stub.alias(shortcut.from)
+  }
+}
 
 if (firstArg === 'extension') {
   const { registerExtensionCommands } = await import('./extension/register.ts')

@@ -27,6 +27,15 @@ export interface LoadOptions {
  * Both `cli.ts` (lazy stub/eager load) and `cli-schema` (always eager) consume
  * this list. Adding a new top-level namespace requires only adding an entry here.
  */
+export interface NamespaceShortcut {
+  /** Root-level word the user types (e.g. `"es"`). */
+  from: string
+  /** Full namespace path it resolves to (e.g. `["stack", "es"]`). */
+  to: string[]
+  /** One-line description shown in `--help`. */
+  description: string
+}
+
 export interface NamespaceEntry {
   name: string
   description: string
@@ -37,6 +46,12 @@ export interface NamespaceEntry {
    * Defaults to true (requires context).
    */
   requiresContext?: boolean
+  /**
+   * Root-level shortcuts that transparently rewrite argv and register stubs so
+   * consumers can invoke this namespace without typing its full path.
+   * E.g. `elastic es ...` as a shortcut for `elastic stack es ...`.
+   */
+  shortcuts?: NamespaceShortcut[]
   /** Fully load the namespace and return a registered command group handle. */
   load: (opts?: LoadOptions) => Promise<OpaqueCommandHandle>
 }
@@ -45,6 +60,12 @@ export const NAMESPACES: NamespaceEntry[] = [
   {
     name: 'stack',
     description: 'Interact with Elastic Stack components (Elasticsearch, Kibana, Fleet)',
+    shortcuts: [
+      { from: 'es',            to: ['stack', 'es'],  description: 'Interact with the Elasticsearch API' },
+      { from: 'elasticsearch', to: ['stack', 'es'],  description: 'Interact with the Elasticsearch API' },
+      { from: 'kb',            to: ['stack', 'kb'],  description: 'Interact with the Kibana API' },
+      { from: 'kibana',        to: ['stack', 'kb'],  description: 'Interact with the Kibana API' },
+    ],
     load: async (opts) => {
       const eager = opts?.eager === true
       const [esModule, kbModule] = await Promise.all([

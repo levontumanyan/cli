@@ -53954,5 +53954,39 @@
       "summary": "Sanitize values for safe use in Elasticsearch"
     }
   ],
+  "shortcuts": [
+    {
+      "from": "es",
+      "to": [
+        "stack",
+        "es"
+      ],
+      "description": "Interact with the Elasticsearch API"
+    },
+    {
+      "from": "elasticsearch",
+      "to": [
+        "stack",
+        "es"
+      ],
+      "description": "Interact with the Elasticsearch API"
+    },
+    {
+      "from": "kb",
+      "to": [
+        "stack",
+        "kb"
+      ],
+      "description": "Interact with the Kibana API"
+    },
+    {
+      "from": "kibana",
+      "to": [
+        "stack",
+        "kb"
+      ],
+      "description": "Interact with the Kibana API"
+    }
+  ],
   "description": "Interface with the Elastic Stack and Elastic Cloud from the command line."
 }
