@@ -13,6 +13,7 @@ import { setResolvedConfig } from './config/store.ts'
 import { renderLogo } from './lib/logo.ts'
 import { rewriteTopLevelAliases } from './completion/argv-aliases.ts'
 import { registerCompletionCommands, COMPLETION_COMMAND_NAMES } from './completion/index.ts'
+import { NAMESPACES } from './namespaces.ts'
 
 // x-release-please-start-version
 const VERSION = '0.1.1';
@@ -35,8 +36,8 @@ program
 // On error, print a structured message and exit -- never let a config failure
 // silently propagate into the command handler.
 //
-// When no --config-file or --use-context overrides are specified, loadConfig()
-// returns the in-process cached result from the early load, avoiding redundant I/O.
+const skipConfigNames = new Set(NAMESPACES.filter(ns => ns.skipConfig).map(ns => ns.name))
+
 program.hook('preAction', async (thisCommand, actionCommand) => {
   if (actionCommand.name() === 'version') return
   // Shell completion commands must not depend on a working config: the user
@@ -47,13 +48,9 @@ program.hook('preAction', async (thisCommand, actionCommand) => {
   // `status` loads the config itself so a partially broken config is reported as
   // a structured result rather than exiting before any probe runs.
   if (actionCommand.name() === 'status') return
-  if (actionCommand.name() === 'cli-schema') return
-  if (actionCommand.parent?.name() === 'docs') return
-  if (actionCommand.parent?.name() === 'sanitize') return
-  // `config` commands author the config file itself — loading it would be
-  // circular (and must tolerate the absence of a file)
-  for (let c = actionCommand.parent; c != null; c = c.parent) {
-    if (c.name() === 'config') return
+  // Walk up the command tree — if any ancestor is a skipConfig namespace, skip config loading.
+  for (let c: Command | null = actionCommand; c != null; c = c.parent) {
+    if (skipConfigNames.has(c.name())) return
   }
   // `extension` commands manage the extension registry, not the Elastic stack
   for (let c = actionCommand.parent; c != null; c = c.parent) {
@@ -150,41 +147,14 @@ if (aliasRewritten.length !== operands.length) {
   firstArg = 'stack'
 }
 
-if (firstArg === 'stack') {
-  const stackChildren: OpaqueCommandHandle[] = []
-
-  const secondArg = operands[1]
-  const esArgs = new Set(['es', 'elasticsearch'])
-  const kbArgs = new Set(['kb', 'kibana'])
-
-  if (secondArg == null || esArgs.has(secondArg)) {
-    const { registerEsCommandsLazy } = await import('./es/register.ts')
-    const esGroup = await registerEsCommandsLazy()
-    esGroup.alias('elasticsearch')
-    stackChildren.push(esGroup)
+// Register namespaces: load eagerly when first arg matches, otherwise register a lightweight stub.
+// To add a new top-level namespace, add an entry to src/namespaces.ts — no changes needed here.
+for (const ns of NAMESPACES) {
+  if (firstArg === ns.name) {
+    program.addCommand(await ns.load({ version: VERSION, rootProgram: program }))
   } else {
-    const esStub = defineGroup({ name: 'es', description: 'Interact with the Elasticsearch API' })
-    esStub.alias('elasticsearch')
-    stackChildren.push(esStub)
+    program.addCommand(defineGroup({ name: ns.name, description: ns.description }))
   }
-
-  if (secondArg == null || kbArgs.has(secondArg)) {
-    const { registerKbCommandsLazy } = await import('./kb/register.ts')
-    const kbGroup = await registerKbCommandsLazy()
-    kbGroup.alias('kibana')
-    stackChildren.push(kbGroup)
-  } else {
-    const kbStub = defineGroup({ name: 'kb', description: 'Interact with the Kibana API' })
-    kbStub.alias('kibana')
-    stackChildren.push(kbStub)
-  }
-
-  program.addCommand(defineGroup(
-    { name: 'stack', description: 'Interact with Elastic Stack components (Elasticsearch, Kibana, Fleet)' },
-    ...stackChildren
-  ))
-} else {
-  program.addCommand(defineGroup({ name: 'stack', description: 'Interact with Elastic Stack components (Elasticsearch, Kibana, Fleet)' }))
 }
 
 // Register top-level es|elasticsearch and kb|kibana stubs so they appear in
@@ -197,34 +167,6 @@ program.addCommand(esAlias)
 const kbAlias = defineGroup({ name: 'kb', description: 'Interact with the Kibana API' })
 kbAlias.alias('kibana')
 program.addCommand(kbAlias)
-
-if (firstArg === 'cloud') {
-  const { registerCloudCommands } = await import('./cloud/register.ts')
-  program.addCommand(registerCloudCommands())
-} else {
-  program.addCommand(defineGroup({ name: 'cloud', description: 'Manage Elastic Cloud (hosted deployments and serverless projects)' }))
-}
-
-if (firstArg === 'docs') {
-  const { registerDocsCommands } = await import('./docs/register.ts')
-  program.addCommand(registerDocsCommands())
-} else {
-  program.addCommand(defineGroup({ name: 'docs', description: 'Search, read, and ask questions about Elastic documentation' }))
-}
-
-if (firstArg === 'config') {
-  const { registerConfigCommands } = await import('./config/commands.ts')
-  program.addCommand(registerConfigCommands())
-} else {
-  program.addCommand(defineGroup({ name: 'config', description: 'Author and maintain the elastic config file' }))
-}
-
-if (firstArg === 'sanitize') {
-  const { registerSanitizeCommands } = await import('./sanitize/register.ts')
-  program.addCommand(registerSanitizeCommands())
-} else {
-  program.addCommand(defineGroup({ name: 'sanitize', description: 'Sanitize values for safe use in Elasticsearch' }))
-}
 
 if (firstArg === 'extension') {
   const { registerExtensionCommands } = await import('./extension/register.ts')
@@ -247,20 +189,12 @@ if (firstArg === 'status') {
   }))
 }
 
-if (firstArg === 'cli-schema') {
-  const { registerCliSchemaCommand } = await import('./cli-schema.ts')
-  program.addCommand(await registerCliSchemaCommand(VERSION, program))
-} else {
-  program.addCommand(defineGroup({ name: 'cli-schema', description: 'Emit the CLI structure as argh-schema JSON' }))
-}
-
-// Load config early so --help can hide blocked commands. Skip for commands
-// that don't need config (e.g. `version`, `sanitize`, `config` which authors
-// the file, and the completion subsystem which runs before any context exists)
-// to avoid unnecessary file I/O and a confusing "no config found" path.
+// Load config early so --help can hide blocked commands. Skip for commands that don't need
+// config (skipConfig namespaces, extension, status, version, or completion commands) to
+// avoid unnecessary file I/O and a confusing 'no config found' path.
 // loadConfig() caches the result in-process; the preAction hook reuses it via the default cache path.
 const SKIP_EARLY_CONFIG = new Set<string>([
-  'version', 'config', 'sanitize', 'extension', 'status', 'cli-schema', ...COMPLETION_COMMAND_NAMES,
+  'version', 'extension', 'status', ...COMPLETION_COMMAND_NAMES, ...skipConfigNames,
 ])
 if (firstArg == null || !SKIP_EARLY_CONFIG.has(firstArg)) {
   // Parse --profile early (before Commander's full parse) so the early config load

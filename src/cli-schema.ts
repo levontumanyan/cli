@@ -9,7 +9,7 @@ import { defineCommand } from './factory.ts'
 import { stripTransportMeta } from './factory.ts'
 import type { OpaqueCommandHandle, CommandConfig, JsonValue } from './factory.ts'
 import type { SchemaArgDefinition } from './lib/schema-args.ts'
-import { NAMESPACES } from './namespaces.ts'
+import type { NamespaceEntry } from './namespaces.ts'
 
 // ---------------------------------------------------------------------------
 // Argh schema types
@@ -453,14 +453,15 @@ export function buildArghSchema (
 
 export async function registerCliSchemaCommand (
   version: string,
-  rootProgram: Command,
+  rootProgram: Command | undefined,
+  namespaces: NamespaceEntry[],
 ): Promise<OpaqueCommandHandle> {
   return defineCommand({
     name: 'cli-schema',
     description: 'Emit the CLI structure as argh-schema JSON',
     handler: async () => {
-      const schemaRoot = new Command(rootProgram.name())
-      schemaRoot.description(rootProgram.description())
+      const schemaRoot = new Command(rootProgram?.name() ?? 'elastic')
+      schemaRoot.description(rootProgram?.description() ?? '')
 
       schemaRoot.addCommand(defineCommand({
         name: 'version',
@@ -468,10 +469,10 @@ export async function registerCliSchemaCommand (
         handler: () => ({ version }),
       }))
 
-      const loaded = await Promise.all(NAMESPACES.map((ns) => ns.load({ eager: true })))
+      const loaded = await Promise.all(namespaces.map((ns) => ns.load({ eager: true })))
       for (const ns of loaded) schemaRoot.addCommand(ns)
 
-      const globalOptions = buildGlobalParams(rootProgram)
+      const globalOptions = rootProgram != null ? buildGlobalParams(rootProgram) : []
       return buildArghSchema(schemaRoot, globalOptions, version) as unknown as JsonValue
     },
     formatOutput: (result) => JSON.stringify(result, null, 2) + '\n',
