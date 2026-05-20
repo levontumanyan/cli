@@ -55,6 +55,7 @@ interface CliNamespace {
   commands: CliCommand[]
   namespaces: CliNamespace[]
   summary?: string
+  options?: CliParameter[]
 }
 
 interface CliEnvVar {
@@ -430,6 +431,83 @@ function walkCommands (
 }
 
 // ---------------------------------------------------------------------------
+// Option hoisting
+// ---------------------------------------------------------------------------
+
+function collectAllLeaves (ns: CliNamespace): CliCommand[] {
+  return [...ns.commands, ...ns.namespaces.flatMap(collectAllLeaves)]
+}
+
+/**
+ * Hoists flags common to every leaf command in `ns` up to `ns.options`,
+ * stripping them from individual command parameters.
+ * Top-down: call on a namespace before recursing so children inherit the result.
+ */
+function hoistNamespaceOptions (ns: CliNamespace): void {
+  const leaves = collectAllLeaves(ns)
+  if (leaves.length === 0) return
+
+  const firstLeaf = leaves[0]
+  if (firstLeaf == null) return
+  const candidates = firstLeaf.parameters.filter(p => p.role !== 'positional')
+  const commonNames = new Set(
+    candidates
+      .map(p => p.name)
+      .filter(name => leaves.every(cmd => cmd.parameters.some(p => p.name === name)))
+  )
+  if (commonNames.size === 0) return
+
+  ns.options = candidates.filter(p => commonNames.has(p.name))
+
+  function stripFrom (n: CliNamespace): void {
+    for (const cmd of n.commands) {
+      cmd.parameters = cmd.parameters.filter(p => !commonNames.has(p.name))
+    }
+    for (const sub of n.namespaces) stripFrom(sub)
+  }
+  stripFrom(ns)
+}
+
+/**
+ * Promotes flags present in every namespace's options AND every root-level command
+ * up to globalOptions, removing them from namespace options and root commands.
+ */
+function promoteToGlobalOptions (
+  namespaces: CliNamespace[],
+  rootCommands: CliCommand[],
+): CliParameter[] {
+  const firstNs = namespaces[0]
+  if (firstNs == null || (firstNs.options ?? []).length === 0) return []
+
+  const commonNames = new Set(
+    (firstNs.options ?? [])
+      .map(p => p.name)
+      .filter(name =>
+        namespaces.every(ns => (ns.options ?? []).some(p => p.name === name)) &&
+        (rootCommands.length === 0 || rootCommands.every(cmd => cmd.parameters.some(p => p.name === name)))
+      )
+  )
+  if (commonNames.size === 0) return []
+
+  const promoted = (firstNs.options ?? []).filter(p => commonNames.has(p.name))
+
+  for (const ns of namespaces) {
+    const remaining = (ns.options ?? []).filter(p => !commonNames.has(p.name))
+    if (remaining.length > 0) {
+      ns.options = remaining
+    } else {
+      delete (ns as { options?: CliParameter[] }).options
+    }
+  }
+
+  for (const cmd of rootCommands) {
+    cmd.parameters = cmd.parameters.filter(p => !commonNames.has(p.name))
+  }
+
+  return promoted
+}
+
+// ---------------------------------------------------------------------------
 // Schema builder
 // ---------------------------------------------------------------------------
 
@@ -437,14 +515,14 @@ export function buildCliSchema (
   root: OpaqueCommandHandle,
   globalOptions: CliParameter[],
   version: string,
-  skipConfigNames: ReadonlySet<string> = new Set(),
+  noContextNames: ReadonlySet<string> = new Set(),
 ): CliSchema {
   const allCommands: CliCommand[] = []
   const namespaces: CliNamespace[] = []
 
   for (const sub of root.commands as OpaqueCommandHandle[]) {
     if (isHidden(sub)) continue
-    const requiresAuth = !skipConfigNames.has(sub.name())
+    const requiresAuth = !noContextNames.has(sub.name())
     const subSubs = sub.commands as OpaqueCommandHandle[]
     if (subSubs.length === 0) {
       allCommands.push(buildLeafCommand(sub, [], requiresAuth))
@@ -454,12 +532,19 @@ export function buildCliSchema (
     }
   }
 
+  // Hoist common flags within each top-level namespace, then promote any that
+  // are universal across all namespaces and root commands up to globalOptions.
+  for (const ns of namespaces) {
+    hoistNamespaceOptions(ns)
+  }
+  const promoted = promoteToGlobalOptions(namespaces, allCommands)
+
   return {
     schemaVersion: 1,
     name: root.name() || 'elastic',
     version,
     reservedMetaCommands: ['cli-schema'],
-    globalOptions,
+    globalOptions: [...globalOptions, ...promoted],
     environment: ENVIRONMENT,
     commands: allCommands,
     namespaces,
@@ -494,13 +579,13 @@ export async function registerCliSchemaCommand (
 
       const globalOptions = rootProgram != null ? buildGlobalParams(rootProgram) : []
 
-      // Build the set of namespace names that don't need config/auth
-      const skipConfigNames = new Set<string>([
-        ...namespaces.filter(ns => ns.skipConfig).map(ns => ns.name),
+      // Build the set of namespace names that don't require context/auth
+      const noContextNames = new Set<string>([
+        ...namespaces.filter(ns => ns.requiresContext === false).map(ns => ns.name),
         'version', // root-level version command needs no auth
       ])
 
-      return buildCliSchema(schemaRoot, globalOptions, version, skipConfigNames) as unknown as JsonValue
+      return buildCliSchema(schemaRoot, globalOptions, version, noContextNames) as unknown as JsonValue
     },
     formatOutput: (result) => JSON.stringify(result, null, 2) + '\n',
   })

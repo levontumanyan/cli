@@ -36,7 +36,7 @@ program
 // On error, print a structured message and exit -- never let a config failure
 // silently propagate into the command handler.
 //
-const skipConfigNames = new Set(NAMESPACES.filter(ns => ns.skipConfig).map(ns => ns.name))
+const skipConfigNames = new Set(NAMESPACES.filter(ns => ns.requiresContext === false).map(ns => ns.name))
 
 program.hook('preAction', async (thisCommand, actionCommand) => {
   if (actionCommand.name() === 'version') return
@@ -48,7 +48,7 @@ program.hook('preAction', async (thisCommand, actionCommand) => {
   // `status` loads the config itself so a partially broken config is reported as
   // a structured result rather than exiting before any probe runs.
   if (actionCommand.name() === 'status') return
-  // Walk up the command tree — if any ancestor is a skipConfig namespace, skip config loading.
+  // Walk up the command tree — if any ancestor doesn't require context, skip config loading.
   for (let c: Command | null = actionCommand; c != null; c = c.parent) {
     if (skipConfigNames.has(c.name())) return
   }
@@ -190,7 +190,7 @@ if (firstArg === 'status') {
 }
 
 // Load config early so --help can hide blocked commands. Skip for commands that don't need
-// config (skipConfig namespaces, extension, status, version, or completion commands) to
+// config (requiresContext: false namespaces, extension, status, version, or completion commands) to
 // avoid unnecessary file I/O and a confusing 'no config found' path.
 // loadConfig() caches the result in-process; the preAction hook reuses it via the default cache path.
 const SKIP_EARLY_CONFIG = new Set<string>([

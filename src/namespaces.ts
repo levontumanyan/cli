@@ -31,11 +31,12 @@ export interface NamespaceEntry {
   name: string
   description: string
   /**
-   * When true, the preAction config-load hook and early config load are skipped
+   * When false, the preAction config-load hook and early config load are skipped
    * for commands in this namespace. Use for namespaces that don't need a config
    * file (e.g. sanitize, cli-schema) or that author the config themselves (config).
+   * Defaults to true (requires context).
    */
-  skipConfig?: boolean
+  requiresContext?: boolean
   /** Fully load the namespace and return a registered command group handle. */
   load: (opts?: LoadOptions) => Promise<OpaqueCommandHandle>
 }
@@ -80,7 +81,7 @@ export const NAMESPACES: NamespaceEntry[] = [
   {
     name: 'docs',
     description: 'Search, read, and ask questions about Elastic documentation',
-    skipConfig: true,
+    requiresContext: false,
     load: async () => {
       const { registerDocsCommands } = await import('./docs/register.ts')
       return registerDocsCommands()
@@ -89,7 +90,7 @@ export const NAMESPACES: NamespaceEntry[] = [
   {
     name: 'config',
     description: 'Author and maintain the elastic config file',
-    skipConfig: true,
+    requiresContext: false,
     load: async () => {
       const { registerConfigCommands } = await import('./config/commands.ts')
       return registerConfigCommands()
@@ -98,7 +99,7 @@ export const NAMESPACES: NamespaceEntry[] = [
   {
     name: 'sanitize',
     description: 'Sanitize values for safe use in Elasticsearch',
-    skipConfig: true,
+    requiresContext: false,
     load: async () => {
       const { registerSanitizeCommands } = await import('./sanitize/register.ts')
       return registerSanitizeCommands()
@@ -107,7 +108,7 @@ export const NAMESPACES: NamespaceEntry[] = [
   {
     name: 'cli-schema',
     description: 'Emit the CLI structure as argh-schema JSON',
-    skipConfig: true,
+    requiresContext: false,
     load: async (opts) => {
       const { registerCliSchemaCommand } = await import('./cli-schema.ts')
       // Exclude cli-schema itself from the eager namespace load to avoid self-reference.
