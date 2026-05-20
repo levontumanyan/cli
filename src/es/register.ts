@@ -7,6 +7,7 @@ import { Command } from 'commander'
 import { z } from 'zod'
 import { defineCommand, defineGroup } from '../factory.ts'
 import type { OpaqueCommandHandle } from '../factory.ts'
+import { inferIntentFromHttp } from '../cli-schema-intent.ts'
 import type { EsApiDefinition } from './types.ts'
 import { validateApiDefinition, resolveInput } from './types.ts'
 import type { SchemaArgDefinition } from '../lib/schema-args.ts'
@@ -107,6 +108,9 @@ function buildLeafHandle (
     description: def.description,
     input: schema,
     handler: createEsHandler(def, schemaArgs),
+    ...(def.intent != null || inferIntentFromHttp(def.method) != null
+      ? { intent: def.intent ?? inferIntentFromHttp(def.method)! }
+      : {}),
   }
   if (def.responseType === 'text') {
     config.formatOutput = (result) => String(result)

@@ -7,71 +7,114 @@ import { Command } from 'commander'
 import { z } from 'zod'
 import { defineCommand } from './factory.ts'
 import { stripTransportMeta } from './factory.ts'
-import type { OpaqueCommandHandle, CommandConfig, JsonValue } from './factory.ts'
+import type { OpaqueCommandHandle, CommandConfig, CommandIntent, JsonValue } from './factory.ts'
 import type { SchemaArgDefinition } from './lib/schema-args.ts'
 import type { NamespaceEntry } from './namespaces.ts'
 
 // ---------------------------------------------------------------------------
-// Argh schema types
+// CLI schema types
 // ---------------------------------------------------------------------------
 
-interface ArghValidation {
+interface CliValidation {
   kind: string
-  min?: string | null
-  max?: string | null
-  pattern?: string | null
-  values?: (string | null)[] | null
+  min?: string
+  max?: string
+  pattern?: string
+  values?: string[]
 }
 
-interface ArghParameter {
+interface CliParameter {
   role: string
   name: string
-  shortName: string | null
   type: string
   required: boolean
-  summary: string | null
-  defaultValue: string | null
-  repeatable: boolean
-  separator: string | null
-  aliases: (string | null)[] | null
-  enumValues: (string | null)[] | null
-  elementType: string | null
-  hidden: boolean
-  validations: ArghValidation[] | null
+  shortName?: string
+  summary?: string
+  defaultValue?: string
+  repeatable?: boolean
+  separator?: string
+  aliases?: string[]
+  enumValues?: string[]
+  elementType?: string
+  hidden?: boolean
+  validations?: CliValidation[]
 }
 
-interface ArghCommand {
-  path: (string | null)[]
+interface CliCommand {
+  path: string[]
   name: string
-  summary: string | null
-  notes: string | null
-  usage: string | null
-  examples: (string | null)[]
-  parameters: ArghParameter[]
-  aliases: (string | null)[] | null
-  hidden: boolean
+  parameters: CliParameter[]
+  summary?: string
+  aliases?: string[]
+  hidden?: boolean
+  intent?: CommandIntent
 }
 
-interface ArghNamespace {
+interface CliNamespace {
   segment: string
-  summary: string | null
-  notes: string | null
-  options: ArghParameter[]
-  defaultCommand: null
-  commands: ArghCommand[]
-  namespaces: ArghNamespace[]
+  commands: CliCommand[]
+  namespaces: CliNamespace[]
+  summary?: string
 }
 
-interface ArghSchema {
-  schemaVersion: string
+interface CliEnvVar {
+  name: string
+  required: boolean
+  description?: string
+}
+
+interface CliConfigFile {
+  path: string
+  required: boolean
+  description?: string
+}
+
+interface CliEnvironment {
+  variables: CliEnvVar[]
+  configFiles: CliConfigFile[]
+}
+
+interface CliSchema {
+  schemaVersion: number
   name: string
   version: string
-  description: string | null
-  reservedMetaCommands: (string | null)[]
-  globalOptions: ArghParameter[]
-  rootDefault: null
-  commands: ArghCommand[]
-  namespaces: ArghNamespace[]
+  reservedMetaCommands: string[]
+  globalOptions: CliParameter[]
+  environment: CliEnvironment
+  commands: CliCommand[]
+  namespaces: CliNamespace[]
+  description?: string
+}
+
+// ---------------------------------------------------------------------------
+// Environment declaration (sources: src/config/loader.ts, src/lib/logo.ts,
+//                                   src/lib/cloud-client.ts)
+// ---------------------------------------------------------------------------
+
+const ENVIRONMENT: CliEnvironment = {
+  variables: [
+    {
+      name: 'ELASTIC_CLI_CONFIG_FILE',
+      required: false,
+      description: 'Override the config file path (precedence: --config-file > this > home directory discovery)',
+    },
+    {
+      name: 'ELASTIC_NO_BANNER',
+      required: false,
+      description: 'Set to 1 to suppress the startup logo',
+    },
+    {
+      name: 'ELASTIC_CLOUD_ADMIN_API',
+      required: false,
+      description: 'Override the Elastic Cloud admin API base URL',
+    },
+  ],
+  configFiles: [
+    { path: '~/.elasticrc.yml',  required: false, description: 'Primary config file (recommended)' },
+    { path: '~/.elasticrc.yaml', required: false, description: 'Alternative YAML extension' },
+    { path: '~/.elasticrc.json', required: false, description: 'JSON form of the config file' },
+    { path: '~/.elasticrc',      required: false, description: 'Extensionless form of the config file' },
+  ],
 }
 
 // ---------------------------------------------------------------------------
@@ -93,9 +136,9 @@ function isHidden (cmd: OpaqueCommandHandle): boolean {
   return (cmd as unknown as any)._hidden === true
 }
 
-function commandAliases (cmd: OpaqueCommandHandle): (string | null)[] | null {
+function commandAliases (cmd: OpaqueCommandHandle): string[] | undefined {
   const list = cmd.aliases() as string[]
-  return list.length > 0 ? list : null
+  return list.length > 0 ? list : undefined
 }
 
 // ---------------------------------------------------------------------------
@@ -131,88 +174,84 @@ function resolveNode (node: JsonSchemaNode, root: JsonSchemaNode): JsonSchemaNod
   return unwrapNullable(resolveRef(node, root), root)
 }
 
-function extractEnumValues (node: JsonSchemaNode, root: JsonSchemaNode): (string | null)[] | null {
+function extractEnumValues (node: JsonSchemaNode, root: JsonSchemaNode): string[] | undefined {
   const resolved = resolveNode(node, root)
   const enumVals = resolved['enum']
-  if (!Array.isArray(enumVals) || enumVals.length === 0) return null
-  return enumVals.map((v) => (v == null ? null : String(v)))
+  if (!Array.isArray(enumVals) || enumVals.length === 0) return undefined
+  return enumVals.filter((v) => v != null).map(String)
 }
 
-function extractElementType (node: JsonSchemaNode, root: JsonSchemaNode): string | null {
+function extractElementType (node: JsonSchemaNode, root: JsonSchemaNode): string | undefined {
   const resolved = resolveNode(node, root)
   const items = resolved['items']
-  if (items == null || typeof items !== 'object') return null
+  if (items == null || typeof items !== 'object') return undefined
   const resolvedItems = resolveNode(items as JsonSchemaNode, root)
   const t = resolvedItems['type']
-  return typeof t === 'string' ? t : null
+  if (typeof t !== 'string') return undefined
+  // Spec only allows scalar element types; object/array items are not expressible
+  return ['string', 'integer', 'number', 'boolean'].includes(t) ? t : undefined
 }
 
-function extractValidations (node: JsonSchemaNode, root: JsonSchemaNode): ArghValidation[] | null {
+function extractValidations (node: JsonSchemaNode, root: JsonSchemaNode): CliValidation[] | undefined {
   const resolved = resolveNode(node, root)
-  const validations: ArghValidation[] = []
+  const validations: CliValidation[] = []
 
-  // Enum values are surfaced via the dedicated `enumValues` field; skip AllowedValues here.
+  // Enum values are surfaced via the dedicated `enumValues` field; skip here.
 
   const min = resolved['minimum']
   const max = resolved['maximum']
   if (min !== undefined || max !== undefined) {
     validations.push({
-      kind: 'Range',
-      min: min !== undefined ? String(min) : null,
-      max: max !== undefined ? String(max) : null,
+      kind: 'range',
+      ...(min !== undefined && { min: String(min) }),
+      ...(max !== undefined && { max: String(max) }),
     })
   }
 
   const pattern = resolved['pattern']
   if (typeof pattern === 'string') {
-    validations.push({ kind: 'Pattern', pattern })
+    validations.push({ kind: 'regex', pattern })
   }
 
-  return validations.length > 0 ? validations : null
+  return validations.length > 0 ? validations : undefined
 }
 
 // ---------------------------------------------------------------------------
 // Parameter builders
 // ---------------------------------------------------------------------------
 
-/** Map SchemaArgDefinition.type to a language-agnostic type string. */
-function schemaArgType (arg: SchemaArgDefinition): string {
+/** Map SchemaArgDefinition.type to a spec-compliant type string. */
+function schemaArgType (arg: SchemaArgDefinition, enumValues: string[] | undefined): string {
+  if (enumValues != null && enumValues.length > 0) return 'enum'
   switch (arg.type) {
     case 'boolean': return 'boolean'
-    case 'number': return 'number'
-    case 'object': return 'object'
-    case 'array': return 'array'
+    case 'number':  return 'number'
+    case 'array':   return 'array'
+    case 'object':
     case 'enum':
     case 'string':
     default: return 'string'
   }
 }
 
-function buildGlobalParams (rootCmd: Command): ArghParameter[] {
+function buildGlobalParams (rootCmd: Command): CliParameter[] {
   return rootCmd.options.map((opt) => {
     const isFlag = !opt.required && !opt.optional
+    const name = opt.long?.replace(/^--/, '') ?? ''
     return {
-      role: 'Named',
-      name: opt.long?.replace(/^--/, '') ?? '',
-      shortName: opt.short?.replace(/^-/, '') ?? null,
+      role: name === 'dry-run' ? 'dryRun' : 'flag',
+      name,
       type: isFlag ? 'boolean' : 'string',
       required: opt.mandatory ?? false,
-      summary: opt.description ?? null,
-      defaultValue: null,
-      repeatable: false,
-      separator: null,
-      aliases: null,
-      enumValues: null,
-      elementType: null,
-      hidden: false,
-      validations: null,
+      ...(opt.short != null && { shortName: opt.short.replace(/^-/, '') }),
+      ...(opt.description && { summary: opt.description }),
     }
   })
 }
 
-function buildCommandParams (cmd: OpaqueCommandHandle): ArghParameter[] {
+function buildCommandParams (cmd: OpaqueCommandHandle): CliParameter[] {
   const attached = getAttachedConfig(cmd)
-  const params: ArghParameter[] = []
+  const params: CliParameter[] = []
 
   let jsonSchema: JsonSchemaNode | undefined
   let schemaRoot: JsonSchemaNode | undefined
@@ -237,40 +276,24 @@ function buildCommandParams (cmd: OpaqueCommandHandle): ArghParameter[] {
     if (attached.config.positionalArg != null) {
       const pa = attached.config.positionalArg
       params.push({
-        role: 'Positional',
+        role: 'positional',
         name: pa.name,
-        shortName: null,
         type: 'string',
         required: pa.required !== false,
-        summary: pa.description ?? null,
-        defaultValue: null,
-        repeatable: false,
-        separator: null,
-        aliases: null,
-        enumValues: null,
-        elementType: null,
-        hidden: false,
-        validations: null,
+        ...(pa.description && { summary: pa.description }),
       })
     }
 
     // Hand-declared options (OptionDefinition[])
     for (const opt of (attached.config.options ?? [])) {
       params.push({
-        role: 'Named',
+        role: 'flag',
         name: opt.long,
-        shortName: opt.short ?? null,
         type: opt.type === 'boolean' ? 'boolean' : opt.type === 'number' ? 'number' : 'string',
         required: opt.required ?? false,
-        summary: opt.description ?? null,
-        defaultValue: opt.defaultValue != null ? String(opt.defaultValue) : null,
-        repeatable: false,
-        separator: null,
-        aliases: null,
-        enumValues: null,
-        elementType: null,
-        hidden: false,
-        validations: null,
+        ...(opt.short != null && { shortName: opt.short }),
+        ...(opt.description && { summary: opt.description }),
+        ...(opt.defaultValue != null && { defaultValue: String(opt.defaultValue) }),
       })
     }
 
@@ -278,21 +301,19 @@ function buildCommandParams (cmd: OpaqueCommandHandle): ArghParameter[] {
     for (const arg of attached.schemaArgs) {
       const node = propNode(arg.schemaKey)
       const root = schemaRoot ?? {}
+      const enumValues = node != null ? extractEnumValues(node, root) : undefined
       params.push({
-        role: 'Named',
+        role: 'flag',
         name: arg.cliFlag,
-        shortName: null,
-        type: schemaArgType(arg),
+        type: schemaArgType(arg, enumValues),
         required: arg.required,
-        summary: arg.description ?? null,
-        defaultValue: arg.defaultValue != null ? String(arg.defaultValue) : null,
-        repeatable: arg.acceptsArrayForm === true,
-        separator: arg.acceptsArrayForm === true && arg.foundIn === 'body' ? ',' : null,
-        aliases: null,
-        enumValues: node != null ? extractEnumValues(node, root) : null,
-        elementType: arg.type === 'array' && node != null ? extractElementType(node, root) : null,
-        hidden: false,
-        validations: node != null ? extractValidations(node, root) : null,
+        ...(arg.description && { summary: arg.description }),
+        ...(arg.defaultValue != null && { defaultValue: String(arg.defaultValue) }),
+        ...(arg.acceptsArrayForm === true && { repeatable: true }),
+        ...(arg.acceptsArrayForm === true && arg.foundIn === 'body' && { separator: ',' }),
+        ...(enumValues != null && { enumValues }),
+        ...(arg.type === 'array' && node != null && extractElementType(node, root) != null && { elementType: extractElementType(node, root) as string }),
+        ...(node != null && extractValidations(node, root) != null && { validations: extractValidations(node, root) as CliValidation[] }),
       })
     }
 
@@ -308,20 +329,12 @@ function buildCommandParams (cmd: OpaqueCommandHandle): ArghParameter[] {
       if (!name) continue
       const isFlag = !opt.required && !opt.optional
       params.push({
-        role: 'Named',
+        role: name === 'dry-run' ? 'dryRun' : 'flag',
         name,
-        shortName: opt.short?.replace(/^-/, '') ?? null,
         type: isFlag ? 'boolean' : 'string',
         required: opt.mandatory ?? false,
-        summary: opt.description ?? null,
-        defaultValue: null,
-        repeatable: false,
-        separator: null,
-        aliases: null,
-        enumValues: null,
-        elementType: null,
-        hidden: false,
-        validations: null,
+        ...(opt.short != null && { shortName: opt.short.replace(/^-/, '') }),
+        ...(opt.description && { summary: opt.description }),
       })
     }
   } else {
@@ -331,20 +344,12 @@ function buildCommandParams (cmd: OpaqueCommandHandle): ArghParameter[] {
       if (!name) continue
       const isFlag = !opt.required && !opt.optional
       params.push({
-        role: 'Named',
+        role: name === 'dry-run' ? 'dryRun' : 'flag',
         name,
-        shortName: opt.short?.replace(/^-/, '') ?? null,
         type: isFlag ? 'boolean' : 'string',
         required: opt.mandatory ?? false,
-        summary: opt.description ?? null,
-        defaultValue: null,
-        repeatable: false,
-        separator: null,
-        aliases: null,
-        enumValues: null,
-        elementType: null,
-        hidden: false,
-        validations: null,
+        ...(opt.short != null && { shortName: opt.short.replace(/^-/, '') }),
+        ...(opt.description && { summary: opt.description }),
       })
     }
   }
@@ -353,61 +358,74 @@ function buildCommandParams (cmd: OpaqueCommandHandle): ArghParameter[] {
 }
 
 // ---------------------------------------------------------------------------
+// Intent helpers
+// ---------------------------------------------------------------------------
+
+/**
+ * Merges a command's declared intent with the namespace-derived requiresAuth value.
+ * An explicit requiresAuth on the command's intent takes precedence over the namespace default.
+ */
+function mergeIntent (commandIntent: CommandIntent | undefined, requiresAuth: boolean): CommandIntent {
+  if (commandIntent?.requiresAuth !== undefined) {
+    return commandIntent
+  }
+  return { ...(commandIntent ?? {}), requiresAuth }
+}
+
+// ---------------------------------------------------------------------------
 // Tree walker
 // ---------------------------------------------------------------------------
 
-function buildLeafCommand (cmd: OpaqueCommandHandle, path: string[]): ArghCommand {
+function buildLeafCommand (cmd: OpaqueCommandHandle, path: string[], requiresAuth: boolean): CliCommand {
+  const attached = getAttachedConfig(cmd)
+  const intent = mergeIntent(attached?.config.intent, requiresAuth)
+  const aliases = commandAliases(cmd)
   return {
     path,
     name: cmd.name(),
-    summary: cmd.description() || null,
-    notes: null,
-    usage: null,
-    examples: [],
     parameters: buildCommandParams(cmd),
-    aliases: commandAliases(cmd),
-    hidden: false,
+    ...(cmd.description() && { summary: cmd.description() }),
+    ...(aliases != null && { aliases }),
+    intent,
   }
 }
 
 function walkCommands (
   cmd: OpaqueCommandHandle,
   pathSoFar: string[],
-  outCommands: ArghCommand[],
-): ArghNamespace | null {
+  outCommands: CliCommand[],
+  requiresAuth: boolean,
+): CliNamespace | null {
   if (isHidden(cmd)) return null
 
   const subs = cmd.commands as OpaqueCommandHandle[]
   const name = cmd.name()
 
   if (subs.length === 0) {
-    outCommands.push(buildLeafCommand(cmd, pathSoFar))
+    outCommands.push(buildLeafCommand(cmd, pathSoFar, requiresAuth))
     return null
   }
 
-  const nsCommands: ArghCommand[] = []
-  const nsNamespaces: ArghNamespace[] = []
+  const nsCommands: CliCommand[] = []
+  const nsNamespaces: CliNamespace[] = []
   const childPath = [...pathSoFar, name]
 
   for (const sub of subs) {
     if (isHidden(sub)) continue
     const subSubs = sub.commands as OpaqueCommandHandle[]
     if (subSubs.length === 0) {
-      nsCommands.push(buildLeafCommand(sub, childPath))
+      nsCommands.push(buildLeafCommand(sub, childPath, requiresAuth))
     } else {
-      const nested = walkCommands(sub, childPath, outCommands)
+      const nested = walkCommands(sub, childPath, outCommands, requiresAuth)
       if (nested != null) nsNamespaces.push(nested)
     }
   }
 
   return {
     segment: name,
-    summary: cmd.description() || null,
-    notes: null,
-    options: [],
-    defaultCommand: null,
     commands: nsCommands,
     namespaces: nsNamespaces,
+    ...(cmd.description() && { summary: cmd.description() }),
   }
 }
 
@@ -415,35 +433,37 @@ function walkCommands (
 // Schema builder
 // ---------------------------------------------------------------------------
 
-export function buildArghSchema (
+export function buildCliSchema (
   root: OpaqueCommandHandle,
-  globalOptions: ArghParameter[],
+  globalOptions: CliParameter[],
   version: string,
-): ArghSchema {
-  const allCommands: ArghCommand[] = []
-  const namespaces: ArghNamespace[] = []
+  skipConfigNames: ReadonlySet<string> = new Set(),
+): CliSchema {
+  const allCommands: CliCommand[] = []
+  const namespaces: CliNamespace[] = []
 
   for (const sub of root.commands as OpaqueCommandHandle[]) {
     if (isHidden(sub)) continue
+    const requiresAuth = !skipConfigNames.has(sub.name())
     const subSubs = sub.commands as OpaqueCommandHandle[]
     if (subSubs.length === 0) {
-      allCommands.push(buildLeafCommand(sub, []))
+      allCommands.push(buildLeafCommand(sub, [], requiresAuth))
     } else {
-      const ns = walkCommands(sub, [], allCommands)
+      const ns = walkCommands(sub, [], allCommands, requiresAuth)
       if (ns != null) namespaces.push(ns)
     }
   }
 
   return {
-    schemaVersion: '1',
+    schemaVersion: 1,
     name: root.name() || 'elastic',
     version,
-    description: root.description() || null,
     reservedMetaCommands: ['cli-schema'],
     globalOptions,
-    rootDefault: null,
+    environment: ENVIRONMENT,
     commands: allCommands,
     namespaces,
+    ...(root.description() && { description: root.description() }),
   }
 }
 
@@ -458,7 +478,7 @@ export async function registerCliSchemaCommand (
 ): Promise<OpaqueCommandHandle> {
   return defineCommand({
     name: 'cli-schema',
-    description: 'Emit the CLI structure as argh-schema JSON',
+    description: 'Emit the CLI structure as JSON',
     handler: async () => {
       const schemaRoot = new Command(rootProgram?.name() ?? 'elastic')
       schemaRoot.description(rootProgram?.description() ?? '')
@@ -473,7 +493,14 @@ export async function registerCliSchemaCommand (
       for (const ns of loaded) schemaRoot.addCommand(ns)
 
       const globalOptions = rootProgram != null ? buildGlobalParams(rootProgram) : []
-      return buildArghSchema(schemaRoot, globalOptions, version) as unknown as JsonValue
+
+      // Build the set of namespace names that don't need config/auth
+      const skipConfigNames = new Set<string>([
+        ...namespaces.filter(ns => ns.skipConfig).map(ns => ns.name),
+        'version', // root-level version command needs no auth
+      ])
+
+      return buildCliSchema(schemaRoot, globalOptions, version, skipConfigNames) as unknown as JsonValue
     },
     formatOutput: (result) => JSON.stringify(result, null, 2) + '\n',
   })

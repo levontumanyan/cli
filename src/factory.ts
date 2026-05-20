@@ -16,6 +16,18 @@ import { simplifyZodIssues, formatIssuesText } from './lib/zod-error.ts'
 import { renderText, formatHandlerError } from './output.ts'
 import { pickFields, parseFieldList, applyTemplate } from './lib/output-transform.ts'
 
+/**
+ * Declared intent for a command, used by the CLI schema emitter.
+ * All fields are optional — omit any that are unknown or inapplicable.
+ */
+export interface CommandIntent {
+  destructive?: boolean
+  idempotent?: boolean
+  scope?: 'file' | 'directory' | 'global'
+  requiresConfirmation?: boolean
+  requiresAuth?: boolean
+}
+
 /** pre-built schema for coercing string → number, reused per option invocation */
 const numberSchema = z.coerce.number()
 
@@ -150,6 +162,11 @@ export interface CommandConfig<T extends z.ZodType = z.ZodType> {
    * never called when `--json` is active.
    */
   formatOutput?: (result: JsonValue, parsed: ParsedResult<z.infer<T>>) => string
+  /**
+   * optional intent declaration for the CLI schema emitter.
+   * used to derive destructiveness, idempotency, and auth requirements in emitted schema.
+   */
+  intent?: CommandIntent
 }
 
 /**
