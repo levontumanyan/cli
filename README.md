@@ -288,7 +288,11 @@ elasticsearch:
 |---|---|
 | `--config-file <path>` | Path to a config file (default: `~/.elasticrc.yml`) |
 | `--use-context <name>` | Override the active context from the config file |
+| `--command-profile <name>` | Restrict available commands to a deployment profile (`full`, `serverless`) |
 | `--json` | Output results as JSON |
+| `--output-fields <list>` | Comma-separated list of fields to include in output (dot-notation supported) |
+| `--output-template <string>` | Mustache-like template for custom text output (e.g. `"{{id}}: {{name}}"`) |
+| `--dry-run` | Validate all inputs and exit without performing any action |
 
 ## Commands
 
