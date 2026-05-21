@@ -11,6 +11,8 @@ import { loadConfig } from './config/loader.ts'
 import { BUILT_IN_PROFILES, type BuiltInProfile } from './config/profiles.ts'
 import { setResolvedConfig } from './config/store.ts'
 import { renderLogo } from './lib/logo.ts'
+import { rewriteTopLevelAliases } from './completion/argv-aliases.ts'
+import { registerCompletionCommands, COMPLETION_COMMAND_NAMES } from './completion/index.ts'
 
 // x-release-please-start-version
 const VERSION = '0.1.1';
@@ -37,6 +39,11 @@ program
 // returns the in-process cached result from the early load, avoiding redundant I/O.
 program.hook('preAction', async (thisCommand, actionCommand) => {
   if (actionCommand.name() === 'version') return
+  // Shell completion commands must not depend on a working config: the user
+  // installs them before any context exists, and tab-completion errors must
+  // never poison the shell. They do their own (best-effort) config loading
+  // inside their handlers when they need context names.
+  if (COMPLETION_COMMAND_NAMES.includes(actionCommand.name())) return
   // `status` loads the config itself so a partially broken config is reported as
   // a structured result rather than exiting before any probe runs.
   if (actionCommand.name() === 'status') return
@@ -80,6 +87,13 @@ const versionCmd = defineCommand({
 })
 program.addCommand(versionCmd)
 
+// Shell completion: `elastic completion <shell>` prints a wrapper script and
+// the hidden `__complete` command answers tab-completion callbacks from that
+// wrapper. Both are config-free; the preAction hook above skips them.
+for (const cmd of registerCompletionCommands()) {
+  program.addCommand(cmd)
+}
+
 // Lazily load command trees only when the relevant top-level subcommand is actually
 // invoked. For all other invocations (including `elastic --help`), a lightweight stub
 // is registered so the group appears in help text without paying the cost of loading
@@ -91,14 +105,46 @@ let firstArg = operands[0]
 // shortcuts for `elastic stack es ...` and `elastic stack kb ...`.
 // argv is rewritten before Commander parses so all routing and dot-paths remain
 // consistent (e.g. policy entries still use `stack.es.*`).
-if (firstArg === 'es' || firstArg === 'elasticsearch') {
-  const idx = process.argv.indexOf(firstArg, 2)
-  if (idx !== -1) process.argv.splice(idx, 0, 'stack')
-  operands.splice(0, 0, 'stack')
-  firstArg = 'stack'
-} else if (firstArg === 'kb' || firstArg === 'kibana') {
-  const idx = process.argv.indexOf(firstArg, 2)
-  if (idx !== -1) process.argv.splice(idx, 0, 'stack')
+const aliasRewritten = rewriteTopLevelAliases(operands)
+if (aliasRewritten.length !== operands.length) {
+  // Find the position of the first operand in process.argv by scanning past
+  // options and their values. We can't use indexOf because an option value
+  // might coincidentally equal the alias (e.g. --command-profile es).
+  const original = firstArg!
+  
+  // Build set of options that take values from the program's option definitions
+  const valueOptions = new Set<string>()
+  for (const opt of program.options) {
+    if (opt.required || opt.optional) {
+      // Option takes a value
+      if (opt.long) valueOptions.add(opt.long)
+      if (opt.short) valueOptions.add(opt.short)
+    }
+  }
+  
+  let idx = 2  // start after 'node' and script name
+  while (idx < process.argv.length) {
+    const arg = process.argv[idx]
+    if (arg == null) break  // defensive: should never happen given loop condition
+    if (arg === original) {
+      // Found the first operand
+      process.argv.splice(idx, 0, 'stack')
+      break
+    }
+    // Skip this argument
+    idx++
+    // If it's an option that takes a value, skip the value too
+    if (arg.startsWith('-')) {
+      const eqIdx = arg.indexOf('=')
+      if (eqIdx === -1) {
+        // No = sign, check if this option takes a value
+        if (valueOptions.has(arg)) {
+          idx++  // skip the value
+        }
+      }
+      // else: --option=value format, value is already part of this arg
+    }
+  }
   operands.splice(0, 0, 'stack')
   firstArg = 'stack'
 }
@@ -201,11 +247,14 @@ if (firstArg === 'status') {
 }
 
 // Load config early so --help can hide blocked commands. Skip for commands
-// that don't need config (e.g. `version`, `sanitize`, or `config` which authors the file)
+// that don't need config (e.g. `version`, `sanitize`, `config` which authors
+// the file, and the completion subsystem which runs before any context exists)
 // to avoid unnecessary file I/O and a confusing "no config found" path.
 // loadConfig() caches the result in-process; the preAction hook reuses it via the default cache path.
-const EARLY_CONFIG_COMMANDS = new Set(['version', 'config', 'sanitize', 'extension', 'status'])
-if (!EARLY_CONFIG_COMMANDS.has(firstArg ?? '')) {
+const SKIP_EARLY_CONFIG = new Set<string>([
+  'version', 'config', 'sanitize', 'extension', 'status', ...COMPLETION_COMMAND_NAMES,
+])
+if (firstArg == null || !SKIP_EARLY_CONFIG.has(firstArg)) {
   // Parse --profile early (before Commander's full parse) so the early config load
   // and hideBlockedCommands can apply the correct profile-based allow-list to --help.
   const profileArgIdx = process.argv.indexOf('--command-profile')
