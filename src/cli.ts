@@ -7,7 +7,7 @@
 import { Command } from 'commander'
 import { defineCommand, defineGroup, hideBlockedCommands } from './factory.js'
 import type { OpaqueCommandHandle } from './factory.js'
-import { loadConfig, type LoadConfigResult } from './config/loader.ts'
+import { loadConfig } from './config/loader.ts'
 import { BUILT_IN_PROFILES, type BuiltInProfile } from './config/profiles.ts'
 import { setResolvedConfig } from './config/store.ts'
 import { renderLogo } from './lib/logo.ts'
@@ -33,10 +33,8 @@ program
 // On error, print a structured message and exit -- never let a config failure
 // silently propagate into the command handler.
 //
-// When no --config-file or --use-context overrides are specified, the hook
-// reuses the cached earlyConfig to avoid a redundant load+resolve cycle.
-let earlyConfig: LoadConfigResult | undefined
-
+// When no --config-file or --use-context overrides are specified, loadConfig()
+// returns the in-process cached result from the early load, avoiding redundant I/O.
 program.hook('preAction', async (thisCommand, actionCommand) => {
   if (actionCommand.name() === 'version') return
   // `status` loads the config itself so a partially broken config is reported as
@@ -55,16 +53,13 @@ program.hook('preAction', async (thisCommand, actionCommand) => {
   }
   const { configFile: configPath, useContext: contextName, commandProfile: profileName } = thisCommand.opts()
   const typedProfileName = profileName as BuiltInProfile | undefined
-
-  if (configPath == null && contextName == null && profileName == null && earlyConfig?.ok === true) {
-    setResolvedConfig(earlyConfig.value)
-    return
-  }
+  const hasOverrides = configPath != null || contextName != null || profileName != null
 
   const result = await loadConfig({
     ...(configPath != null && { configPath }),
     ...(contextName != null && { contextName }),
     ...(typedProfileName != null && { profileName: typedProfileName }),
+    refresh: hasOverrides,
   })
   if (result.ok) {
     setResolvedConfig(result.value)
@@ -208,7 +203,7 @@ if (firstArg === 'status') {
 // Load config early so --help can hide blocked commands. Skip for commands
 // that don't need config (e.g. `version`, `sanitize`, or `config` which authors the file)
 // to avoid unnecessary file I/O and a confusing "no config found" path.
-// The result is cached in earlyConfig so the preAction hook can reuse it.
+// loadConfig() caches the result in-process; the preAction hook reuses it via the default cache path.
 const EARLY_CONFIG_COMMANDS = new Set(['version', 'config', 'sanitize', 'extension', 'status'])
 if (!EARLY_CONFIG_COMMANDS.has(firstArg ?? '')) {
   // Parse --profile early (before Commander's full parse) so the early config load
@@ -216,7 +211,7 @@ if (!EARLY_CONFIG_COMMANDS.has(firstArg ?? '')) {
   const profileArgIdx = process.argv.indexOf('--command-profile')
   const earlyProfile = profileArgIdx !== -1 ? process.argv[profileArgIdx + 1] as BuiltInProfile | undefined : undefined
 
-  earlyConfig = await loadConfig({
+  const earlyConfig = await loadConfig({
     ...(earlyProfile != null && { profileName: earlyProfile }),
   })
   if (earlyConfig.ok) {
@@ -226,6 +221,7 @@ if (!EARLY_CONFIG_COMMANDS.has(firstArg ?? '')) {
 }
 
 if (process.argv.slice(2).length === 0) {
+  const earlyConfig = await loadConfig()
   if (!earlyConfig?.ok || earlyConfig.value.banner !== false) {
     process.stdout.write(renderLogo(VERSION))
   }
@@ -244,7 +240,8 @@ if (firstArg != null && !BUILT_IN_COMMANDS.has(firstArg)) {
   if (ext != null) {
     const { buildContextEnv } = await import('./extension/context.ts')
     const { runExtension } = await import('./extension/runner.ts')
-    const contextEnv = earlyConfig?.ok === true ? buildContextEnv(earlyConfig.value) : {}
+    const cachedConfig = await loadConfig()
+    const contextEnv = cachedConfig?.ok === true ? buildContextEnv(cachedConfig.value) : {}
     const exitCode = await runExtension(ext, process.argv.slice(3), contextEnv)
     process.exit(exitCode)
   }
