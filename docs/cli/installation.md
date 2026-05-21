@@ -1,17 +1,14 @@
 # Installation
 
-The `elastic` CLI is not yet available on npm. Install it by cloning the repository, building, and linking it locally.
+Install globally from `npm` so the elastic binary is available on your `PATH`:
 
 ```bash
-git clone git@github.com:elastic/cli.git
-cd cli
-npm install
-npm run build
-npm link
+npm install -g @elastic/cli
+elastic --help
 ```
 
-Once linked, verify the installation:
+If you don't want a global install, you can run a one-off invocation with npx, which downloads and runs the CLI without persisting it:
 
 ```bash
-elastic --help
+npx -y @elastic/cli --help
 ```
