@@ -231,13 +231,15 @@ function extractValidations (node: JsonSchemaNode, root: JsonSchemaNode): CliVal
 function schemaArgType (arg: SchemaArgDefinition, enumValues: string[] | undefined): string {
   if (enumValues != null && enumValues.length > 0) return 'enum'
   switch (arg.type) {
-    case 'boolean': return 'boolean'
-    case 'number':  return 'number'
-    case 'array':   return 'array'
+    case 'boolean':
+    case 'number':
+    case 'array':
+      return arg.type
     case 'object':
     case 'enum':
     case 'string':
-    default: return 'string'
+    default:
+      return 'string'
   }
 }
 
