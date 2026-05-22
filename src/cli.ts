@@ -109,8 +109,18 @@ const shortcutMatch = firstArg != null ? shortcutMap.get(firstArg) : undefined
 if (shortcutMatch != null) {
   const parentNs = shortcutMatch.to[0]
   if (parentNs != null) {
-    const idx = process.argv.indexOf(firstArg as string, 2)
-    if (idx !== -1) process.argv.splice(idx, 0, parentNs)
+    // Scan forward past options and their values to find the first positional arg.
+    // Simple indexOf would incorrectly match a shortcut name used as an option value
+    // (e.g. --command-profile es).
+    const valueOptions = new Set(program.options.filter(o => o.required || o.optional).flatMap(o => [o.long, o.short].filter(Boolean) as string[]))
+    let idx = 2
+    while (idx < process.argv.length) {
+      const arg = process.argv[idx]
+      if (arg == null) break
+      if (arg === firstArg) { process.argv.splice(idx, 0, parentNs); break }
+      idx++
+      if (arg.startsWith('-') && arg.indexOf('=') === -1 && valueOptions.has(arg)) idx++
+    }
     operands.splice(0, 0, parentNs)
     firstArg = parentNs
   }
