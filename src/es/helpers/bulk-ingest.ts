@@ -235,6 +235,7 @@ export function createBulkIngestCommand (deps?: BulkIngestDeps): OpaqueCommandHa
     description: 'Bulk-ingest documents from file, directory, or stdin with automatic batching, concurrency, and retries.',
     input: inputSchema,
     handler: createBulkIngestHandler(deps),
+    intent: { destructive: false, idempotent: false, scope: 'global' },
     formatOutput: (result) => {
       const r = result as Record<string, unknown>
       if (r.error != null) return JSON.stringify(result, null, 2) + '\n'

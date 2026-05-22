@@ -11,8 +11,8 @@ import { loadConfig } from './config/loader.ts'
 import { BUILT_IN_PROFILES, type BuiltInProfile } from './config/profiles.ts'
 import { setResolvedConfig } from './config/store.ts'
 import { renderLogo } from './lib/logo.ts'
-import { rewriteTopLevelAliases } from './completion/argv-aliases.ts'
 import { registerCompletionCommands, COMPLETION_COMMAND_NAMES } from './completion/index.ts'
+import { NAMESPACES } from './namespaces.ts'
 
 // x-release-please-start-version
 const VERSION = '0.1.1';
@@ -35,8 +35,8 @@ program
 // On error, print a structured message and exit -- never let a config failure
 // silently propagate into the command handler.
 //
-// When no --config-file or --use-context overrides are specified, loadConfig()
-// returns the in-process cached result from the early load, avoiding redundant I/O.
+const skipConfigNames = new Set(NAMESPACES.filter(ns => ns.requiresContext === false).map(ns => ns.name))
+
 program.hook('preAction', async (thisCommand, actionCommand) => {
   if (actionCommand.name() === 'version') return
   // Shell completion commands must not depend on a working config: the user
@@ -47,12 +47,9 @@ program.hook('preAction', async (thisCommand, actionCommand) => {
   // `status` loads the config itself so a partially broken config is reported as
   // a structured result rather than exiting before any probe runs.
   if (actionCommand.name() === 'status') return
-  if (actionCommand.parent?.name() === 'docs') return
-  if (actionCommand.parent?.name() === 'sanitize') return
-  // `config` commands author the config file itself — loading it would be
-  // circular (and must tolerate the absence of a file)
-  for (let c = actionCommand.parent; c != null; c = c.parent) {
-    if (c.name() === 'config') return
+  // Walk up the command tree — if any ancestor doesn't require context, skip config loading.
+  for (let c: Command | null = actionCommand; c != null; c = c.parent) {
+    if (skipConfigNames.has(c.name())) return
   }
   // `extension` commands manage the extension registry, not the Elastic stack
   for (let c = actionCommand.parent; c != null; c = c.parent) {
@@ -101,128 +98,60 @@ for (const cmd of registerCompletionCommands()) {
 const { operands } = program.parseOptions(process.argv.slice(2))
 let firstArg = operands[0]
 
-// Transparent aliases: `elastic es ...` and `elastic kb ...` are first-class
-// shortcuts for `elastic stack es ...` and `elastic stack kb ...`.
-// argv is rewritten before Commander parses so all routing and dot-paths remain
-// consistent (e.g. policy entries still use `stack.es.*`).
-const aliasRewritten = rewriteTopLevelAliases(operands)
-if (aliasRewritten.length !== operands.length) {
-  // Find the position of the first operand in process.argv by scanning past
-  // options and their values. We can't use indexOf because an option value
-  // might coincidentally equal the alias (e.g. --command-profile es).
-  const original = firstArg!
-  
-  // Build set of options that take values from the program's option definitions
-  const valueOptions = new Set<string>()
-  for (const opt of program.options) {
-    if (opt.required || opt.optional) {
-      // Option takes a value
-      if (opt.long) valueOptions.add(opt.long)
-      if (opt.short) valueOptions.add(opt.short)
+// Build a map of shortcut `from` names to the top-level namespace they belong to,
+// so argv can be rewritten before Commander parses.
+const allShortcuts = NAMESPACES.flatMap(ns => (ns.shortcuts ?? []).map(s => ({ ...s, nsName: ns.name })))
+const shortcutMap = new Map(allShortcuts.map(s => [s.from, s]))
+
+// Transparent argv rewrite: `elastic es ...` becomes `elastic stack es ...`.
+// Done before Commander parses so routing, dot-paths, and option parsing are consistent.
+const shortcutMatch = firstArg != null ? shortcutMap.get(firstArg) : undefined
+if (shortcutMatch != null) {
+  const parentNs = shortcutMatch.to[0]
+  if (parentNs != null) {
+    // Scan forward past options and their values to find the first positional arg.
+    // Simple indexOf would incorrectly match a shortcut name used as an option value
+    // (e.g. --command-profile es).
+    const valueOptions = new Set(program.options.filter(o => o.required || o.optional).flatMap(o => [o.long, o.short].filter(Boolean) as string[]))
+    let idx = 2
+    while (idx < process.argv.length) {
+      const arg = process.argv[idx]
+      if (arg == null) break
+      if (arg === firstArg) { process.argv.splice(idx, 0, parentNs); break }
+      idx++
+      if (arg.startsWith('-') && arg.indexOf('=') === -1 && valueOptions.has(arg)) idx++
     }
+    operands.splice(0, 0, parentNs)
+    firstArg = parentNs
   }
-  
-  let idx = 2  // start after 'node' and script name
-  while (idx < process.argv.length) {
-    const arg = process.argv[idx]
-    if (arg == null) break  // defensive: should never happen given loop condition
-    if (arg === original) {
-      // Found the first operand
-      process.argv.splice(idx, 0, 'stack')
-      break
-    }
-    // Skip this argument
-    idx++
-    // If it's an option that takes a value, skip the value too
-    if (arg.startsWith('-')) {
-      const eqIdx = arg.indexOf('=')
-      if (eqIdx === -1) {
-        // No = sign, check if this option takes a value
-        if (valueOptions.has(arg)) {
-          idx++  // skip the value
-        }
-      }
-      // else: --option=value format, value is already part of this arg
-    }
-  }
-  operands.splice(0, 0, 'stack')
-  firstArg = 'stack'
 }
 
-if (firstArg === 'stack') {
-  const stackChildren: OpaqueCommandHandle[] = []
-
-  const secondArg = operands[1]
-  const esArgs = new Set(['es', 'elasticsearch'])
-  const kbArgs = new Set(['kb', 'kibana'])
-
-  if (secondArg == null || esArgs.has(secondArg)) {
-    const { registerEsCommandsLazy } = await import('./es/register.ts')
-    const esGroup = await registerEsCommandsLazy()
-    esGroup.alias('elasticsearch')
-    stackChildren.push(esGroup)
+// Register namespaces: load eagerly when first arg matches, otherwise register a lightweight stub.
+// To add a new top-level namespace, add an entry to src/namespaces.ts — no changes needed here.
+for (const ns of NAMESPACES) {
+  if (firstArg === ns.name) {
+    program.addCommand(await ns.load({ version: VERSION, rootProgram: program }))
   } else {
-    const esStub = defineGroup({ name: 'es', description: 'Interact with the Elasticsearch API' })
-    esStub.alias('elasticsearch')
-    stackChildren.push(esStub)
+    program.addCommand(defineGroup({ name: ns.name, description: ns.description }))
   }
+}
 
-  if (secondArg == null || kbArgs.has(secondArg)) {
-    const { registerKbCommandsLazy } = await import('./kb/register.ts')
-    const kbGroup = await registerKbCommandsLazy()
-    kbGroup.alias('kibana')
-    stackChildren.push(kbGroup)
+// Register root-level shortcut stubs derived from NAMESPACES so they appear in
+// `elastic --help`. Group by `to` path so multiple `from` names for the same
+// target become Commander aliases of a single stub rather than separate commands.
+// Argv has already been rewritten above so Commander routes correctly.
+const stubsByTarget = new Map<string, OpaqueCommandHandle>()
+for (const shortcut of allShortcuts) {
+  const targetKey = shortcut.to.join('.')
+  const existing = stubsByTarget.get(targetKey)
+  if (existing == null) {
+    const description = `Shortcut for 'elastic ${shortcut.to.join(' ')}'`
+    const stub = defineGroup({ name: shortcut.from, description })
+    stubsByTarget.set(targetKey, stub)
+    program.addCommand(stub)
   } else {
-    const kbStub = defineGroup({ name: 'kb', description: 'Interact with the Kibana API' })
-    kbStub.alias('kibana')
-    stackChildren.push(kbStub)
+    existing.alias(shortcut.from)
   }
-
-  program.addCommand(defineGroup(
-    { name: 'stack', description: 'Interact with Elastic Stack components (Elasticsearch, Kibana, Fleet)' },
-    ...stackChildren
-  ))
-} else {
-  program.addCommand(defineGroup({ name: 'stack', description: 'Interact with Elastic Stack components (Elasticsearch, Kibana, Fleet)' }))
-}
-
-// Register top-level es|elasticsearch and kb|kibana stubs so they appear in
-// `elastic --help` as first-class aliases. When invoked, argv has already been
-// rewritten above so Commander routes through `stack es` / `stack kb`.
-const esAlias = defineGroup({ name: 'es', description: 'Interact with the Elasticsearch API' })
-esAlias.alias('elasticsearch')
-program.addCommand(esAlias)
-
-const kbAlias = defineGroup({ name: 'kb', description: 'Interact with the Kibana API' })
-kbAlias.alias('kibana')
-program.addCommand(kbAlias)
-
-if (firstArg === 'cloud') {
-  const { registerCloudCommands } = await import('./cloud/register.ts')
-  program.addCommand(registerCloudCommands())
-} else {
-  program.addCommand(defineGroup({ name: 'cloud', description: 'Manage Elastic Cloud (hosted deployments and serverless projects)' }))
-}
-
-if (firstArg === 'docs') {
-  const { registerDocsCommands } = await import('./docs/register.ts')
-  program.addCommand(registerDocsCommands())
-} else {
-  program.addCommand(defineGroup({ name: 'docs', description: 'Search, read, and ask questions about Elastic documentation' }))
-}
-
-if (firstArg === 'config') {
-  const { registerConfigCommands } = await import('./config/commands.ts')
-  program.addCommand(registerConfigCommands())
-} else {
-  program.addCommand(defineGroup({ name: 'config', description: 'Author and maintain the elastic config file' }))
-}
-
-if (firstArg === 'sanitize') {
-  const { registerSanitizeCommands } = await import('./sanitize/register.ts')
-  program.addCommand(registerSanitizeCommands())
-} else {
-  program.addCommand(defineGroup({ name: 'sanitize', description: 'Sanitize values for safe use in Elasticsearch' }))
 }
 
 if (firstArg === 'extension') {
@@ -246,13 +175,12 @@ if (firstArg === 'status') {
   }))
 }
 
-// Load config early so --help can hide blocked commands. Skip for commands
-// that don't need config (e.g. `version`, `sanitize`, `config` which authors
-// the file, and the completion subsystem which runs before any context exists)
-// to avoid unnecessary file I/O and a confusing "no config found" path.
+// Load config early so --help can hide blocked commands. Skip for commands that don't need
+// config (requiresContext: false namespaces, extension, status, version, or completion commands) to
+// avoid unnecessary file I/O and a confusing 'no config found' path.
 // loadConfig() caches the result in-process; the preAction hook reuses it via the default cache path.
 const SKIP_EARLY_CONFIG = new Set<string>([
-  'version', 'config', 'sanitize', 'extension', 'status', ...COMPLETION_COMMAND_NAMES,
+  'version', 'extension', 'status', ...COMPLETION_COMMAND_NAMES, ...skipConfigNames,
 ])
 if (firstArg == null || !SKIP_EARLY_CONFIG.has(firstArg)) {
   // Parse --profile early (before Commander's full parse) so the early config load

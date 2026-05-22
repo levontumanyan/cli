@@ -16,6 +16,18 @@ import { simplifyZodIssues, formatIssuesText } from './lib/zod-error.ts'
 import { renderText, formatHandlerError } from './output.ts'
 import { pickFields, parseFieldList, applyTemplate } from './lib/output-transform.ts'
 
+/**
+ * Declared intent for a command, used by the CLI schema emitter.
+ * All fields are optional — omit any that are unknown or inapplicable.
+ */
+export interface CommandIntent {
+  destructive?: boolean
+  idempotent?: boolean
+  scope?: 'file' | 'directory' | 'global'
+  requiresConfirmation?: boolean
+  requiresAuth?: boolean
+}
+
 /** pre-built schema for coercing string → number, reused per option invocation */
 const numberSchema = z.coerce.number()
 
@@ -150,6 +162,11 @@ export interface CommandConfig<T extends z.ZodType = z.ZodType> {
    * never called when `--json` is active.
    */
   formatOutput?: (result: JsonValue, parsed: ParsedResult<z.infer<T>>) => string
+  /**
+   * optional intent declaration for the CLI schema emitter.
+   * used to derive destructiveness, idempotency, and auth requirements in emitted schema.
+   */
+  intent?: CommandIntent
 }
 
 /**
@@ -383,13 +400,14 @@ function validateInput (name: string, input: unknown): void {
 
 /**
  * Recursively removes `found_in` keys from a JSON Schema object.
+ * Exported for reuse in cli-schema.ts validation extraction.
  *
  * `found_in` is internal routing metadata used by the request builder to classify
  * parameters as path, query, or body. It is an HTTP transport implementation detail
  * and MUST NOT be exposed in user-facing help text or agent-facing JSON Schema output
  * (Constitution Principle VIII: Transport-Layer Abstraction).
  */
-function stripTransportMeta (value: JsonValue): JsonValue {
+export function stripTransportMeta (value: JsonValue): JsonValue {
   if (Array.isArray(value)) return value.map(stripTransportMeta)
   if (value !== null && typeof value === 'object') {
     const out: Record<string, JsonValue> = {}
@@ -621,6 +639,14 @@ export function defineCommand<T extends z.ZodType> (config: CommandConfig<T>): O
     cmd,
     config.input instanceof z.ZodType ? config.input : undefined,
   )
+
+  // Attach typed metadata for tooling (e.g. cli-schema). Non-enumerable so it
+  // doesn't appear in JSON.stringify or Commander's own command inspection.
+  Object.defineProperty(cmd, '_commandConfig', {
+    value: { config, schemaArgs },
+    writable: false,
+    enumerable: false,
+  })
 
   cmd.action(async () => {
     const allRaw = cmd.optsWithGlobals()
