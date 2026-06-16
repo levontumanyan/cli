@@ -369,6 +369,50 @@ elastic es update --index my-index --id abc123
 
 Run `elastic es <command> --help` for all available options on any command.
 
+##### Dump and restore an index
+
+`elastic es helpers dump` exports one or more indices as bulk-format NDJSON
+(action + `_source` line pairs) using a per-index Point-in-Time and
+`search_after` sorted by `_shard_doc` for a consistent read. The output is
+shaped so it can be piped or fed straight into `elastic es helpers bulk-ingest`
+with `--source-format bulk-ndjson`.
+
+Typical use case: capture a remote index for local debugging.
+
+```bash
+# Export from the remote cluster, omit _index so the dump can be re-targeted,
+# and filter by a Query DSL clause
+elastic --use-context remote es helpers dump \
+  --indices my-prod-idx \
+  --skip-index-name \
+  --query '{"range":{"@timestamp":{"gte":"now-1h"}}}' \
+  --output dump.ndjson
+
+# Re-ingest into the local cluster under a new index name
+elastic --use-context local es helpers bulk-ingest \
+  --source-format bulk-ndjson \
+  --index local-copy \
+  --data-file dump.ndjson
+```
+
+Selected `dump` options (run `elastic es helpers dump --help` for the full set):
+
+| Option | Description |
+|---|---|
+| `--indices <list>` | Comma-separated list of indices to dump (required) |
+| `--size <n>` | Documents per search batch (default `500`) |
+| `--keep-alive <duration>` | Point-in-time keep-alive (default `1m`) |
+| `--output <path>` | Write NDJSON to a file; omit to stream to stdout |
+| `--skip-index-name` | Omit `_index` from action lines so the dump can be re-targeted |
+| `--add-id` | Include `_id` in action lines so document IDs round-trip |
+| `--query <json>` | Query DSL clause as inline JSON |
+| `--query-file <path>` | Path to a file containing a Query DSL clause (use `-` for stdin) |
+
+The companion `bulk-ingest --source-format bulk-ndjson` mode streams
+pre-formatted action+doc line pairs verbatim into `_bulk`. `--index` is
+optional in this mode: when omitted, requests go to `/_bulk` and the action
+lines must carry `_index`.
+
 #### `kb` - Kibana API
 
 Run Kibana API calls. Commands are organised by namespace (e.g. `data-views`,
