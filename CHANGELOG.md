@@ -1,5 +1,20 @@
 # Changelog
 
+## [0.2.1](https://github.com/elastic/cli/compare/v0.2.0...v0.2.1) (2026-06-16)
+
+
+### Bug Fixes
+
+* Add explicit permissions to GitHub Actions workflows ([#414](https://github.com/elastic/cli/issues/414)) ([252fd44](https://github.com/elastic/cli/commit/252fd44953ffe86ae19a1af8f78fd65c07b3da04))
+* **ci:** Use node-version instead of missing .nvmrc ([8d84d45](https://github.com/elastic/cli/commit/8d84d4500e0e6a293da6357f0ecd63bc1ecdfbb7))
+* **cli:** Show banner on --help to match bare `elastic` output ([#391](https://github.com/elastic/cli/issues/391)) ([cb4becd](https://github.com/elastic/cli/commit/cb4becd1ef7818dbff23fe240e302402ee4e37aa))
+* **deps:** Update dependency commander to v15 ([#410](https://github.com/elastic/cli/issues/410)) ([7a8056f](https://github.com/elastic/cli/commit/7a8056ffd4c6d2b0ab3f81bd23658744cff97662))
+
+
+### Performance Improvements
+
+* Small tweaks and lazy-loading to improve --help performance ([#400](https://github.com/elastic/cli/issues/400)) ([223fdd3](https://github.com/elastic/cli/commit/223fdd345852e09e816f0d75feb87285a8335fb4))
+
 ## [0.2.0](https://github.com/elastic/cli/compare/v0.1.1...v0.2.0) (2026-05-29)
 
 
