@@ -82,7 +82,8 @@ program.hook('preAction', async (thisCommand, actionCommand) => {
 const versionCmd = defineCommand({
   name: 'version',
   description: 'Print the elastic CLI version',
-  handler: () => ({ version: VERSION })
+  handler: () => ({ version: VERSION }),
+  formatOutput: () => VERSION + '\n',
 })
 program.addCommand(versionCmd)
 
