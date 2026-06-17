@@ -5,11 +5,11 @@
 
 import { describe, it } from 'node:test'
 import assert from 'node:assert/strict'
-import { mkdtempSync, writeFileSync, readFileSync } from 'node:fs'
+import { mkdtempSync, writeFileSync, readFileSync, openSync, closeSync, fstatSync } from 'node:fs'
 import { join } from 'node:path'
 import { tmpdir } from 'node:os'
 import type { EsClient, EsRequestParams } from '../../../src/lib/es-client.ts'
-import { createDumpCommand } from '../../../src/es/helpers/dump.ts'
+import { createDumpCommand, abortDump } from '../../../src/es/helpers/dump.ts'
 import type { DumpDeps } from '../../../src/es/helpers/dump.ts'
 import { _testSetStdinReader } from '../../../src/factory.ts'
 import { Command } from 'commander'
@@ -399,5 +399,73 @@ describe('dump command', () => {
 
     const text = io.stderr.chunks.join('')
     assert.ok(/1\s+document/i.test(text) || text.includes('1'), `expected stderr to mention 1 document, got: ${text}`)
+  })
+})
+
+describe('abortDump (SIGINT/SIGTERM cleanup)', () => {
+  it('closes the open fd and DELETEs the active PIT', async () => {
+    const tmpDir = mkdtempSync(join(tmpdir(), 'dump-abort-'))
+    const fd = openSync(join(tmpDir, 'partial.ndjson'), 'w')
+
+    const requests: Array<{ params: EsRequestParams }> = []
+    const transport = {
+      request: async (params: EsRequestParams) => {
+        requests.push({ params })
+        return {}
+      }
+    } as unknown as EsClient
+
+    const refs = { pitId: 'pit-mid-dump', fd }
+    await abortDump(transport, refs)
+
+    assert.equal(refs.pitId, null)
+    assert.equal(refs.fd, null)
+    assert.equal(requests.length, 1)
+    assert.equal(requests[0]!.params.method, 'DELETE')
+    assert.ok(requests[0]!.params.path.includes('_pit'))
+    assert.deepStrictEqual(requests[0]!.params.body, { id: 'pit-mid-dump' })
+
+    // fd should be closed: fstatSync on a closed fd throws
+    assert.throws(() => fstatSync(fd))
+  })
+
+  it('is a no-op when no resources are active', async () => {
+    const requests: Array<{ params: EsRequestParams }> = []
+    const transport = {
+      request: async (params: EsRequestParams) => { requests.push({ params }); return {} }
+    } as unknown as EsClient
+
+    const refs = { pitId: null, fd: null }
+    await abortDump(transport, refs)
+    assert.equal(requests.length, 0)
+  })
+
+  it('swallows DELETE failures (best effort)', async () => {
+    const transport = {
+      request: async () => { throw new Error('network down') }
+    } as unknown as EsClient
+    const refs = { pitId: 'pit-x', fd: null }
+    await assert.doesNotReject(() => abortDump(transport, refs))
+    assert.equal(refs.pitId, null)
+  })
+
+  it('clears pitId before awaiting DELETE so concurrent aborts do not double-close', async () => {
+    let resolveRequest: () => void = () => {}
+    const requests: EsRequestParams[] = []
+    const transport = {
+      request: async (params: EsRequestParams) => {
+        requests.push(params)
+        await new Promise<void>((r) => { resolveRequest = r })
+        return {}
+      }
+    } as unknown as EsClient
+
+    const refs = { pitId: 'pit-1', fd: null }
+    const first = abortDump(transport, refs)
+    // While the first DELETE is in flight, a second abort must not re-issue it.
+    const second = abortDump(transport, refs)
+    resolveRequest()
+    await Promise.all([first, second])
+    assert.equal(requests.length, 1)
   })
 })

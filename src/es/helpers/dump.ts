@@ -67,6 +67,12 @@ function resolveQuery (input: DumpInput): unknown {
   return { match_all: {} }
 }
 
+/** Mutable handle to the resources a SIGINT/SIGTERM cleanup needs to release. */
+interface AbortRefs {
+  pitId: string | null
+  fd: number | null
+}
+
 interface DumpIndexParams {
   index: string
   query: unknown
@@ -75,10 +81,31 @@ interface DumpIndexParams {
   write: (chunk: string) => void
   skipIndexName: boolean
   addId: boolean
+  abortRefs: AbortRefs
+}
+
+/**
+ * Best-effort cleanup of resources held by an in-flight dump. Used both by the
+ * SIGINT/SIGTERM handlers and (indirectly, via per-index `finally`) by the
+ * normal completion path. Idempotent: nulling each ref after release prevents
+ * double-close races between the signal handler and the per-index finally.
+ */
+export async function abortDump (transport: EsClient, refs: AbortRefs): Promise<void> {
+  if (refs.fd != null) {
+    try { closeSync(refs.fd) } catch { /* best effort */ }
+    refs.fd = null
+  }
+  if (refs.pitId != null) {
+    const id = refs.pitId
+    refs.pitId = null
+    try {
+      await transport.request({ method: 'DELETE', path: '/_pit', body: { id } })
+    } catch { /* best effort */ }
+  }
 }
 
 async function dumpOneIndex (transport: EsClient, params: DumpIndexParams): Promise<number> {
-  const { index, query, size, keepAlive, write, skipIndexName, addId } = params
+  const { index, query, size, keepAlive, write, skipIndexName, addId, abortRefs } = params
 
   const pitOpen = await transport.request<PitResponse>({
     method: 'POST',
@@ -88,6 +115,7 @@ async function dumpOneIndex (transport: EsClient, params: DumpIndexParams): Prom
   if (pitOpen.id == null) {
     throw new Error(`Failed to open point-in-time for index "${index}"`)
   }
+  abortRefs.pitId = pitOpen.id
 
   // Action-line prefix is invariant across hits when --add-id is off; precompute it.
   // When --add-id is on, only the `_id` field varies, so we still avoid building a
@@ -128,12 +156,16 @@ async function dumpOneIndex (transport: EsClient, params: DumpIndexParams): Prom
       }
       total += hits.length
 
-      if (result.pit_id != null) pitId = result.pit_id
+      if (result.pit_id != null) {
+        pitId = result.pit_id
+        abortRefs.pitId = result.pit_id
+      }
       const lastSort = hits[hits.length - 1]!.sort
       if (lastSort == null || lastSort.length === 0) break
       searchAfter = lastSort
     }
   } finally {
+    if (abortRefs.pitId === pitId) abortRefs.pitId = null
     try {
       await transport.request({ method: 'DELETE', path: '/_pit', body: { id: pitId } })
     } catch {
@@ -189,6 +221,18 @@ function createDumpHandler (deps: DumpDeps = defaultDeps) {
     const perIndex: Array<{ name: string, docs: number }> = []
     const startTime = Date.now()
 
+    // Refs shared with the signal handler so SIGINT/SIGTERM mid-dump still
+    // close the active PIT and flush the output fd before the process exits.
+    const abortRefs: AbortRefs = { pitId: null, fd }
+    const onAbort = (): void => {
+      abortDump(transport, abortRefs).finally(() => {
+        // 130 = 128 + SIGINT; matches what a shell reports for Ctrl+C.
+        process.exit(130)
+      })
+    }
+    process.on('SIGINT', onAbort)
+    process.on('SIGTERM', onAbort)
+
     try {
       for (const index of indices) {
         const docs = await dumpOneIndex(transport, {
@@ -199,15 +243,20 @@ function createDumpHandler (deps: DumpDeps = defaultDeps) {
           write,
           skipIndexName: opts.skip_index_name === true,
           addId: opts.add_id === true,
+          abortRefs,
         })
         perIndex.push({ name: index, docs })
       }
     } catch (err) {
       if (fd != null) closeSync(fd)
+      process.off('SIGINT', onAbort)
+      process.off('SIGTERM', onAbort)
       return transportError(err)
     }
 
     if (fd != null) closeSync(fd)
+    process.off('SIGINT', onAbort)
+    process.off('SIGTERM', onAbort)
 
     const total = perIndex.reduce((n, e) => n + e.docs, 0)
     const elapsed_ms = Date.now() - startTime
