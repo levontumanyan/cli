@@ -5,7 +5,7 @@
 
 import { describe, it } from 'node:test'
 import assert from 'node:assert/strict'
-import { mkdtempSync, writeFileSync, readFileSync, openSync, closeSync, fstatSync } from 'node:fs'
+import { mkdtempSync, writeFileSync, readFileSync, openSync, fstatSync } from 'node:fs'
 import { join } from 'node:path'
 import { tmpdir } from 'node:os'
 import type { EsClient, EsRequestParams } from '../../../src/lib/es-client.ts'
