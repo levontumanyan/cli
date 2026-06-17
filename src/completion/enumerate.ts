@@ -32,14 +32,17 @@ export interface CompletionResult {
 export type DynamicCompleter = () => string[] | Promise<string[]>
 
 /**
- * Lookup table for dynamic completers keyed by flag long name (including `--`).
+ * Lookup table for dynamic completers keyed by flag long name (including `--`)
+ * or by command path (e.g. `"config current-context set"`).
  *
- * Returning `undefined` for an unknown flag is mandatory: the completion path
+ * Returning `undefined` for an unknown key is mandatory: the completion path
  * MUST NOT throw or block, so completers that are unavailable for the current
  * environment simply do not register themselves.
  */
 export interface DynamicCompleterRegistry {
   get(flagLong: string): DynamicCompleter | undefined
+  /** Returns a positional-argument completer for the given space-joined command path, if any. */
+  getPositional?(commandPath: string): DynamicCompleter | undefined
 }
 
 // Commander stores hidden state on an internal `_hidden` field that is not
@@ -108,6 +111,21 @@ function optionTakesArg (current: Command, root: Command, word: string): boolean
     }
   }
   return false
+}
+
+/**
+ * Builds a space-joined path for `cmd` excluding the root program name.
+ * e.g. the `set` subcommand under `elastic config current-context` → `"config current-context set"`.
+ */
+function getCommandPath (cmd: Command): string {
+  const parts: string[] = []
+  let c: Command | null = cmd
+  while (c != null && c.parent != null) {
+    parts.push(c.name())
+    c = c.parent
+  }
+  parts.reverse()
+  return parts.join(' ')
 }
 
 function prefixFilter (candidates: readonly string[], prefix: string): string[] {
@@ -219,9 +237,19 @@ export async function enumerate (
     return { candidates: [], directive: DIRECTIVE_NO_FILE_COMP }
   }
 
-  const cands = collectChildren(current)
+  const children = collectChildren(current)
+  if (children.length === 0 && registry != null) {
+    const positionalCompleter = registry.getPositional?.(getCommandPath(current))
+    if (positionalCompleter != null) {
+      const cands = await safeRun(positionalCompleter)
+      return {
+        candidates: prefixFilter(cands, incomplete),
+        directive: DIRECTIVE_NO_FILE_COMP,
+      }
+    }
+  }
   return {
-    candidates: prefixFilter(cands, incomplete),
+    candidates: prefixFilter(children, incomplete),
     directive: DIRECTIVE_NO_FILE_COMP,
   }
 }
